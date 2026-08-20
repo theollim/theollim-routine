@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="더올림수학 루틴 — 폼 바로가기 · 공지사항 · 공식 암기">
+<title>더올림수학 루틴</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="더올림 루틴">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0b0b'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3E올%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --surface:#fcfcfb; --plane:#f9f9f7; --sunk:#f2f1ed;
+  --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --line:rgba(11,11,11,.10);
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --goodBg:rgba(12,163,12,.10); --warnBg:rgba(250,178,25,.16); --critBg:rgba(208,59,59,.10);
+  --gEs:#3987e5; --gM1:#12a594; --gM2:#8b5cf6; --gM3:#e2478a; --gHs:#c2760c;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --surface:#1a1a19; --plane:#0d0d0d; --sunk:#232321; --ink:#fff; --ink2:#c3c2b7; --muted:#898781; --line:rgba(255,255,255,.12);
+    --goodBg:rgba(12,163,12,.16); --warnBg:rgba(250,178,25,.14); --critBg:rgba(208,59,59,.18); }
+}
+:root[data-theme="dark"]{ --surface:#1a1a19; --plane:#0d0d0d; --sunk:#232321; --ink:#fff; --ink2:#c3c2b7; --muted:#898781; --line:rgba(255,255,255,.12);
+  --goodBg:rgba(12,163,12,.16); --warnBg:rgba(250,178,25,.14); --critBg:rgba(208,59,59,.18); }
+:root[data-theme="light"]{ --surface:#fcfcfb; --plane:#f9f9f7; --sunk:#f2f1ed; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781; --line:rgba(11,11,11,.10);
+  --goodBg:rgba(12,163,12,.10); --warnBg:rgba(250,178,25,.16); --critBg:rgba(208,59,59,.10); }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--plane);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding-bottom:calc(66px + env(safe-area-inset-bottom));}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  padding:14px 16px calc(10px + env(safe-area-inset-top)) 16px;display:flex;align-items:center;justify-content:space-between}
+header h1{font-size:17px}
+header .sub{font-size:12px;color:var(--muted);margin-top:1px}
+#themeBtn{width:32px;height:32px;border-radius:50%;background:var(--sunk);display:flex;align-items:center;justify-content:center;font-size:15px}
+main{padding:14px 14px 6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:10px}
+.hint{font-size:12.5px;color:var(--muted);margin:2px 2px 12px}
+
+/* ── 링크 탭 ── */
+.gradeGrid{display:grid;grid-template-columns:1fr;gap:10px}
+.gradeCard{display:flex;align-items:center;gap:14px;padding:18px 16px;border-radius:16px;background:var(--surface);
+  border:1px solid var(--line);text-align:left;width:100%}
+.gradeCard .emo{font-size:30px;width:42px;text-align:center;flex:0 0 auto}
+.gradeCard .lab{font-weight:750;font-size:17px}
+.gradeCard .go{margin-left:auto;font-size:12px;color:var(--muted);flex:0 0 auto}
+.backBtn{font-size:13px;font-weight:650;color:var(--ink2);margin-bottom:10px;padding:6px 2px}
+.linkCard{display:flex;align-items:center;gap:12px;padding:15px;border-radius:14px;background:var(--surface);
+  border:1px solid var(--line);margin-bottom:10px}
+.linkCard .emo{font-size:24px;width:38px;text-align:center;flex:0 0 auto}
+.linkCard .lab{font-weight:650;font-size:15px}
+.linkCard .go{margin-left:auto;font-size:13px;color:var(--good);font-weight:650;flex:0 0 auto}
+.linkCard.off{opacity:.55}
+.linkCard.off .go{color:var(--muted)}
+.linkCard.skel{background:linear-gradient(90deg,var(--sunk) 25%,var(--line) 37%,var(--sunk) 63%);
+  background-size:400% 100%;animation:sk 1.4s ease infinite;height:58px}
+@keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
+
+/* ── 공지 탭 ── */
+.noticeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.notice{border-radius:14px;padding:13px 12px;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid transparent}
+.notice .emo{font-size:19px;margin-bottom:6px}
+.notice .t{font-weight:700;font-size:13px;line-height:1.3;margin-bottom:4px}
+.notice .b{font-size:11.5px;color:var(--ink2);line-height:1.45}
+.notice.crit{border-left-color:var(--crit)}
+.notice.warn{border-left-color:var(--warn)}
+.notice.good{border-left-color:var(--good)}
+
+/* ── 공식암기 탭 ── */
+.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px}
+.chip{flex:0 0 auto;padding:6px 13px;border-radius:999px;font-size:13px;border:1px solid var(--line);
+  color:var(--ink2);background:var(--surface);white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--plane);border-color:var(--ink);font-weight:650}
+.toolbar{display:flex;gap:8px;margin-bottom:12px}
+.toolbar button{flex:1;padding:9px;border-radius:11px;background:var(--sunk);font-size:13px;font-weight:600;border:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.fc{perspective:1000px}
+.fcIn{position:relative;width:100%;display:grid;transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  transform-style:preserve-3d}
+.fc.on .fcIn{transform:rotateY(180deg)}
+.fcFace{grid-row:1;grid-column:1;min-height:104px;border-radius:13px;backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:16px 12px 12px;border-top:3px solid transparent;border-left:1px solid var(--line);
+  border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fcFront{background:var(--sunk);font-size:14px;font-weight:700;line-height:1.35}
+.fcBack{background:var(--ink);color:var(--plane);transform:rotateY(180deg);
+  font-size:12.5px;line-height:1.55;font-weight:600;letter-spacing:-.01em}
+.fcBack .def{font-size:12.5px;font-weight:750;margin-bottom:6px}
+.fcBack .form{font-size:14px;font-weight:750;font-variant-numeric:tabular-nums}
+.fcBack .sub{font-size:11px;opacity:.65;margin-top:3px;font-weight:500}
+.propList{margin:2px 0 0;padding:0;list-style:none;text-align:left;width:100%}
+.propList li{position:relative;padding-left:12px;margin-bottom:3px;font-weight:500;opacity:.92}
+.propList li::before{content:'·';position:absolute;left:0;top:-1px;font-weight:900;opacity:.7}
+.gradeTag{font-size:9.5px;font-weight:800;position:absolute;top:9px;left:12px;letter-spacing:.03em;opacity:.85}
+.fc[data-t="es"] .fcFace{border-top-color:var(--gEs)} .fc[data-t="es"] .gradeTag{color:var(--gEs)}
+.fc[data-t="m1"] .fcFace{border-top-color:var(--gM1)} .fc[data-t="m1"] .gradeTag{color:var(--gM1)}
+.fc[data-t="m2"] .fcFace{border-top-color:var(--gM2)} .fc[data-t="m2"] .gradeTag{color:var(--gM2)}
+.fc[data-t="m3"] .fcFace{border-top-color:var(--gM3)} .fc[data-t="m3"] .gradeTag{color:var(--gM3)}
+.fc[data-t="hs"] .fcFace{border-top-color:var(--gHs)} .fc[data-t="hs"] .gradeTag{color:var(--gHs)}
+.fcBack .gradeTag{color:rgba(255,255,255,.55) !important}
+
+/* ── 하단 탭바 ── */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted)}
+nav button.on{color:var(--ink);font-weight:650}
+nav button .ic{font-size:19px}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>더올림수학 루틴</h1><div class="sub" id="hdrSub">폼 바로가기 · 공지 · 공식 암기</div></div>
+  <button id="themeBtn">🌓</button>
+</header>
+<main id="main"></main>
+<nav>
+  <button data-tab="link" class="on"><span class="ic">🔗</span>링크</button>
+  <button data-tab="notice"><span class="ic">📌</span>공지</button>
+  <button data-tab="card"><span class="ic">🧠</span>공식암기</button>
+</nav>
+
+<script>
+/* ═══════════════════════ 데이터 ═══════════════════════ */
+const NOTICES = [
+  {k:'crit', e:'🚫', t:'당일 결석 · 보강 없음', b:'당일에 빠지면 보강 자리를 못 잡아드려요.'},
+  {k:'crit', e:'⏰', t:'지각 · 보강 대상 아님', b:'늦은 만큼 그날 수업이 줄어듭니다.'},
+  {k:'crit', e:'🔁', t:'보강도 한 번뿐', b:'보강에 못 오면 재보강은 어려워요.'},
+  {k:'warn', e:'📅', t:'결석은 미리 알려주세요', b:'2주 전 신고하면 보강 자리를 잡아드려요.'},
+  {k:'warn', e:'📞', t:'숙제 3회째도 안 되면 연락', b:'2번은 챙겨보고, 3번째부터 연락드려요.'},
+  {k:'good', e:'✏️', t:'필기도구는 개인 지참', b:'여분 비치는 안 합니다. 교재도 챙겨주세요.'},
+];
+
+const CARDS = [
+  /* ═══ 초등 (4~6학년) — 도형의 넓이·부피, 사각형의 성질 ═══ */
+  {g:'초등', f:'직사각형 넓이', b:'가로 × 세로'},
+  {g:'초등', f:'정사각형 넓이', b:'한 변 × 한 변'},
+  {g:'초등', f:'삼각형 넓이', b:'밑변 × 높이 ÷ 2'},
+  {g:'초등', f:'평행사변형 넓이', b:'밑변 × 높이'},
+  {g:'초등', f:'마름모 넓이', b:'한 대각선 × 다른 대각선 ÷ 2'},
+  {g:'초등', f:'사다리꼴 넓이', b:'(윗변 + 아랫변) × 높이 ÷ 2'},
+  {g:'초등', f:'원의 둘레 (원주)', b:'지름 × 3.14'},
+  {g:'초등', f:'원의 넓이', b:'반지름 × 반지름 × 3.14'},
+  {g:'초등', f:'직육면체의 부피', b:'가로 × 세로 × 높이'},
+  {g:'초등', f:'정육면체의 부피', b:'한 모서리 × 한 모서리 × 한 모서리'},
+  {g:'초등', f:'삼각형 세 각의 합', b:'180°'},
+  {g:'초등', f:'사각형 네 각의 합', b:'360°'},
+  {g:'초등', f:'비율(백분율)', b:'(비교하는 양 ÷ 기준량) × 100 (%)'},
+  {g:'초등', f:'직사각형', def:'네 각이 모두 직각인 사각형',
+    props:['마주보는 두 변의 길이가 같다','두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다']},
+  {g:'초등', f:'정사각형', def:'네 변의 길이가 모두 같고 네 각이 모두 직각인 사각형',
+    props:['두 대각선의 길이가 같다','두 대각선은 서로를 수직으로 이등분한다']},
+  {g:'초등', f:'평행사변형', def:'마주보는 두 쌍의 변이 서로 평행한 사각형',
+    props:['마주보는 변의 길이가 같다','마주보는 각의 크기가 같다','두 대각선은 서로를 이등분한다']},
+  {g:'초등', f:'마름모', def:'네 변의 길이가 모두 같은 사각형',
+    props:['마주보는 각의 크기가 같다','이웃한 두 각의 합이 180°이다','두 대각선은 수직으로 만난다','두 대각선은 서로 다른 것을 이등분한다']},
+  {g:'초등', f:'사다리꼴', def:'한 쌍의 마주보는 변이 서로 평행한 사각형', props:[]},
+
+  /* ═══ 중1 — 소인수분해, 정수·유리수, 일차방정식, 평면·입체도형 ═══ */
+  {g:'중1', f:'소인수분해', b:'수를 소수들만의 곱으로 나타내기\n예) 12 = 2² × 3'},
+  {g:'중1', f:'최대공약수(GCD)', b:'공통인 소인수를 가장 작은 지수로 곱한다'},
+  {g:'중1', f:'최소공배수(LCM)', b:'모든 소인수를 가장 큰 지수로 곱한다'},
+  {g:'중1', f:'정수의 덧셈', b:'부호가 같으면 절댓값의 합에 같은 부호\n부호가 다르면 절댓값의 차에 큰 쪽 부호'},
+  {g:'중1', f:'일차방정식 풀이 순서', b:'괄호 풀기\n→ 이항(문자는 좌변, 수는 우변)\n→ 양변 정리\n→ 계수로 나누기'},
+  {g:'중1', f:'좌표평면의 사분면', b:'1사분면(+,+) · 2사분면(-,+)\n3사분면(-,-) · 4사분면(+,-)'},
+  {g:'중1', f:'정비례 관계식', b:'y = ax (a ≠ 0)'},
+  {g:'중1', f:'반비례 관계식', b:'y = a/x (a ≠ 0)'},
+  {g:'중1', f:'다각형 내각의 합', b:'180° × (n - 2)\n(n은 변의 개수)'},
+  {g:'중1', f:'다각형 외각의 합', b:'항상 360°'},
+  {g:'중1', f:'다각형의 대각선 개수', b:'n(n - 3) ÷ 2\n(n은 변의 개수)'},
+  {g:'중1', f:'원의 둘레 · 넓이', b:'둘레 = 2πr\n넓이 = πr²'},
+  {g:'중1', f:'부채꼴의 넓이 (중심각 알 때)', b:'πr² × (x/360)\n(x는 중심각)'},
+  {g:'중1', f:'부채꼴의 넓이 (중심각 모를 때)', b:'½ × r × l\n(l은 호의 길이)'},
+  {g:'중1', f:'각기둥의 부피', b:'밑넓이 × 높이'},
+  {g:'중1', f:'각뿔의 부피', b:'밑넓이 × 높이 ÷ 3'},
+  {g:'중1', f:'원기둥의 부피', b:'πr² × h'},
+  {g:'중1', f:'원기둥의 겉넓이', b:'(밑넓이 × 2) + 옆넓이'},
+  {g:'중1', f:'원뿔의 부피', b:'⅓ × πr² × h'},
+  {g:'중1', f:'구의 겉넓이', b:'4πr²'},
+  {g:'중1', f:'구의 부피', b:'4⁄3 × πr³'},
+
+  /* ═══ 중2 — 지수법칙·식의 계산, 부등식·연립방정식, 일차함수, 도형의 성질 ═══ */
+  {g:'중2', f:'지수법칙 — 곱셈', b:'aᵐ × aⁿ = aᵐ⁺ⁿ'},
+  {g:'중2', f:'지수법칙 — 나눗셈', b:'aᵐ ÷ aⁿ = aᵐ⁻ⁿ (m > n)'},
+  {g:'중2', f:'지수법칙 — 거듭제곱', b:'(aᵐ)ⁿ = aᵐⁿ'},
+  {g:'중2', f:'다항식의 덧셈·뺄셈', b:'동류항끼리만 더하고 뺀다'},
+  {g:'중2', f:'연립방정식 풀이', b:'대입법 또는 가감법으로\n한 문자를 없애고 푼다'},
+  {g:'중2', f:'일차부등식의 성질', b:'양변에 음수를 곱하거나 나누면\n부등호 방향이 바뀐다'},
+  {g:'중2', f:'일차함수의 기울기', b:'y의 증가량 ÷ x의 증가량'},
+  {g:'중2', f:'일차함수의 절편', b:'x절편: y = 0을 대입해서 구한다\ny절편: x = 0을 대입해서 구한다'},
+  {g:'중2', f:'삼각형의 닮음 조건', b:'SSS닮음 · SAS닮음 · AA닮음'},
+  {g:'중2', f:'삼각형의 중점연결정리', b:'두 변의 중점을 이은 선분은\n나머지 한 변과 평행하고\n길이는 그 변의 절반이다'},
+  {g:'중2', f:'피타고라스 정리', b:'a² + b² = c²\n(c는 직각삼각형의 빗변)'},
+  {g:'중2', f:'확률 구하기', b:'(사건이 일어나는 경우의 수)\n÷ (모든 경우의 수)'},
+  {g:'중2', f:'삼각형 내각의 합', b:'180°'},
+  {g:'중2', f:'평행사변형이 되는 조건', def:'아래 중 하나만 만족해도 평행사변형이다', props:[
+    '두 쌍의 대변이 각각 평행하다','두 쌍의 대변의 길이가 각각 같다','두 쌍의 대각의 크기가 각각 같다',
+    '한 쌍의 대변이 평행하고 길이가 같다','두 대각선이 서로를 이등분한다']},
+  {g:'중2', f:'직사각형의 성질', def:'평행사변형의 성질 + 아래', props:['두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다']},
+  {g:'중2', f:'마름모의 성질', def:'평행사변형의 성질 + 아래', props:['두 대각선은 서로 다른 것을 수직으로 이등분한다']},
+  {g:'중2', f:'이등변삼각형의 성질', def:'두 변의 길이가 같은 삼각형', props:['두 밑각의 크기가 같다','꼭지각의 이등분선은 밑변을 수직으로 이등분한다']},
+
+  /* ═══ 중3 — 제곱근·곱셈공식·인수분해, 이차방정식·이차함수, 삼각비·원의 성질 ═══ */
+  {g:'중3', f:'제곱근의 성질', b:'√a² = |a|\n√a × √b = √(ab)'},
+  {g:'중3', f:'곱셈공식 — 완전제곱식', b:'(a ± b)² = a² ± 2ab + b²'},
+  {g:'중3', f:'곱셈공식 — 합차공식', b:'(a+b)(a-b) = a² - b²'},
+  {g:'중3', f:'곱셈공식 — 일차식의 곱', b:'(x+a)(x+b) = x² + (a+b)x + ab'},
+  {g:'중3', f:'곱셈공식 — 세 항의 제곱', b:'(a+b+c)² = a²+b²+c²+2ab+2bc+2ca'},
+  {g:'중3', f:'곱셈공식 — 세제곱의 합', b:'a³+b³ = (a+b)(a²-ab+b²)'},
+  {g:'중3', f:'곱셈공식 — 세제곱의 차', b:'a³-b³ = (a-b)(a²+ab+b²)'},
+  {g:'중3', f:'인수분해 — 완전제곱식', b:'a² ± 2ab + b² = (a ± b)²'},
+  {g:'중3', f:'인수분해 — 합차공식', b:'a² - b² = (a+b)(a-b)'},
+  {g:'중3', f:'인수분해 — 공통인수', b:'ma + mb + mc = m(a+b+c)\n먼저 공통인수부터 묶는다'},
+  {g:'중3', f:'인수분해 — 치환', b:'반복되는 부분을 한 문자로\n바꿔서 인수분해한 뒤 되돌린다'},
+  {g:'중3', f:'이차방정식의 근의 공식', b:'x = (-b ± √(b²-4ac)) / 2a'},
+  {g:'중3', f:'이차함수의 꼭짓점', b:'y = a(x-p)² + q 의 꼭짓점은 (p, q)'},
+  {g:'중3', f:'이차함수의 축', b:'축의 방정식은 x = p'},
+  {g:'중3', f:'삼각비', b:'sin = 높이 ÷ 빗변\ncos = 밑변 ÷ 빗변\ntan = 높이 ÷ 밑변'},
+  {g:'중3', f:'원과 접선의 성질', b:'접선은 그 접점을 지나는\n반지름과 서로 수직이다'},
+  {g:'중3', f:'원주각의 성질', b:'한 호에 대한 원주각은\n중심각의 절반이다'},
+  {g:'중3', f:'대푯값 — 평균', b:'(자료 값의 합) ÷ (자료의 개수)'},
+
+  /* ═══ 공통수학1 — 다항식·방정식·부등식, 경우의 수, 행렬 ═══ */
+  {g:'공통수학1', f:'곱셈공식 — 세제곱', b:'(a±b)³ = a³±3a²b+3ab²±b³'},
+  {g:'공통수학1', f:'나머지정리', b:'P(x)를 (x-a)로 나눈 나머지 = P(a)'},
+  {g:'공통수학1', f:'인수정리', b:'P(a) = 0 이면\n(x-a)는 P(x)의 인수다'},
+  {g:'공통수학1', f:'조립제법', b:'고차식을 (x-a)로 나눌 때\n계수만으로 몫과 나머지를 구하는 방법'},
+  {g:'공통수학1', f:'복소수의 계산', b:'i² = -1\n(a+bi)(a-bi) = a²+b²'},
+  {g:'공통수학1', f:'이차방정식 — 근과 계수의 관계', b:'두 근의 합 = -b/a\n두 근의 곱 = c/a'},
+  {g:'공통수학1', f:'이차방정식의 판별식', b:'D = b²-4ac\nD>0: 서로 다른 두 실근\nD=0: 중근 · D<0: 서로 다른 두 허근'},
+  {g:'공통수학1', f:'이차함수와 이차방정식', b:'D>0: x축과 두 점에서 만난다\nD=0: 한 점(접한다) · D<0: 만나지 않는다'},
+  {g:'공통수학1', f:'순열', b:'ₙPᵣ = n! / (n-r)!'},
+  {g:'공통수학1', f:'조합', b:'ₙCᵣ = n! / (r!(n-r)!)'},
+  {g:'공통수학1', f:'2×2 행렬의 곱셈', def:'행 성분과 열 성분을 각각 곱해서 더한다', props:[]},
+
+  /* ═══ 공통수학2 — 도형의 방정식, 집합과 명제, 함수 ═══ */
+  {g:'공통수학2', f:'두 점 사이의 거리', b:'√((x₂-x₁)² + (y₂-y₁)²)'},
+  {g:'공통수학2', f:'선분의 내분점', b:'( (mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n) )'},
+  {g:'공통수학2', f:'두 직선의 평행·수직', b:'평행: 기울기가 같다 (m₁=m₂)\n수직: 기울기의 곱이 -1 (m₁×m₂=-1)'},
+  {g:'공통수학2', f:'점과 직선 사이의 거리', b:'|ax₀+by₀+c| / √(a²+b²)'},
+  {g:'공통수학2', f:'원의 방정식', b:'중심(a,b), 반지름 r\n(x-a)² + (y-b)² = r²'},
+  {g:'공통수학2', f:'대칭이동', b:'x축 대칭: (x,-y) · y축 대칭: (-x,y)\n원점 대칭: (-x,-y) · y=x 대칭: (y,x)'},
+  {g:'공통수학2', f:'집합의 원소 개수', b:'부분집합의 개수 = 2ⁿ\n(n은 원소의 개수)'},
+  {g:'공통수학2', f:'유리함수의 그래프', b:'y = k/(x-p) + q\n점근선: x=p, y=q'},
+
+  /* ═══ 대수 — 지수·로그, 삼각함수, 수열 ═══ */
+  {g:'대수', f:'로그의 정의', b:'logₐN = x ⇔ aˣ = N'},
+  {g:'대수', f:'로그의 성질', b:'logₐ(MN) = logₐM + logₐN\nlogₐ(M/N) = logₐM - logₐN\nlogₐMᵏ = k·logₐM'},
+  {g:'대수', f:'삼각함수의 기본 관계', b:'sin²θ + cos²θ = 1\ntanθ = sinθ / cosθ'},
+  {g:'대수', f:'사인법칙', b:'a/sinA = b/sinB = c/sinC = 2R\n(R은 외접원의 반지름)'},
+  {g:'대수', f:'코사인법칙', b:'a² = b² + c² - 2bc·cosA'},
+  {g:'대수', f:'등차수열', b:'일반항: aₙ = a₁+(n-1)d\n합: Sₙ = n(a₁+aₙ)/2'},
+  {g:'대수', f:'등비수열', b:'일반항: aₙ = a₁rⁿ⁻¹\n합: Sₙ = a₁(rⁿ-1)/(r-1)'},
+
+  /* ═══ 미적분Ⅰ — 함수의 극한과 연속, 미분, 적분 ═══ */
+  {g:'미적분Ⅰ', f:'미분계수의 정의', b:'lim[h→0] (f(a+h)-f(a)) / h'},
+  {g:'미적분Ⅰ', f:'다항함수의 미분법', b:'(xⁿ)′ = nxⁿ⁻¹\n(c)′ = 0 (c는 상수)'},
+  {g:'미적분Ⅰ', f:'함수의 증가·감소', b:"f'(x) > 0 인 구간: 증가\nf'(x) < 0 인 구간: 감소"},
+  {g:'미적분Ⅰ', f:'극대·극소의 판정', b:"f'(x)가 +→- 로 바뀌면 극대\nf'(x)가 -→+ 로 바뀌면 극소"},
+  {g:'미적분Ⅰ', f:'접선의 방정식', b:'y - f(a) = f′(a)(x - a)'},
+  {g:'미적분Ⅰ', f:'부정적분', b:'∫xⁿdx = xⁿ⁺¹/(n+1) + C (n ≠ -1)'},
+  {g:'미적분Ⅰ', f:'미적분의 기본정리', b:'∫[a,b] f(x)dx = F(b) - F(a)'},
+  {g:'미적분Ⅰ', f:'정적분으로 넓이 구하기', b:'두 곡선 사이의 넓이\n= ∫[a,b] |f(x)-g(x)| dx'},
+
+  /* ═══ 확률과 통계 — 경우의 수, 확률, 통계적 추정 ═══ */
+  {g:'확률과 통계', f:'원순열', b:'(n-1)!'},
+  {g:'확률과 통계', f:'중복순열', b:'ₙΠᵣ = nʳ'},
+  {g:'확률과 통계', f:'이항정리', b:'(a+b)ⁿ = Σ ₙCᵣ aⁿ⁻ʳbʳ'},
+  {g:'확률과 통계', f:'확률의 덧셈정리', b:'P(A∪B) = P(A)+P(B)-P(A∩B)'},
+  {g:'확률과 통계', f:'조건부확률', b:'P(B|A) = P(A∩B) / P(A)'},
+  {g:'확률과 통계', f:'정규분포의 표준화', b:'Z = (X - μ) / σ'},
+
+  /* ═══ 미적분Ⅱ — 수열의 극한과 급수, 여러 함수의 미분·적분 ═══ */
+  {g:'미적분Ⅱ', f:'등비급수의 합', b:'a / (1-r)  (단, |r| < 1)'},
+  {g:'미적분Ⅱ', f:'지수·로그함수의 미분', b:'(eˣ)′ = eˣ\n(ln x)′ = 1/x'},
+  {g:'미적분Ⅱ', f:'삼각함수의 미분', b:'(sin x)′ = cos x\n(cos x)′ = -sin x'},
+  {g:'미적분Ⅱ', f:'곱·몫의 미분법', b:'(fg)′ = f′g + fg′\n(f/g)′ = (f′g - fg′) / g²'},
+  {g:'미적분Ⅱ', f:'합성함수의 미분 (연쇄법칙)', b:'{f(g(x))}′ = f′(g(x)) · g′(x)'},
+  {g:'미적분Ⅱ', f:'치환적분법', b:'x = g(t)로 치환하면\n∫f(x)dx = ∫f(g(t))g′(t)dt'},
+  {g:'미적분Ⅱ', f:'부분적분법', b:'∫f′g dx = fg - ∫fg′ dx'},
+
+  /* ═══ 기하 — 이차곡선, 공간도형, 벡터 ═══ */
+  {g:'기하', f:'포물선의 방정식', b:'y² = 4px (초점 (p,0), 준선 x=-p)'},
+  {g:'기하', f:'타원의 방정식', b:'x²/a² + y²/b² = 1'},
+  {g:'기하', f:'쌍곡선의 방정식', b:'x²/a² - y²/b² = 1'},
+  {g:'기하', f:'공간에서 두 점 사이의 거리', b:'√((x₂-x₁)²+(y₂-y₁)²+(z₂-z₁)²)'},
+  {g:'기하', f:'벡터의 내적', b:'a·b = |a||b|cosθ = a₁b₁+a₂b₂'},
+  {g:'기하', f:'벡터가 이루는 각', b:'cosθ = (a·b) / (|a||b|)'},
+];
+
+const LINK_FALLBACK = {
+  checkin_es:{label:'체크인', emoji:'🌼'}, checkin_ms:{label:'체크인', emoji:'🌿'},
+  checkin_hs:{label:'체크인', emoji:'🍀'}, arrival:{label:'등원 — 출석체크', emoji:'✏️'},
+  dismissal:{label:'하원 — 수업정리', emoji:'📘'},
+};
+const LINK_GROUPS = {
+  '초등':{emoji:'🌼', keys:['checkin_es','arrival','dismissal']},
+  '중등':{emoji:'🌿', keys:['checkin_ms','arrival','dismissal']},
+  '고등':{emoji:'🍀', keys:['checkin_hs','arrival','dismissal']},
+};
+const TIER = {
+  '초등':'es', '중1':'m1', '중2':'m2', '중3':'m3',
+  '공통수학1':'hs', '공통수학2':'hs', '대수':'hs', '미적분Ⅰ':'hs',
+  '확률과 통계':'hs', '미적분Ⅱ':'hs', '기하':'hs',
+};
+
+/* ═══════════════════════ 상태 ═══════════════════════ */
+let TAB = 'link';
+let LINKS = null;         // /api/links 결과
+let linkGrade = null;     // '초등' | '중등' | '고등' | null(고르는 중)
+let cardGrade = '전체';
+let cardsShownAll = true;   // 처음엔 다 보이게
+const flipped = new Set();  // 가린 카드 인덱스 (전체보기 상태에서 개별로 가린 것)
+
+const $ = (s,el)=> (el||document).querySelector(s);
+const esc = (s)=> String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ═══════════════════════ 렌더 ═══════════════════════ */
+function renderLink(){
+  if(!linkGrade){
+    const h = Object.entries(LINK_GROUPS).map(([g,meta])=>
+      `<button class="gradeCard" data-lg="${esc(g)}">
+        <div class="emo">${meta.emoji}</div>
+        <div class="lab">${esc(g)}</div>
+        <div class="go">체크인 · 등원 · 하원 ›</div>
+      </button>`).join('');
+    $('#main').innerHTML = `<div class="hint">학년을 먼저 골라주세요.</div><div class="gradeGrid">${h}</div>`;
+    return;
+  }
+  const keys = LINK_GROUPS[linkGrade].keys;
+  let h = '';
+  if(!LINKS){
+    h += keys.map(()=>`<div class="linkCard skel"></div>`).join('');
+  } else {
+    h += keys.map(key=>{
+      const meta = LINK_FALLBACK[key];
+      const l = LINKS.find(x=>x.key===key);
+      const url = l && l.url;
+      const cls = url ? '' : ' off';
+      const goTxt = url ? '열기 ›' : '준비중';
+      const tag = url ? 'a' : 'div';
+      const hrefAttr = url ? `href="${esc(url)}" target="_blank" rel="noopener"` : '';
+      return `<${tag} class="linkCard${cls}" ${hrefAttr}>
+        <div class="emo">${meta.emoji}</div>
+        <div class="lab">${esc(meta.label)}</div>
+        <div class="go">${goTxt}</div>
+      </${tag}>`;
+    }).join('');
+  }
+  $('#main').innerHTML = `<button class="backBtn" id="linkBack">‹ ${esc(linkGrade)} 다시 고르기</button>
+    <div class="hint">눌러서 바로 폼으로 이동합니다. 매일 아침 자동으로 최신 주소를 확인해요.</div>${h}`;
+}
+
+function renderNotice(){
+  const h = NOTICES.map(n=>`
+    <div class="notice ${n.k}">
+      <div class="emo">${n.e}</div>
+      <div class="t">${esc(n.t)}</div>
+      <div class="b">${esc(n.b)}</div>
+    </div>`).join('');
+  $('#main').innerHTML = `<div class="hint">더올림수학을 다니면서 꼭 알아두면 좋은 것들이에요.</div><div class="noticeGrid">${h}</div>`;
+}
+
+function renderCard(){
+  const grades = ['전체','초등','중1','중2','중3','고등'];
+  const chips = grades.map(g=>`<button class="chip" data-cg="${esc(g)}" aria-pressed="${g===cardGrade}">${esc(g)}</button>`).join('');
+  const list = CARDS.filter((c)=>
+    cardGrade==='전체' || c.g===cardGrade || (cardGrade==='고등' && TIER[c.g]==='hs'));
+  const cardsHtml = list.map((c)=>{
+    const idx = CARDS.indexOf(c);
+    const on = cardsShownAll || flipped.has(idx);
+    const back = c.props
+      ? `<div class="def">${esc(c.def)}</div>${c.props.length ? `<ul class="propList">${c.props.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>` : ''}`
+      : `<div class="form">${esc(c.b).replace(/\n/g,'<br>')}</div>`;
+    return `<div class="fc${on?' on':''}" data-ci="${idx}" data-t="${TIER[c.g]||'hs'}">
+      <div class="fcIn">
+        <div class="fcFace fcFront"><span class="gradeTag">${esc(c.g)}</span>${esc(c.f)}</div>
+        <div class="fcFace fcBack"><span class="gradeTag">${esc(c.g)}</span>${back}</div>
+      </div>
+    </div>`;
+  }).join('');
+  $('#main').innerHTML = `
+    <div class="hint">지금은 다 보이는 상태예요. 「전체 가리기」를 누르면 카드를 눌러야 답이 보입니다.</div>
+    <div class="chips">${chips}</div>
+    <div class="toolbar">
+      <button id="cardToggleAll">${cardsShownAll?'전체 가리기':'전체 보기'}</button>
+      <button id="cardShuffle">순서 섞기</button>
+    </div>
+    <div class="grid">${cardsHtml}</div>`;
+}
+
+function render(){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===TAB));
+  $('#hdrSub').textContent = TAB==='link' ? '폼 바로가기' : TAB==='notice' ? '공지사항' : '초중등 공식 암기';
+  if(TAB==='link') renderLink();
+  else if(TAB==='notice') renderNotice();
+  else renderCard();
+}
+
+/* ═══════════════════════ 이벤트 ═══════════════════════ */
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', ()=>{ TAB=b.dataset.tab; render(); }));
+
+$('#themeBtn').addEventListener('click', ()=>{
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur==='dark' ? 'light' : cur==='light' ? 'dark'
+    : (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', next);
+  try{ localStorage.setItem('deolrim.links.theme', next); }catch(e){}
+});
+try{
+  const savedTheme = localStorage.getItem('deolrim.links.theme');
+  if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+}catch(e){}
+
+document.addEventListener('click', (e)=>{
+  const gradeCard = e.target.closest('[data-lg]');
+  if(gradeCard){ linkGrade = gradeCard.dataset.lg; renderLink(); return; }
+  const linkBack = e.target.closest('#linkBack');
+  if(linkBack){ linkGrade = null; renderLink(); return; }
+  const chip = e.target.closest('[data-cg]');
+  if(chip){ cardGrade = chip.dataset.cg; renderCard(); return; }
+  const toggleAll = e.target.closest('#cardToggleAll');
+  if(toggleAll){ cardsShownAll = !cardsShownAll; if(cardsShownAll) flipped.clear(); renderCard(); return; }
+  const shuffle = e.target.closest('#cardShuffle');
+  if(shuffle){
+    for(let i=CARDS.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [CARDS[i],CARDS[j]]=[CARDS[j],CARDS[i]]; }
+    flipped.clear(); cardsShownAll=false; renderCard(); return;
+  }
+  const fc = e.target.closest('.fc');
+  if(fc && !cardsShownAll){
+    const idx = Number(fc.dataset.ci);
+    if(flipped.has(idx)) flipped.delete(idx); else flipped.add(idx);
+    fc.classList.toggle('on');
+  }
+});
+
+/* ═══════════════════════ 시작 ═══════════════════════ */
+render();
+fetch('/api/links', {cache:'no-store'})
+  .then(r=>r.json()).then(j=>{ LINKS = (j && j.links) || []; if(TAB==='link') renderLink(); })
+  .catch(()=>{ LINKS = []; if(TAB==='link') renderLink(); });
+
+/* 홈 화면 추가 시 이름이 "더올림수학 루틴" 으로 뜨도록 매니페스트를 붙인다 */
+try{
+  var ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0b0b'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3E올%3C/text%3E%3C/svg%3E";
+  var MANI = {name:'더올림수학 루틴', short_name:'더올림 루틴', start_url:'.', scope:'.',
+    display:'standalone', orientation:'portrait', background_color:'#f9f9f7', theme_color:'#0b0b0b', lang:'ko',
+    icons:[{src:ICON, sizes:'192x192', type:'image/svg+xml'}, {src:ICON, sizes:'512x512', type:'image/svg+xml', purpose:'any maskable'}]};
+  var blob = new Blob([JSON.stringify(MANI)], {type:'application/manifest+json'});
+  var link = document.createElement('link');
+  link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+}catch(e){}
+</script>
+</body>
+</html>
