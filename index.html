@@ -77,32 +77,42 @@ main{padding:14px 14px 6px}
 /* ── 공식암기 탭 ── */
 .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:10px}
 .chipsSub{margin-bottom:12px}
-.chip{flex:0 0 auto;padding:6px 13px;border-radius:999px;font-size:13px;border:1px solid var(--line);
-  color:var(--ink2);background:var(--surface);white-space:nowrap}
+.chip{flex:0 0 auto;min-height:44px;padding:6px 15px;border-radius:999px;font-size:13px;border:1px solid var(--line);
+  color:var(--ink2);background:var(--surface);white-space:nowrap;display:inline-flex;align-items:center}
 .chip[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:650}
-.chipsSub .chip{font-size:12px;padding:5px 12px}
-.toolbar{display:flex;gap:8px;margin-bottom:12px}
-.toolbar button{flex:1;padding:9px;border-radius:11px;background:var(--accentBg);color:var(--accent);font-size:13px;font-weight:650;border:1px solid var(--accent)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.chipsSub .chip{font-size:12.5px;padding:6px 14px}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar button{flex:1 1 auto;min-height:44px;min-width:100px;padding:9px;border-radius:11px;background:var(--accentBg);
+  color:var(--accent);font-size:12.5px;font-weight:650;border:1px solid var(--accent)}
+.toolbar button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.unitList{display:flex;flex-direction:column;gap:10px}
+.unit{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.unitHead{width:100%;min-height:52px;display:flex;align-items:center;gap:10px;padding:10px 14px;text-align:left;background:transparent}
+.unitHead .ug{font-size:10.5px;font-weight:800;opacity:.6;flex:0 0 auto}
+.unitHead .un{font-size:14.5px;font-weight:700;flex:1 1 auto;line-height:1.3}
+.unitHead .uprog{font-size:11.5px;font-weight:700;color:var(--accent);flex:0 0 auto;white-space:nowrap}
+.unitHead .uchev{font-size:12px;color:var(--muted);flex:0 0 auto;transition:transform .2s}
+.unit.open .uchev{transform:rotate(90deg)}
+.unitBody{display:none;flex-direction:column;gap:10px;padding:0 12px 14px}
+.unit.open .unitBody{display:flex}
 .fc{perspective:1000px}
-.fcIn{position:relative;width:100%;height:336px;display:grid;transition:transform .4s cubic-bezier(.2,.8,.2,1);
+.fcIn{position:relative;width:100%;height:184px;display:grid;transition:transform .4s cubic-bezier(.2,.8,.2,1);
   transform-style:preserve-3d}
 .fc.on .fcIn{transform:rotateY(180deg)}
-.fcFace{grid-row:1;grid-column:1;height:336px;border-radius:13px;backface-visibility:hidden;
+.fcFace{grid-row:1;grid-column:1;height:184px;border-radius:13px;backface-visibility:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  padding:24px 12px 12px;border-top:3px solid transparent;border-left:1px solid var(--line);
+  padding:22px 16px 14px;border-top:3px solid transparent;border-left:1px solid var(--line);
   border-right:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
-.fcFront{background:var(--sunk);font-size:14px;font-weight:700;line-height:1.35}
+.fcFront{background:var(--sunk);font-size:15px;font-weight:700;line-height:1.35}
 .fcBack{background:var(--ink);color:var(--plane);transform:rotateY(180deg);
-  font-size:12.5px;line-height:1.5;font-weight:600;letter-spacing:-.01em;gap:2px}
-.fcBack .def{font-size:12px;font-weight:750;margin-bottom:5px}
+  font-size:13px;line-height:1.5;font-weight:600;letter-spacing:-.01em;gap:2px}
+.fcBack .def{font-size:12.5px;font-weight:750;margin-bottom:5px}
 .fcBack .form{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.45}
-.fcBack .sub{font-size:11px;opacity:.65;margin-top:3px;font-weight:500}
-.fcShape{width:100%;height:58px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+.fcShape{width:100%;height:52px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
   margin-bottom:5px;opacity:.92}
 .fcShape svg{height:100%;width:auto;max-width:100%}
 .propList{margin:2px 0 0;padding:0;list-style:none;text-align:left;width:100%}
-.propList li{position:relative;padding-left:12px;margin-bottom:3px;font-weight:500;opacity:.92;font-size:11.5px}
+.propList li{position:relative;padding-left:12px;margin-bottom:3px;font-weight:500;opacity:.92;font-size:12px}
 .propList li::before{content:'·';position:absolute;left:0;top:-1px;font-weight:900;opacity:.7}
 .gradeTag{font-size:9.5px;font-weight:800;position:absolute;top:9px;left:12px;letter-spacing:.03em;opacity:.85}
 .fc[data-t="es"] .fcFace{border-top-color:var(--gEs)} .fc[data-t="es"] .gradeTag{color:var(--gEs)}
@@ -110,6 +120,20 @@ main{padding:14px 14px 6px}
 .fc[data-t="m2"] .fcFace{border-top-color:var(--gM2)} .fc[data-t="m2"] .gradeTag{color:var(--gM2)}
 .fc[data-t="m3"] .fcFace{border-top-color:var(--gM3)} .fc[data-t="m3"] .gradeTag{color:var(--gM3)}
 .fc[data-t="hs"] .fcFace{border-top-color:var(--gHs)} .fc[data-t="hs"] .gradeTag{color:var(--gHs)}
+.fcFooter{margin-top:8px;display:flex;flex-direction:column;gap:8px}
+.detailToggle{width:100%;min-height:44px;border-radius:10px;background:var(--sunk);border:1px solid var(--line);
+  color:var(--ink2);font-size:12.5px;font-weight:650}
+.detailPanel{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+  display:flex;flex-direction:column;gap:9px;font-size:12.5px;line-height:1.5}
+.detailPanel .drow b{display:block;font-size:10.5px;font-weight:800;color:var(--accent);margin-bottom:2px;letter-spacing:.02em}
+.detailPanel .drow span{color:var(--ink)}
+.judgeRow{display:flex;gap:8px}
+.judgeRow button{flex:1;min-height:44px;border-radius:11px;font-size:13px;font-weight:700;
+  border:1px solid var(--line);background:var(--surface);color:var(--ink2)}
+.judgeRow button[data-know]{border-color:var(--good)}
+.judgeRow button[data-unsure]{border-color:var(--warn)}
+.judgeRow button.active[data-know]{background:var(--good);color:#fff;border-color:var(--good)}
+.judgeRow button.active[data-unsure]{background:var(--warn);color:#fff;border-color:var(--warn)}
 .fcBack .gradeTag{color:rgba(255,255,255,.55) !important}
 
 /* ── 하단 탭바 ── */
@@ -145,165 +169,288 @@ const NOTICES = [
 
 const CARDS = [
   /* ═══ 초등 (4~6학년) — 도형의 넓이·부피, 사각형의 성질 ═══ */
-  {g:'초등', f:'직사각형 넓이', b:'가로 × 세로', shape:'rect'},
-  {g:'초등', f:'정사각형 넓이', b:'한 변 × 한 변', shape:'square'},
-  {g:'초등', f:'삼각형 넓이', b:'밑변 × 높이 ÷ 2', shape:'triangle'},
-  {g:'초등', f:'평행사변형 넓이', b:'밑변 × 높이', shape:'parallelogram'},
-  {g:'초등', f:'마름모 넓이', b:'한 대각선 × 다른 대각선 ÷ 2', shape:'rhombus'},
-  {g:'초등', f:'사다리꼴 넓이', b:'(윗변 + 아랫변) × 높이 ÷ 2', shape:'trapezoid'},
-  {g:'초등', f:'직사각형 둘레', b:'(가로 + 세로) × 2', shape:'rect'},
-  {g:'초등', f:'정사각형 둘레', b:'한 변 × 4', shape:'square'},
-  {g:'초등', f:'삼각형 둘레', b:'세 변의 길이의 합', shape:'triangle'},
-  {g:'초등', f:'평행사변형 둘레', b:'(밑변 + 옆변) × 2', shape:'parallelogram'},
-  {g:'초등', f:'마름모 둘레', b:'한 변 × 4', shape:'rhombus'},
-  {g:'초등', f:'사다리꼴 둘레', b:'네 변의 길이의 합', shape:'trapezoid'},
-  {g:'초등', f:'원의 둘레 (원주)', b:'지름 × 3.14', shape:'circle'},
-  {g:'초등', f:'원의 넓이', b:'반지름 × 반지름 × 3.14', shape:'circle'},
-  {g:'초등', f:'직육면체의 부피', b:'가로 × 세로 × 높이', shape:'cuboid'},
-  {g:'초등', f:'정육면체의 부피', b:'한 모서리 × 한 모서리 × 한 모서리', shape:'cube'},
-  {g:'초등', f:'삼각형 세 각의 합', b:'180°'},
-  {g:'초등', f:'사각형 네 각의 합', b:'360°'},
-  {g:'초등', f:'비율(백분율)', b:'(비교하는 양 ÷ 기준량) × 100 (%)'},
-  {g:'초등', f:'직사각형', def:'네 각이 모두 직각인 사각형', shape:'rect',
+  {g:'초등', u:'도형의 둘레와 넓이', f:'직사각형 넓이', b:'가로 × 세로', shape:'rect',
+    when:'직사각형 모양 땅·종이의 넓이를 구할 때', caution:'가로·세로는 반드시 같은 단위로 맞춰서 곱한다', example:'가로 6cm, 세로 4cm → 24cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'정사각형 넓이', b:'한 변 × 한 변', shape:'square',
+    when:'정사각형 모양의 넓이를 구할 때', caution:'한 변의 길이를 두 번 곱하는 것(2배 아님)', example:'한 변 5cm → 25cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'삼각형 넓이', b:'밑변 × 높이 ÷ 2', shape:'triangle',
+    when:'삼각형 모양의 넓이를 구할 때', caution:'높이는 밑변과 수직인 선분이어야 한다', example:'밑변 8cm, 높이 5cm → 20cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'평행사변형 넓이', b:'밑변 × 높이', shape:'parallelogram',
+    when:'평행사변형 모양의 넓이를 구할 때', caution:'높이는 두 밑변 사이의 수직 거리(옆변 길이 아님)', example:'밑변 7cm, 높이 4cm → 28cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'마름모 넓이', b:'한 대각선 × 다른 대각선 ÷ 2', shape:'rhombus',
+    when:'마름모 모양의 넓이를 구할 때', caution:'두 대각선은 서로 수직으로 만나야 이 공식이 성립', example:'대각선 6cm, 8cm → 24cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'사다리꼴 넓이', b:'(윗변 + 아랫변) × 높이 ÷ 2', shape:'trapezoid',
+    when:'사다리꼴 모양의 넓이를 구할 때', caution:'윗변·아랫변은 서로 평행한 두 변', example:'윗변 3cm, 아랫변 7cm, 높이 4cm → 20cm²'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'직사각형 둘레', b:'(가로 + 세로) × 2', shape:'rect',
+    when:'직사각형 테두리 길이(울타리 등)를 구할 때', caution:'가로+세로를 먼저 더한 뒤 2를 곱한다', example:'가로 6cm, 세로 4cm → 20cm'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'정사각형 둘레', b:'한 변 × 4', shape:'square',
+    when:'정사각형 테두리 길이를 구할 때', caution:'네 변의 길이가 모두 같다는 것을 이용', example:'한 변 5cm → 20cm'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'삼각형 둘레', b:'세 변의 길이의 합', shape:'triangle',
+    when:'삼각형 테두리 길이를 구할 때', caution:'세 변의 길이를 모두 알아야 구할 수 있다', example:'3cm+4cm+5cm → 12cm'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'평행사변형 둘레', b:'(밑변 + 옆변) × 2', shape:'parallelogram',
+    when:'평행사변형 테두리 길이를 구할 때', caution:'옆변은 높이가 아니라 비스듬한 변의 실제 길이', example:'밑변 7cm, 옆변 5cm → 24cm'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'마름모 둘레', b:'한 변 × 4', shape:'rhombus',
+    when:'마름모 테두리 길이를 구할 때', caution:'네 변의 길이가 모두 같다는 것을 이용', example:'한 변 6cm → 24cm'},
+  {g:'초등', u:'도형의 둘레와 넓이', f:'사다리꼴 둘레', b:'네 변의 길이의 합', shape:'trapezoid',
+    when:'사다리꼴 테두리 길이를 구할 때', caution:'네 변의 길이를 모두 더해야 한다(윗변+아랫변만 X)', example:'3+7+5+5cm → 20cm'},
+  {g:'초등', u:'원', f:'원의 둘레 (원주)', b:'지름 × 3.14', shape:'circle',
+    when:'원 모양 테두리(운동장 트랙 등)의 길이를 구할 때', caution:'3.14는 원주율(π)의 어림값', example:'지름 10cm → 31.4cm'},
+  {g:'초등', u:'원', f:'원의 넓이', b:'반지름 × 반지름 × 3.14', shape:'circle',
+    when:'원 모양의 넓이를 구할 때', caution:'지름이 아니라 반지름을 두 번 곱한다', example:'반지름 5cm → 78.5cm²'},
+  {g:'초등', u:'입체도형의 부피', f:'직육면체의 부피', b:'가로 × 세로 × 높이', shape:'cuboid',
+    when:'상자 같은 직육면체의 부피를 구할 때', caution:'가로·세로·높이 세 길이를 모두 곱한다', example:'3×4×5cm → 60cm³'},
+  {g:'초등', u:'입체도형의 부피', f:'정육면체의 부피', b:'한 모서리 × 한 모서리 × 한 모서리', shape:'cube',
+    when:'정육면체(주사위 모양)의 부피를 구할 때', caution:'한 모서리를 세 번 곱한다(3배 아님)', example:'한 모서리 4cm → 64cm³'},
+  {g:'초등', u:'각도와 비율', f:'삼각형 세 각의 합', b:'180°',
+    when:'삼각형에서 모르는 한 각의 크기를 구할 때', caution:'삼각형 모양과 상관없이 항상 180°', example:'두 각이 50°,60° → 나머지 70°'},
+  {g:'초등', u:'각도와 비율', f:'사각형 네 각의 합', b:'360°',
+    when:'사각형에서 모르는 한 각의 크기를 구할 때', caution:'사각형은 삼각형 2개로 나뉘어서 180°×2', example:'세 각이 80°,90°,100° → 나머지 90°'},
+  {g:'초등', u:'각도와 비율', f:'비율(백분율)', b:'(비교하는 양 ÷ 기준량) × 100 (%)',
+    when:'전체 중 몇 %인지 구할 때', caution:'비교하는 양과 기준량을 바꾸지 않도록 주의', example:'20명 중 5명 → 25%'},
+  {g:'초등', u:'사각형의 성질', f:'직사각형', def:'네 각이 모두 직각인 사각형', shape:'rect',
     props:['마주보는 두 변의 길이가 같다','두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다']},
-  {g:'초등', f:'정사각형', def:'네 변의 길이가 모두 같고 네 각이 모두 직각인 사각형', shape:'square',
+  {g:'초등', u:'사각형의 성질', f:'정사각형', def:'네 변의 길이가 모두 같고 네 각이 모두 직각인 사각형', shape:'square',
     props:['두 대각선의 길이가 같다','두 대각선은 서로를 수직으로 이등분한다']},
-  {g:'초등', f:'평행사변형', def:'마주보는 두 쌍의 변이 서로 평행한 사각형', shape:'parallelogram',
+  {g:'초등', u:'사각형의 성질', f:'평행사변형', def:'마주보는 두 쌍의 변이 서로 평행한 사각형', shape:'parallelogram',
     props:['마주보는 변의 길이가 같다','마주보는 각의 크기가 같다','두 대각선은 서로를 이등분한다']},
-  {g:'초등', f:'마름모', def:'네 변의 길이가 모두 같은 사각형', shape:'rhombus',
+  {g:'초등', u:'사각형의 성질', f:'마름모', def:'네 변의 길이가 모두 같은 사각형', shape:'rhombus',
     props:['마주보는 각의 크기가 같다','이웃한 두 각의 합이 180°이다','두 대각선은 수직으로 만난다','두 대각선은 서로 다른 것을 이등분한다']},
-  {g:'초등', f:'사다리꼴', def:'한 쌍의 마주보는 변이 서로 평행한 사각형', shape:'trapezoid', props:[]},
+  {g:'초등', u:'사각형의 성질', f:'사다리꼴', def:'한 쌍의 마주보는 변이 서로 평행한 사각형', shape:'trapezoid', props:[]},
 
   /* ═══ 중1 — 소인수분해, 정수·유리수, 일차방정식, 평면·입체도형 ═══ */
-  {g:'중1', f:'소인수분해', b:'수를 소수들만의 곱으로 나타내기\n예) 12 = 2² × 3'},
-  {g:'중1', f:'최대공약수(GCD)', b:'공통인 소인수를 가장 작은 지수로 곱한다'},
-  {g:'중1', f:'최소공배수(LCM)', b:'모든 소인수를 가장 큰 지수로 곱한다'},
-  {g:'중1', f:'정수의 덧셈', b:'부호가 같으면 절댓값의 합에 같은 부호\n부호가 다르면 절댓값의 차에 큰 쪽 부호'},
-  {g:'중1', f:'일차방정식 풀이 순서', b:'괄호 풀기\n→ 이항(문자는 좌변, 수는 우변)\n→ 양변 정리\n→ 계수로 나누기'},
-  {g:'중1', f:'좌표평면의 사분면', b:'1사분면(+,+) · 2사분면(-,+)\n3사분면(-,-) · 4사분면(+,-)'},
-  {g:'중1', f:'정비례 관계식', b:'y = ax (a ≠ 0)'},
-  {g:'중1', f:'반비례 관계식', b:'y = a/x (a ≠ 0)'},
-  {g:'중1', f:'다각형 내각의 합', b:'180° × (n - 2)\n(n은 변의 개수)'},
-  {g:'중1', f:'다각형 외각의 합', b:'항상 360°'},
-  {g:'중1', f:'다각형의 대각선 개수', b:'n(n - 3) ÷ 2\n(n은 변의 개수)'},
-  {g:'중1', f:'원의 둘레 · 넓이', b:'둘레 = 2πr\n넓이 = πr²', shape:'circle'},
-  {g:'중1', f:'부채꼴의 넓이 (중심각 알 때)', b:'πr² × (x/360)\n(x는 중심각)', shape:'sector'},
-  {g:'중1', f:'부채꼴의 넓이 (중심각 모를 때)', b:'½ × r × l\n(l은 호의 길이)', shape:'sector'},
-  {g:'중1', f:'각기둥의 부피', b:'밑넓이 × 높이', shape:'prism'},
-  {g:'중1', f:'각뿔의 부피', b:'1/3 × 밑넓이 × 높이', shape:'pyramid'},
-  {g:'중1', f:'원기둥의 부피', b:'πr² × h', shape:'cylinder'},
-  {g:'중1', f:'원기둥의 겉넓이', b:'(밑넓이 × 2) + 옆넓이', shape:'cylinder'},
-  {g:'중1', f:'원뿔의 부피', b:'1/3 × πr² × h', shape:'cone'},
-  {g:'중1', f:'구의 겉넓이', b:'4πr²', shape:'sphere'},
-  {g:'중1', f:'구의 부피', b:'4/3 × πr³', shape:'sphere'},
+  {g:'중1', u:'소인수분해와 약수·배수', f:'소인수분해', b:'수를 소수들만의 곱으로 나타내기\n예) 12 = 2² × 3',
+    when:'어떤 수를 소수들의 곱으로 쪼갤 때(약수·배수 문제의 기초)', caution:'소수로만 쪼개야 하고, 같은 소수는 거듭제곱으로', example:'12 = 2² × 3'},
+  {g:'중1', u:'소인수분해와 약수·배수', f:'최대공약수(GCD)', b:'공통인 소인수를 가장 작은 지수로 곱한다',
+    when:'두 수 이상을 동시에 나누는 가장 큰 수를 구할 때(분수 약분 등)', caution:'공통 소인수를 작은 지수로 곱한다(큰 지수 아님)', example:'12,18의 GCD → 2×3=6'},
+  {g:'중1', u:'소인수분해와 약수·배수', f:'최소공배수(LCM)', b:'모든 소인수를 가장 큰 지수로 곱한다',
+    when:'두 수 이상의 공통 배수 중 가장 작은 수를 구할 때(분수 통분 등)', caution:'모든 소인수를 큰 지수로 곱한다', example:'4,6의 LCM → 2²×3=12'},
+  {g:'중1', u:'정수와 유리수', f:'정수의 덧셈', b:'부호가 같으면 절댓값의 합에 같은 부호\n부호가 다르면 절댓값의 차에 큰 쪽 부호',
+    when:'양수·음수가 섞인 덧셈을 계산할 때', caution:'부호가 다르면 큰 절댓값에서 작은 절댓값을 뺀다', example:'(+5)+(-8) → 절댓값 차 3, 큰쪽 부호 -3'},
+  {g:'중1', u:'일차방정식', f:'일차방정식 풀이 순서', b:'괄호 풀기\n→ 이항(문자는 좌변, 수는 우변)\n→ 양변 정리\n→ 계수로 나누기',
+    when:'x가 포함된 일차방정식의 해를 구할 때', caution:'이항할 때 부호가 바뀐다는 것을 꼭 기억', example:'2x+3=7 → 2x=4 → x=2'},
+  {g:'중1', u:'좌표평면과 그래프', f:'좌표평면의 사분면', b:'1사분면(+,+) · 2사분면(-,+)\n3사분면(-,-) · 4사분면(+,-)',
+    when:'점의 좌표만 보고 어느 사분면에 있는지 판단할 때', caution:'축 위의 점은 어느 사분면에도 속하지 않는다', example:'(-2,3) → 2사분면'},
+  {g:'중1', u:'좌표평면과 그래프', f:'정비례 관계식', b:'y = ax (a ≠ 0)',
+    when:'x가 커질수록 y도 같은 비율로 커지는 관계를 나타낼 때', caution:'그래프는 항상 원점을 지나는 직선', example:'시속 60km로 x시간 이동 → y=60x'},
+  {g:'중1', u:'좌표평면과 그래프', f:'반비례 관계식', b:'y = a/x (a ≠ 0)',
+    when:'x가 커질수록 y가 같은 비율로 작아지는 관계를 나타낼 때', caution:'그래프는 원점을 지나지 않는 곡선', example:'거리 120km를 시속 x로 → y=120/x'},
+  {g:'중1', u:'다각형의 성질', f:'다각형 내각의 합', b:'180° × (n - 2)\n(n은 변의 개수)',
+    when:'다각형의 안쪽 각의 합, 또는 모르는 한 각을 구할 때', caution:'n은 변의 개수(꼭짓점 개수와 같음)', example:'오각형(n=5) → 180×3=540°'},
+  {g:'중1', u:'다각형의 성질', f:'다각형 외각의 합', b:'항상 360°',
+    when:'다각형의 바깥쪽 각의 합을 구할 때', caution:'변의 개수와 상관없이 항상 360°', example:'정육각형 한 외각 → 360÷6=60°'},
+  {g:'중1', u:'다각형의 성질', f:'다각형의 대각선 개수', b:'n(n - 3) ÷ 2\n(n은 변의 개수)',
+    when:'다각형에서 그을 수 있는 대각선 총 개수를 구할 때', caution:'한 꼭짓점에서 그은 대각선 (n-3)개를 이용', example:'육각형(n=6) → 6×3÷2=9개'},
+  {g:'중1', u:'원과 부채꼴', f:'원의 둘레 · 넓이', b:'둘레 = 2πr\n넓이 = πr²', shape:'circle',
+    when:'원 모양의 둘레(원주)나 넓이를 구할 때', caution:'π(파이)는 3.14가 아니라 문자 그대로 둔다', example:'반지름 5cm → 둘레 10π, 넓이 25π'},
+  {g:'중1', u:'원과 부채꼴', f:'부채꼴의 넓이 (중심각 알 때)', b:'πr² × (x/360)\n(x는 중심각)', shape:'sector',
+    when:'부채꼴의 중심각을 알고 있을 때 넓이를 구함', caution:'중심각이 전체 360°에서 차지하는 비율만큼만', example:'r=6,x=60° → 36π×(60/360)=6π'},
+  {g:'중1', u:'원과 부채꼴', f:'부채꼴의 넓이 (중심각 모를 때)', b:'½ × r × l\n(l은 호의 길이)', shape:'sector',
+    when:'중심각은 모르지만 호의 길이 l을 알 때', caution:'원의 넓이 공식(πr²)과 혼동하지 않도록', example:'r=6,l=2π → ½×6×2π=6π'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'각기둥의 부피', b:'밑넓이 × 높이', shape:'prism',
+    when:'삼각기둥·사각기둥 등 각기둥의 부피를 구할 때', caution:'밑넓이는 밑면 하나의 넓이(위+아래 아님)', example:'밑넓이 12cm², 높이 5cm → 60cm³'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'각뿔의 부피', b:'1/3 × 밑넓이 × 높이', shape:'pyramid',
+    when:'각뿔의 부피를 구할 때', caution:'같은 밑넓이·높이의 각기둥의 1/3', example:'밑넓이 12cm², 높이 6cm → 24cm³'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'원기둥의 부피', b:'πr² × h', shape:'cylinder',
+    when:'원기둥 모양(통조림 등)의 부피를 구할 때', caution:'r은 밑면의 반지름, h는 높이', example:'r=3,h=10 → 90π'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'원기둥의 겉넓이', b:'(밑넓이 × 2) + 옆넓이', shape:'cylinder',
+    when:'원기둥의 겉면 전체 넓이를 구할 때', caution:'밑넓이는 위·아래 두 개이므로 ×2', example:'밑넓이 9π, 옆넓이 60π → 78π'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'원뿔의 부피', b:'1/3 × πr² × h', shape:'cone',
+    when:'원뿔(고깔) 모양의 부피를 구할 때', caution:'같은 밑넓이·높이의 원기둥의 1/3', example:'r=3,h=6 → 1/3×9π×6=18π'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'구의 겉넓이', b:'4πr²', shape:'sphere',
+    when:'공 모양의 겉면 넓이를 구할 때', caution:'반지름을 두 번 곱한 뒤 4π를 곱한다', example:'r=3 → 4π×9=36π'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'구의 부피', b:'4/3 × πr³', shape:'sphere',
+    when:'공 모양의 부피를 구할 때', caution:'반지름을 세 번 곱한 뒤 4/3×π를 곱한다', example:'r=3 → 4/3×π×27=36π'},
 
   /* ═══ 중2 — 지수법칙·식의 계산, 부등식·연립방정식, 일차함수, 도형의 성질 ═══ */
-  {g:'중2', f:'지수법칙 — 곱셈', b:'aᵐ × aⁿ = aᵐ⁺ⁿ'},
-  {g:'중2', f:'지수법칙 — 나눗셈', b:'aᵐ ÷ aⁿ = aᵐ⁻ⁿ (m > n)'},
-  {g:'중2', f:'지수법칙 — 거듭제곱', b:'(aᵐ)ⁿ = aᵐⁿ'},
-  {g:'중2', f:'다항식의 덧셈·뺄셈', b:'동류항끼리만 더하고 뺀다'},
-  {g:'중2', f:'연립방정식 풀이', b:'대입법 또는 가감법으로\n한 문자를 없애고 푼다'},
-  {g:'중2', f:'일차부등식의 성질', b:'양변에 음수를 곱하거나 나누면\n부등호 방향이 바뀐다'},
-  {g:'중2', f:'일차함수의 기울기', b:'y의 증가량 ÷ x의 증가량'},
-  {g:'중2', f:'일차함수의 절편', b:'x절편: y = 0을 대입해서 구한다\ny절편: x = 0을 대입해서 구한다'},
-  {g:'중2', f:'삼각형의 닮음 조건', b:'SSS닮음 · SAS닮음 · AA닮음'},
-  {g:'중2', f:'삼각형의 중점연결정리', b:'두 변의 중점을 이은 선분은\n나머지 한 변과 평행하고\n길이는 그 변의 절반이다'},
-  {g:'중2', f:'피타고라스 정리', b:'a² + b² = c²\n(c는 직각삼각형의 빗변)', shape:'rightTriangle'},
-  {g:'중2', f:'확률 구하기', b:'(사건이 일어나는 경우의 수)\n÷ (모든 경우의 수)'},
-  {g:'중2', f:'삼각형 내각의 합', b:'180°'},
-  {g:'중2', f:'평행사변형이 되는 조건', def:'아래 중 하나만 만족해도 평행사변형이다', shape:'parallelogram', props:[
+  {g:'중2', u:'지수법칙과 다항식의 계산', f:'지수법칙 — 곱셈', b:'aᵐ × aⁿ = aᵐ⁺ⁿ',
+    when:'밑이 같은 거듭제곱끼리 곱할 때', caution:'밑이 같을 때만 사용 가능, 지수끼리 더한다(곱하기 X)', example:'a²×a³ → a⁵'},
+  {g:'중2', u:'지수법칙과 다항식의 계산', f:'지수법칙 — 나눗셈', b:'aᵐ ÷ aⁿ = aᵐ⁻ⁿ (m > n)',
+    when:'밑이 같은 거듭제곱끼리 나눌 때', caution:'m>n일 때 성립, 지수끼리 뺀다', example:'a⁵÷a² → a³'},
+  {g:'중2', u:'지수법칙과 다항식의 계산', f:'지수법칙 — 거듭제곱', b:'(aᵐ)ⁿ = aᵐⁿ',
+    when:'거듭제곱을 다시 거듭제곱할 때', caution:'지수끼리 곱한다(더하기 X)', example:'(a²)³ → a⁶'},
+  {g:'중2', u:'지수법칙과 다항식의 계산', f:'다항식의 덧셈·뺄셈', b:'동류항끼리만 더하고 뺀다',
+    when:'문자식끼리 더하거나 뺄 때', caution:'문자와 차수가 같은 동류항끼리만 계산', example:'3x+2y-x+y → 2x+3y'},
+  {g:'중2', u:'연립방정식과 부등식', f:'연립방정식 풀이', b:'대입법 또는 가감법으로\n한 문자를 없애고 푼다',
+    when:'미지수가 2개인 두 방정식을 동시에 풀 때', caution:'한 문자를 없애는 게 목표 — 어느 방법이든 상관없다', example:'x+y=5, x-y=1 → x=3,y=2'},
+  {g:'중2', u:'연립방정식과 부등식', f:'일차부등식의 성질', b:'양변에 음수를 곱하거나 나누면\n부등호 방향이 바뀐다',
+    when:'부등식 양변에 수를 곱하거나 나눌 때', caution:'음수를 곱하거나 나눌 때만 부등호 방향이 바뀐다', example:'-2x<6 → x>-3'},
+  {g:'중2', u:'일차함수', f:'일차함수의 기울기', b:'y의 증가량 ÷ x의 증가량',
+    when:'일차함수 그래프가 얼마나 가파른지 구할 때', caution:'x의 증가량으로 y의 증가량을 나눈다(반대 X)', example:'(1,2)→(3,6) → 기울기 2'},
+  {g:'중2', u:'일차함수', f:'일차함수의 절편', b:'x절편: y = 0을 대입해서 구한다\ny절편: x = 0을 대입해서 구한다',
+    when:'그래프가 x축·y축과 만나는 점을 구할 때', caution:'x절편은 y=0, y절편은 x=0을 대입', example:'y=2x-4 → x절편2, y절편-4'},
+  {g:'중2', u:'도형의 닮음과 성질', f:'삼각형의 닮음 조건', b:'SSS닮음 · SAS닮음 · AA닮음',
+    when:'두 삼각형이 닮음인지 판단할 때', caution:'세 조건 중 하나만 만족해도 닮음이다', example:'대응변 비율이 모두 2:1이면 SSS닮음'},
+  {g:'중2', u:'도형의 닮음과 성질', f:'삼각형의 중점연결정리', b:'두 변의 중점을 이은 선분은\n나머지 한 변과 평행하고\n길이는 그 변의 절반이다',
+    when:'삼각형에서 두 변의 중점을 이은 선분의 길이·평행 관계를 구할 때', caution:'반드시 "두 변의 중점"을 이은 선분이어야 성립', example:'밑변 10cm → 중점을 이은 선분 5cm'},
+  {g:'중2', u:'도형의 닮음과 성질', f:'피타고라스 정리', b:'a² + b² = c²\n(c는 직각삼각형의 빗변)', shape:'rightTriangle',
+    when:'직각삼각형에서 한 변의 길이를 구할 때', caution:'c는 반드시 직각과 마주보는 가장 긴 변(빗변)', example:'a=3,b=4 → c=5'},
+  {g:'중2', u:'도형의 닮음과 성질', f:'삼각형 내각의 합', b:'180°',
+    when:'삼각형에서 모르는 한 각을 구할 때', caution:'삼각형 모양과 상관없이 항상 180°', example:'두 각 40°,70° → 나머지 70°'},
+  {g:'중2', u:'확률', f:'확률 구하기', b:'(사건이 일어나는 경우의 수)\n÷ (모든 경우의 수)',
+    when:'어떤 사건이 일어날 가능성을 수로 나타낼 때', caution:'분모는 일어날 수 있는 모든 경우의 수', example:'주사위에서 짝수 → 3/6=1/2'},
+  {g:'중2', u:'사각형과 삼각형의 성질', f:'평행사변형이 되는 조건', def:'아래 중 하나만 만족해도 평행사변형이다', shape:'parallelogram', props:[
     '두 쌍의 대변이 각각 평행하다','두 쌍의 대변의 길이가 각각 같다','두 쌍의 대각의 크기가 각각 같다',
     '한 쌍의 대변이 평행하고 길이가 같다','두 대각선이 서로를 이등분한다']},
-  {g:'중2', f:'직사각형의 성질', def:'평행사변형의 성질 + 아래', shape:'rect', props:['두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다']},
-  {g:'중2', f:'마름모의 성질', def:'평행사변형의 성질 + 아래', shape:'rhombus', props:['두 대각선은 서로 다른 것을 수직으로 이등분한다']},
-  {g:'중2', f:'이등변삼각형의 성질', def:'두 변의 길이가 같은 삼각형', shape:'isoTriangle', props:['두 밑각의 크기가 같다','꼭지각의 이등분선은 밑변을 수직으로 이등분한다']},
+  {g:'중2', u:'사각형과 삼각형의 성질', f:'직사각형의 성질', def:'평행사변형의 성질 + 아래', shape:'rect', props:['두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다']},
+  {g:'중2', u:'사각형과 삼각형의 성질', f:'마름모의 성질', def:'평행사변형의 성질 + 아래', shape:'rhombus', props:['두 대각선은 서로 다른 것을 수직으로 이등분한다']},
+  {g:'중2', u:'사각형과 삼각형의 성질', f:'이등변삼각형의 성질', def:'두 변의 길이가 같은 삼각형', shape:'isoTriangle', props:['두 밑각의 크기가 같다','꼭지각의 이등분선은 밑변을 수직으로 이등분한다']},
 
   /* ═══ 중3 — 제곱근·곱셈공식·인수분해, 이차방정식·이차함수, 삼각비·원의 성질 ═══ */
-  {g:'중3', f:'제곱근의 성질', b:'√a² = |a|\n√a × √b = √(ab)'},
-  {g:'중3', f:'곱셈공식 — 완전제곱식', b:'(a ± b)² = a² ± 2ab + b²'},
-  {g:'중3', f:'곱셈공식 — 합차공식', b:'(a+b)(a-b) = a² - b²'},
-  {g:'중3', f:'곱셈공식 — 일차식의 곱', b:'(x+a)(x+b) = x² + (a+b)x + ab'},
-  {g:'중3', f:'곱셈공식 — 세 항의 제곱', b:'(a+b+c)² = a²+b²+c²+2ab+2bc+2ca'},
-  {g:'중3', f:'곱셈공식 — 세제곱의 합', b:'a³+b³ = (a+b)(a²-ab+b²)'},
-  {g:'중3', f:'곱셈공식 — 세제곱의 차', b:'a³-b³ = (a-b)(a²+ab+b²)'},
-  {g:'중3', f:'인수분해 — 완전제곱식', b:'a² ± 2ab + b² = (a ± b)²'},
-  {g:'중3', f:'인수분해 — 합차공식', b:'a² - b² = (a+b)(a-b)'},
-  {g:'중3', f:'인수분해 — 공통인수', b:'ma + mb + mc = m(a+b+c)\n먼저 공통인수부터 묶는다'},
-  {g:'중3', f:'인수분해 — 치환', b:'반복되는 부분을 한 문자로\n바꿔서 인수분해한 뒤 되돌린다'},
-  {g:'중3', f:'이차방정식의 근의 공식', b:'x = (-b ± √(b²-4ac)) / 2a'},
-  {g:'중3', f:'이차함수의 꼭짓점', b:'y = a(x-p)² + q 의 꼭짓점은 (p, q)'},
-  {g:'중3', f:'이차함수의 축', b:'축의 방정식은 x = p'},
-  {g:'중3', f:'삼각비', b:'sin = 높이 ÷ 빗변\ncos = 밑변 ÷ 빗변\ntan = 높이 ÷ 밑변'},
-  {g:'중3', f:'원과 접선의 성질', b:'접선은 그 접점을 지나는\n반지름과 서로 수직이다'},
-  {g:'중3', f:'원주각의 성질', b:'한 호에 대한 원주각은\n중심각의 절반이다'},
-  {g:'중3', f:'대푯값 — 평균', b:'(자료 값의 합) ÷ (자료의 개수)'},
+  {g:'중3', u:'제곱근과 실수', f:'제곱근의 성질', b:'√a² = |a|\n√a × √b = √(ab)',
+    when:'제곱근이 있는 식을 계산하거나 간단히 할 때', caution:'√a²=a가 아니라 |a|(절댓값)', example:'√(-3)² → |-3|=3'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 완전제곱식', b:'(a ± b)² = a² ± 2ab + b²',
+    when:'(a±b)² 꼴을 전개할 때', caution:'가운데 항 2ab의 부호를 놓치지 않기', example:'(x+3)² → x²+6x+9'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 합차공식', b:'(a+b)(a-b) = a² - b²',
+    when:'(a+b)(a-b) 꼴을 전개할 때', caution:'가운데 항이 사라지고 제곱의 차만 남는다', example:'(x+2)(x-2) → x²-4'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 일차식의 곱', b:'(x+a)(x+b) = x² + (a+b)x + ab',
+    when:'(x+a)(x+b) 꼴을 전개할 때', caution:'가운데 항은 a+b, 상수항은 a×b', example:'(x+2)(x+3) → x²+5x+6'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 세 항의 제곱', b:'(a+b+c)² = a²+b²+c²+2ab+2bc+2ca',
+    when:'(a+b+c)² 꼴을 전개할 때', caution:'제곱 3개 + 서로 곱한 것 2배씩 3쌍', example:'(x+y+1)² → x²+y²+1+2xy+2y+2x'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 세제곱의 합', b:'a³+b³ = (a+b)(a²-ab+b²)',
+    when:'a³+b³을 인수분해하거나 전개할 때', caution:'가운데 부호가 -ab로 바뀐다는 점 주의', example:'x³+8 → (x+2)(x²-2x+4)'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'곱셈공식 — 세제곱의 차', b:'a³-b³ = (a-b)(a²+ab+b²)',
+    when:'a³-b³을 인수분해하거나 전개할 때', caution:'가운데 부호가 +ab로 바뀐다는 점 주의', example:'x³-8 → (x-2)(x²+2x+4)'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'인수분해 — 완전제곱식', b:'a² ± 2ab + b² = (a ± b)²',
+    when:'a²±2ab+b² 꼴을 곱의 형태로 바꿀 때', caution:'가운데 항이 2×(첫항)×(둘째항)인지 확인', example:'x²+6x+9 → (x+3)²'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'인수분해 — 합차공식', b:'a² - b² = (a+b)(a-b)',
+    when:'a²-b² 꼴을 곱의 형태로 바꿀 때', caution:'두 항 모두 제곱 꼴이어야 적용 가능', example:'x²-9 → (x+3)(x-3)'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'인수분해 — 공통인수', b:'ma + mb + mc = m(a+b+c)\n먼저 공통인수부터 묶는다',
+    when:'모든 항에 공통으로 들어있는 문자·수를 뺄 때', caution:'인수분해의 가장 먼저 확인해야 하는 기본 단계', example:'2x²+4x → 2x(x+2)'},
+  {g:'중3', u:'곱셈공식과 인수분해', f:'인수분해 — 치환', b:'반복되는 부분을 한 문자로\n바꿔서 인수분해한 뒤 되돌린다',
+    when:'같은 식이 반복될 때 복잡한 식을 간단히 만들 때', caution:'치환 후 인수분해하고 원래 문자로 꼭 되돌리기', example:'(x+1)²-5(x+1)+6 → t=x+1로 치환'},
+  {g:'중3', u:'이차방정식과 이차함수', f:'이차방정식의 근의 공식', b:'x = (-b ± √(b²-4ac)) / 2a',
+    when:'인수분해가 안 되는 이차방정식을 풀 때', caution:'루트 안(판별식)이 음수면 실근이 없다', example:'x²+3x+1=0 → x=(-3±√5)/2'},
+  {g:'중3', u:'이차방정식과 이차함수', f:'이차함수의 꼭짓점', b:'y = a(x-p)² + q 의 꼭짓점은 (p, q)',
+    when:'이차함수 그래프의 꼭짓점 좌표를 구할 때', caution:'p의 부호에 주의(x-p이므로 +p가 아니라 p)', example:'y=(x-2)²+3 → 꼭짓점(2,3)'},
+  {g:'중3', u:'이차방정식과 이차함수', f:'이차함수의 축', b:'축의 방정식은 x = p',
+    when:'이차함수 그래프의 대칭축을 구할 때', caution:'축은 항상 꼭짓점을 지나는 세로선', example:'y=(x-2)²+3 → 축 x=2'},
+  {g:'중3', u:'삼각비', f:'삼각비', b:'sin = 높이 ÷ 빗변\ncos = 밑변 ÷ 빗변\ntan = 높이 ÷ 밑변',
+    when:'직각삼각형의 변의 길이나 각을 구할 때', caution:'세 비 모두 직각을 낀 변 기준으로 정의', example:'높이3, 빗변5 → sin=3/5'},
+  {g:'중3', u:'원의 성질', f:'원과 접선의 성질', b:'접선은 그 접점을 지나는\n반지름과 서로 수직이다',
+    when:'원의 접선과 관련된 각·길이를 구할 때', caution:'접점을 지나는 반지름과 접선은 항상 수직', example:'접선과 반지름 사이 각 → 90°'},
+  {g:'중3', u:'원의 성질', f:'원주각의 성질', b:'한 호에 대한 원주각은\n중심각의 절반이다',
+    when:'원에서 원주각과 중심각의 관계를 이용할 때', caution:'같은 호에 대한 원주각끼리는 서로 같다', example:'중심각 80° → 원주각 40°'},
+  {g:'중3', u:'통계', f:'대푯값 — 평균', b:'(자료 값의 합) ÷ (자료의 개수)',
+    when:'자료 전체를 대표하는 값을 구할 때', caution:'극단적인 값(이상치)에 영향을 크게 받는다', example:'2,4,6,8 → 평균 5'},
 
   /* ═══ 공통수학1 — 다항식·방정식·부등식, 경우의 수, 행렬 ═══ */
-  {g:'공통수학1', f:'곱셈공식 — 세제곱', b:'(a±b)³ = a³±3a²b+3ab²±b³'},
-  {g:'공통수학1', f:'나머지정리', b:'P(x)를 (x-a)로 나눈 나머지 = P(a)'},
-  {g:'공통수학1', f:'인수정리', b:'P(a) = 0 이면\n(x-a)는 P(x)의 인수다'},
-  {g:'공통수학1', f:'조립제법', b:'고차식을 (x-a)로 나눌 때\n계수만으로 몫과 나머지를 구하는 방법'},
-  {g:'공통수학1', f:'복소수의 계산', b:'i² = -1\n(a+bi)(a-bi) = a²+b²'},
-  {g:'공통수학1', f:'이차방정식 — 근과 계수의 관계', b:'두 근의 합 = -b/a\n두 근의 곱 = c/a'},
-  {g:'공통수학1', f:'이차방정식의 판별식', b:'D = b²-4ac\nD>0: 서로 다른 두 실근\nD=0: 중근 · D<0: 서로 다른 두 허근'},
-  {g:'공통수학1', f:'이차함수와 이차방정식', b:'D>0: x축과 두 점에서 만난다\nD=0: 한 점(접한다) · D<0: 만나지 않는다'},
-  {g:'공통수학1', f:'순열', b:'ₙPᵣ = n! / (n-r)!'},
-  {g:'공통수학1', f:'조합', b:'ₙCᵣ = n! / (r!(n-r)!)'},
-  {g:'공통수학1', f:'2×2 행렬의 곱셈', def:'행 성분과 열 성분을 각각 곱해서 더한다', props:[]},
+  {g:'공통수학1', u:'다항식의 연산', f:'곱셈공식 — 세제곱', b:'(a±b)³ = a³±3a²b+3ab²±b³',
+    when:'(a±b)³ 꼴을 전개할 때', caution:'항이 4개, 계수는 1-3-3-1(파스칼)', example:'(x+1)³ → x³+3x²+3x+1'},
+  {g:'공통수학1', u:'다항식의 연산', f:'나머지정리', b:'P(x)를 (x-a)로 나눈 나머지 = P(a)',
+    when:'다항식을 (x-a)로 나눈 나머지를 직접 나눗셈 없이 구할 때', caution:'x-a=0이 되는 값 a를 대입', example:'P(x)=x²+1을 x-2로 → P(2)=5'},
+  {g:'공통수학1', u:'다항식의 연산', f:'인수정리', b:'P(a) = 0 이면\n(x-a)는 P(x)의 인수다',
+    when:'다항식이 (x-a)로 나누어떨어지는지 확인할 때', caution:'P(a)=0이면 인수, 아니면 인수가 아니다', example:'P(1)=0 → (x-1)은 P(x)의 인수'},
+  {g:'공통수학1', u:'다항식의 연산', f:'조립제법', b:'고차식을 (x-a)로 나눌 때\n계수만으로 몫과 나머지를 구하는 방법',
+    when:'다항식을 (x-a)로 빠르게 나눌 때', caution:'계수를 빠짐없이 순서대로(생략된 항은 0)', example:'x³-2x+1을 x-1로 나누기'},
+  {g:'공통수학1', u:'복소수와 이차방정식', f:'복소수의 계산', b:'i² = -1\n(a+bi)(a-bi) = a²+b²',
+    when:'루트 안이 음수인 방정식을 풀거나 복소수를 계산할 때', caution:'i²=-1로 바꿔서 정리하는 게 핵심', example:'(2+i)(2-i) → 4+1=5'},
+  {g:'공통수학1', u:'복소수와 이차방정식', f:'이차방정식 — 근과 계수의 관계', b:'두 근의 합 = -b/a\n두 근의 곱 = c/a',
+    when:'두 근을 직접 구하지 않고 합·곱만 필요할 때', caution:'부호 주의: 합은 -b/a, 곱은 +c/a', example:'x²-5x+6=0 → 합5, 곱6'},
+  {g:'공통수학1', u:'복소수와 이차방정식', f:'이차방정식의 판별식', b:'D = b²-4ac\nD>0: 서로 다른 두 실근\nD=0: 중근 · D<0: 서로 다른 두 허근',
+    when:'실제로 풀지 않고 근의 개수·종류만 알고 싶을 때', caution:'D=0도 "서로 다른 두 근"이 아니라 중근 1개', example:'x²-4x+4=0 → D=0, 중근'},
+  {g:'공통수학1', u:'이차함수와 이차방정식의 관계', f:'이차함수와 이차방정식', b:'D>0: x축과 두 점에서 만난다\nD=0: 한 점(접한다) · D<0: 만나지 않는다',
+    when:'그래프가 x축과 몇 번 만나는지 판단할 때', caution:'판별식 D의 부호로 그대로 판단', example:'D>0 → x축과 두 점에서 만남'},
+  {g:'공통수학1', u:'경우의 수', f:'순열', b:'ₙPᵣ = n! / (n-r)!',
+    when:'순서를 구별해서 n개 중 r개를 뽑아 나열할 때', caution:'뽑는 순서가 다르면 다른 경우로 센다', example:'5명 중 2명을 줄세우기 → ₅P₂=20'},
+  {g:'공통수학1', u:'경우의 수', f:'조합', b:'ₙCᵣ = n! / (r!(n-r)!)',
+    when:'순서 상관없이 n개 중 r개를 뽑을 때', caution:'순열을 r!로 나눠서 순서 중복을 없앤다', example:'5명 중 2명 뽑기(순서X) → ₅C₂=10'},
+  {g:'공통수학1', u:'행렬', f:'2×2 행렬의 곱셈', def:'행 성분과 열 성분을 각각 곱해서 더한다', props:[]},
 
   /* ═══ 공통수학2 — 도형의 방정식, 집합과 명제, 함수 ═══ */
-  {g:'공통수학2', f:'두 점 사이의 거리', b:'√((x₂-x₁)² + (y₂-y₁)²)'},
-  {g:'공통수학2', f:'선분의 내분점', b:'( (mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n) )'},
-  {g:'공통수학2', f:'두 직선의 평행·수직', b:'평행: 기울기가 같다 (m₁=m₂)\n수직: 기울기의 곱이 -1 (m₁×m₂=-1)'},
-  {g:'공통수학2', f:'점과 직선 사이의 거리', b:'|ax₀+by₀+c| / √(a²+b²)'},
-  {g:'공통수학2', f:'원의 방정식', b:'중심(a,b), 반지름 r\n(x-a)² + (y-b)² = r²'},
-  {g:'공통수학2', f:'대칭이동', b:'x축 대칭: (x,-y) · y축 대칭: (-x,y)\n원점 대칭: (-x,-y) · y=x 대칭: (y,x)'},
-  {g:'공통수학2', f:'집합의 원소 개수', b:'부분집합의 개수 = 2ⁿ\n(n은 원소의 개수)'},
-  {g:'공통수학2', f:'유리함수의 그래프', b:'y = k/(x-p) + q\n점근선: x=p, y=q'},
+  {g:'공통수학2', u:'도형의 방정식', f:'두 점 사이의 거리', b:'√((x₂-x₁)² + (y₂-y₁)²)',
+    when:'좌표평면 위 두 점 사이의 거리를 구할 때', caution:'피타고라스 정리를 좌표에 적용한 것', example:'(0,0),(3,4) → 거리5'},
+  {g:'공통수학2', u:'도형의 방정식', f:'선분의 내분점', b:'( (mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n) )',
+    when:'선분을 m:n으로 나누는 점의 좌표를 구할 때', caution:'분모는 m+n, x와 y 각각 같은 방식으로', example:'(0,0),(6,0)을 1:2내분 → (2,0)'},
+  {g:'공통수학2', u:'도형의 방정식', f:'두 직선의 평행·수직', b:'평행: 기울기가 같다 (m₁=m₂)\n수직: 기울기의 곱이 -1 (m₁×m₂=-1)',
+    when:'두 직선이 평행인지 수직인지 판단할 때', caution:'수직은 기울기의 곱이 -1(단순히 다르다 X)', example:'기울기2와 -1/2 → 수직'},
+  {g:'공통수학2', u:'도형의 방정식', f:'점과 직선 사이의 거리', b:'|ax₀+by₀+c| / √(a²+b²)',
+    when:'한 점에서 직선까지의 최단 거리를 구할 때', caution:'직선을 ax+by+c=0 꼴로 먼저 정리', example:'점(0,0), 직선x+y-2=0 → √2'},
+  {g:'공통수학2', u:'도형의 방정식', f:'원의 방정식', b:'중심(a,b), 반지름 r\n(x-a)² + (y-b)² = r²',
+    when:'중심과 반지름이 주어진 원을 식으로 나타낼 때', caution:'중심 좌표의 부호가 바뀐다((x-a) 형태)', example:'중심(1,2),r=3 → (x-1)²+(y-2)²=9'},
+  {g:'공통수학2', u:'도형의 방정식', f:'대칭이동', b:'x축 대칭: (x,-y) · y축 대칭: (-x,y)\n원점 대칭: (-x,-y) · y=x 대칭: (y,x)',
+    when:'점이나 도형을 축이나 원점에 대칭시킬 때', caution:'어느 축인지에 따라 바뀌는 좌표가 다르다', example:'(2,3)을 x축 대칭 → (2,-3)'},
+  {g:'공통수학2', u:'집합과 명제', f:'집합의 원소 개수', b:'부분집합의 개수 = 2ⁿ\n(n은 원소의 개수)',
+    when:'집합의 부분집합이 몇 개인지 구할 때', caution:'공집합과 자기 자신도 부분집합에 포함', example:'원소3개 → 부분집합 2³=8개'},
+  {g:'공통수학2', u:'함수', f:'유리함수의 그래프', b:'y = k/(x-p) + q\n점근선: x=p, y=q',
+    when:'분수 꼴 함수의 그래프와 점근선을 구할 때', caution:'점근선은 분모가 0이 되는 x=p와 y=q', example:'y=1/(x-2)+3 → 점근선 x=2,y=3'},
 
   /* ═══ 대수 — 지수·로그, 삼각함수, 수열 ═══ */
-  {g:'대수', f:'로그의 정의', b:'logₐN = x ⇔ aˣ = N'},
-  {g:'대수', f:'로그의 성질', b:'logₐ(MN) = logₐM + logₐN\nlogₐ(M/N) = logₐM - logₐN\nlogₐMᵏ = k·logₐM'},
-  {g:'대수', f:'삼각함수의 기본 관계', b:'sin²θ + cos²θ = 1\ntanθ = sinθ / cosθ'},
-  {g:'대수', f:'사인법칙', b:'a/sinA = b/sinB = c/sinC = 2R\n(R은 외접원의 반지름)'},
-  {g:'대수', f:'코사인법칙', b:'a² = b² + c² - 2bc·cosA'},
-  {g:'대수', f:'등차수열', b:'일반항: aₙ = a₁+(n-1)d\n합: Sₙ = n(a₁+aₙ)/2'},
-  {g:'대수', f:'등비수열', b:'일반항: aₙ = a₁rⁿ⁻¹\n합: Sₙ = a₁(rⁿ-1)/(r-1)'},
+  {g:'대수', u:'지수와 로그', f:'로그의 정의', b:'logₐN = x ⇔ aˣ = N',
+    when:'지수 형태의 식을 로그로, 또는 그 반대로 바꿀 때', caution:'밑 a는 1이 아닌 양수여야 정의된다', example:'2³=8 ⇔ log₂8=3'},
+  {g:'대수', u:'지수와 로그', f:'로그의 성질', b:'logₐ(MN) = logₐM + logₐN\nlogₐ(M/N) = logₐM - logₐN\nlogₐMᵏ = k·logₐM',
+    when:'로그가 포함된 식을 계산하거나 간단히 할 때', caution:'곱은 덧셈으로, 나눗셈은 뺄셈으로 바뀐다', example:'log₂4+log₂8 → log₂32=5'},
+  {g:'대수', u:'삼각함수', f:'삼각함수의 기본 관계', b:'sin²θ + cos²θ = 1\ntanθ = sinθ / cosθ',
+    when:'sin,cos,tan 중 하나만 알 때 나머지를 구할 때', caution:'sin²θ+cos²θ=1은 항상 성립하는 항등식', example:'sinθ=3/5 → cosθ=4/5(1사분면)'},
+  {g:'대수', u:'삼각함수', f:'사인법칙', b:'a/sinA = b/sinB = c/sinC = 2R\n(R은 외접원의 반지름)',
+    when:'삼각형에서 각과 변의 관계, 외접원 반지름을 구할 때', caution:'"변÷대응하는 각의 sin"이 모두 같다', example:'a=6,sinA=1/2 → 2R=12'},
+  {g:'대수', u:'삼각함수', f:'코사인법칙', b:'a² = b² + c² - 2bc·cosA',
+    when:'두 변과 그 사이 각으로 나머지 변을 구할 때', caution:'구하려는 변과 마주보는 각의 cos을 사용', example:'b=3,c=4,A=60° → a²=13'},
+  {g:'대수', u:'수열', f:'등차수열', b:'일반항: aₙ = a₁+(n-1)d\n합: Sₙ = n(a₁+aₙ)/2',
+    when:'일정하게 더해지는 수열의 일반항이나 합을 구할 때', caution:'d는 공차(뒤항-앞항), 첫째항 a₁부터 센다', example:'2,5,8,... → aₙ=3n-1'},
+  {g:'대수', u:'수열', f:'등비수열', b:'일반항: aₙ = a₁rⁿ⁻¹\n합: Sₙ = a₁(rⁿ-1)/(r-1)',
+    when:'일정하게 곱해지는 수열의 일반항이나 합을 구할 때', caution:'r은 공비(뒤항÷앞항), r=1이면 별도 공식', example:'2,6,18,... → aₙ=2×3ⁿ⁻¹'},
 
   /* ═══ 미적분Ⅰ — 함수의 극한과 연속, 미분, 적분 ═══ */
-  {g:'미적분Ⅰ', f:'미분계수의 정의', b:'lim[h→0] (f(a+h)-f(a)) / h'},
-  {g:'미적분Ⅰ', f:'다항함수의 미분법', b:'(xⁿ)′ = nxⁿ⁻¹\n(c)′ = 0 (c는 상수)'},
-  {g:'미적분Ⅰ', f:'함수의 증가·감소', b:"f'(x) > 0 인 구간: 증가\nf'(x) < 0 인 구간: 감소"},
-  {g:'미적분Ⅰ', f:'극대·극소의 판정', b:"f'(x)가 +→- 로 바뀌면 극대\nf'(x)가 -→+ 로 바뀌면 극소"},
-  {g:'미적분Ⅰ', f:'접선의 방정식', b:'y - f(a) = f′(a)(x - a)'},
-  {g:'미적분Ⅰ', f:'부정적분', b:'∫xⁿdx = xⁿ⁺¹/(n+1) + C (n ≠ -1)'},
-  {g:'미적분Ⅰ', f:'미적분의 기본정리', b:'∫[a,b] f(x)dx = F(b) - F(a)'},
-  {g:'미적분Ⅰ', f:'정적분으로 넓이 구하기', b:'두 곡선 사이의 넓이\n= ∫[a,b] |f(x)-g(x)| dx'},
+  {g:'미적분Ⅰ', u:'함수의 극한과 미분', f:'미분계수의 정의', b:'lim[h→0] (f(a+h)-f(a)) / h',
+    when:'한 점에서 함수의 순간변화율(기울기)을 정의할 때', caution:'극한값이 존재해야 미분가능하다고 말할 수 있다', example:'f(x)=x² → f\'(1)=2'},
+  {g:'미적분Ⅰ', u:'함수의 극한과 미분', f:'다항함수의 미분법', b:'(xⁿ)′ = nxⁿ⁻¹\n(c)′ = 0 (c는 상수)',
+    when:'xⁿ 꼴이 있는 다항함수를 미분할 때', caution:'상수를 미분하면 0이 된다는 것 놓치지 않기', example:'x³ → 3x²'},
+  {g:'미적분Ⅰ', u:'함수의 극한과 미분', f:'함수의 증가·감소', b:"f'(x) > 0 인 구간: 증가\nf'(x) < 0 인 구간: 감소",
+    when:'그래프가 오르는 구간인지 내리는 구간인지 판단할 때', caution:"f'(x)의 부호로만 판단, 값 자체는 무관", example:"f'(x)=2x → x>0에서 증가"},
+  {g:'미적분Ⅰ', u:'함수의 극한과 미분', f:'극대·극소의 판정', b:"f'(x)가 +→- 로 바뀌면 극대\nf'(x)가 -→+ 로 바뀌면 극소",
+    when:'그래프의 봉우리(극대)와 골짜기(극소)를 찾을 때', caution:"f'(x)=0이라고 무조건 극값은 아니다(부호 변화 확인)", example:"f'(x)가 3에서 +→- → x=3 극대"},
+  {g:'미적분Ⅰ', u:'함수의 극한과 미분', f:'접선의 방정식', b:'y - f(a) = f′(a)(x - a)',
+    when:'곡선 위 한 점에서의 접선 식을 구할 때', caution:"기울기는 그 점에서의 미분계수 f'(a)", example:'f(x)=x², a=1 → y-1=2(x-1)'},
+  {g:'미적분Ⅰ', u:'적분', f:'부정적분', b:'∫xⁿdx = xⁿ⁺¹/(n+1) + C (n ≠ -1)',
+    when:'미분의 반대 과정으로 원래 함수를 구할 때', caution:'적분상수 C를 반드시 붙여야 한다', example:'∫x²dx → x³/3+C'},
+  {g:'미적분Ⅰ', u:'적분', f:'미적분의 기본정리', b:'∫[a,b] f(x)dx = F(b) - F(a)',
+    when:'정적분 값을 부정적분으로 계산할 때', caution:'F는 f의 부정적분(원시함수) 중 하나', example:'∫[0,2]xdx → 2²/2-0=2'},
+  {g:'미적분Ⅰ', u:'적분', f:'정적분으로 넓이 구하기', b:'두 곡선 사이의 넓이\n= ∫[a,b] |f(x)-g(x)| dx',
+    when:'두 곡선 사이의 넓이를 구할 때', caution:'절댓값 안에서 위쪽 함수 빼기 아래쪽 함수', example:'y=x, y=x² 사이(0~1) → 1/6'},
 
   /* ═══ 확률과 통계 — 경우의 수, 확률, 통계적 추정 ═══ */
-  {g:'확률과 통계', f:'원순열', b:'(n-1)!'},
-  {g:'확률과 통계', f:'중복순열', b:'ₙΠᵣ = nʳ'},
-  {g:'확률과 통계', f:'이항정리', b:'(a+b)ⁿ = Σ ₙCᵣ aⁿ⁻ʳbʳ'},
-  {g:'확률과 통계', f:'확률의 덧셈정리', b:'P(A∪B) = P(A)+P(B)-P(A∩B)'},
-  {g:'확률과 통계', f:'조건부확률', b:'P(B|A) = P(A∩B) / P(A)'},
-  {g:'확률과 통계', f:'정규분포의 표준화', b:'Z = (X - μ) / σ'},
+  {g:'확률과 통계', u:'경우의 수', f:'원순열', b:'(n-1)!',
+    when:'원 모양으로 둘러앉는 등 순환하는 배열의 경우의 수', caution:'한 명을 고정하고 나머지를 배열하는 방식', example:'4명이 원탁에 앉기 → (4-1)!=6'},
+  {g:'확률과 통계', u:'경우의 수', f:'중복순열', b:'ₙΠᵣ = nʳ',
+    when:'같은 것을 여러 번 뽑을 수 있는 순서 있는 배열', caution:'뽑은 것을 다시 쓸 수 있다는 점이 순열과 다름', example:'0~9 숫자로 3자리 비밀번호 → 10³'},
+  {g:'확률과 통계', u:'경우의 수', f:'이항정리', b:'(a+b)ⁿ = Σ ₙCᵣ aⁿ⁻ʳbʳ',
+    when:'(a+b)ⁿ을 전개했을 때 특정 항의 계수를 구할 때', caution:'각 항의 지수 합은 항상 n', example:'(a+b)³ → a³+3a²b+3ab²+b³'},
+  {g:'확률과 통계', u:'확률', f:'확률의 덧셈정리', b:'P(A∪B) = P(A)+P(B)-P(A∩B)',
+    when:'두 사건 중 적어도 하나가 일어날 확률을 구할 때', caution:'겹치는 부분(교집합)을 한 번 빼야 한다', example:'.5+.4-.2 → .7'},
+  {g:'확률과 통계', u:'확률', f:'조건부확률', b:'P(B|A) = P(A∩B) / P(A)',
+    when:'어떤 사건이 일어났다는 조건에서 다른 사건의 확률', caution:'분모가 전체가 아니라 조건이 되는 사건 A', example:'P(A)=.5,P(A∩B)=.2 → P(B|A)=.4'},
+  {g:'확률과 통계', u:'통계적 추정', f:'정규분포의 표준화', b:'Z = (X - μ) / σ',
+    when:'정규분포를 표준정규분포로 바꿔 표를 이용할 때', caution:'평균을 빼고 표준편차로 나누는 순서 지키기', example:'μ=50,σ=10,X=65 → Z=1.5'},
 
   /* ═══ 미적분Ⅱ — 수열의 극한과 급수, 여러 함수의 미분·적분 ═══ */
-  {g:'미적분Ⅱ', f:'등비급수의 합', b:'a / (1-r)  (단, |r| < 1)'},
-  {g:'미적분Ⅱ', f:'지수·로그함수의 미분', b:'(eˣ)′ = eˣ\n(ln x)′ = 1/x'},
-  {g:'미적분Ⅱ', f:'삼각함수의 미분', b:'(sin x)′ = cos x\n(cos x)′ = -sin x'},
-  {g:'미적분Ⅱ', f:'곱·몫의 미분법', b:'(fg)′ = f′g + fg′\n(f/g)′ = (f′g - fg′) / g²'},
-  {g:'미적분Ⅱ', f:'합성함수의 미분 (연쇄법칙)', b:'{f(g(x))}′ = f′(g(x)) · g′(x)'},
-  {g:'미적분Ⅱ', f:'치환적분법', b:'x = g(t)로 치환하면\n∫f(x)dx = ∫f(g(t))g′(t)dt'},
-  {g:'미적분Ⅱ', f:'부분적분법', b:'∫f′g dx = fg - ∫fg′ dx'},
+  {g:'미적분Ⅱ', u:'수열의 극한', f:'등비급수의 합', b:'a / (1-r)  (단, |r| < 1)',
+    when:'무한히 더해지는 등비수열의 합(수렴할 때)을 구할 때', caution:'|r|<1일 때만 수렴해서 합이 존재한다', example:'1+1/2+1/4+... → 2'},
+  {g:'미적분Ⅱ', u:'여러 함수의 미분', f:'지수·로그함수의 미분', b:'(eˣ)′ = eˣ\n(ln x)′ = 1/x',
+    when:'eˣ이나 ln x가 포함된 함수를 미분할 때', caution:'eˣ은 미분해도 그대로, 일반 aˣ과 다르다', example:'y=e^(2x) → y\'=2e^(2x)'},
+  {g:'미적분Ⅱ', u:'여러 함수의 미분', f:'삼각함수의 미분', b:'(sin x)′ = cos x\n(cos x)′ = -sin x',
+    when:'sin,cos이 포함된 함수를 미분할 때', caution:'sin을 미분하면 cos, cos을 미분하면 -sin(부호 주의)', example:"y=sinx+cosx → y'=cosx-sinx"},
+  {g:'미적분Ⅱ', u:'여러 함수의 미분', f:'곱·몫의 미분법', b:'(fg)′ = f′g + fg′\n(f/g)′ = (f′g - fg′) / g²',
+    when:'두 함수의 곱이나 나눗셈 형태를 미분할 때', caution:'그냥 각각 미분해서 곱하면 안 된다', example:"(x²sinx)' → 2xsinx+x²cosx"},
+  {g:'미적분Ⅱ', u:'여러 함수의 미분', f:'합성함수의 미분 (연쇄법칙)', b:'{f(g(x))}′ = f′(g(x)) · g′(x)',
+    when:'함수 안에 함수가 들어있는 합성함수를 미분할 때', caution:'바깥쪽 미분 × 안쪽 미분, 순서대로 곱한다', example:'(x²+1)³ → 3(x²+1)²×2x'},
+  {g:'미적분Ⅱ', u:'적분법', f:'치환적분법', b:'x = g(t)로 치환하면\n∫f(x)dx = ∫f(g(t))g′(t)dt',
+    when:'식이 복잡해서 문자를 바꾸면 적분이 쉬워질 때', caution:'dx도 반드시 dt로 함께 바꿔야 한다', example:'∫2x(x²+1)dx, t=x²+1로 치환'},
+  {g:'미적분Ⅱ', u:'적분법', f:'부분적분법', b:'∫f′g dx = fg - ∫fg′ dx',
+    when:'두 함수의 곱을 적분할 때(치환이 안 될 때)', caution:"어느 것을 f, g'로 둘지가 계산량을 좌우", example:'∫x·eˣdx = x·eˣ - eˣ + C'},
 
   /* ═══ 기하 — 이차곡선, 공간도형, 벡터 ═══ */
-  {g:'기하', f:'포물선의 방정식', b:'y² = 4px (초점 (p,0), 준선 x=-p)'},
-  {g:'기하', f:'타원의 방정식', b:'x²/a² + y²/b² = 1'},
-  {g:'기하', f:'쌍곡선의 방정식', b:'x²/a² - y²/b² = 1'},
-  {g:'기하', f:'공간에서 두 점 사이의 거리', b:'√((x₂-x₁)²+(y₂-y₁)²+(z₂-z₁)²)'},
-  {g:'기하', f:'벡터의 내적', b:'a·b = |a||b|cosθ = a₁b₁+a₂b₂'},
-  {g:'기하', f:'벡터가 이루는 각', b:'cosθ = (a·b) / (|a||b|)'},
+  {g:'기하', u:'이차곡선', f:'포물선의 방정식', b:'y² = 4px (초점 (p,0), 준선 x=-p)',
+    when:'초점과 준선으로 정의되는 포물선을 다룰 때', caution:'p의 부호로 포물선이 열리는 방향이 결정', example:'y²=8x → 초점(2,0)'},
+  {g:'기하', u:'이차곡선', f:'타원의 방정식', b:'x²/a² + y²/b² = 1',
+    when:'두 초점까지 거리의 합이 일정한 도형을 다룰 때', caution:'a²이 더 큰 쪽이 장축 방향', example:'x²/9+y²/4=1 → 장축 x축 방향'},
+  {g:'기하', u:'이차곡선', f:'쌍곡선의 방정식', b:'x²/a² - y²/b² = 1',
+    when:'두 초점까지 거리의 차가 일정한 도형을 다룰 때', caution:'부호가 -인 것이 타원과 다른 점', example:'x²/4-y²/9=1'},
+  {g:'기하', u:'공간도형과 벡터', f:'공간에서 두 점 사이의 거리', b:'√((x₂-x₁)²+(y₂-y₁)²+(z₂-z₁)²)',
+    when:'3차원 좌표에서 두 점 사이 거리를 구할 때', caution:'z좌표 차이도 제곱해서 더해야 한다', example:'(0,0,0),(1,2,2) → 거리3'},
+  {g:'기하', u:'공간도형과 벡터', f:'벡터의 내적', b:'a·b = |a||b|cosθ = a₁b₁+a₂b₂',
+    when:'두 벡터 사이의 각이나 수직 여부를 판단할 때', caution:'내적이 0이면 두 벡터는 서로 수직', example:'a=(1,0),b=(0,1) → 내적0(수직)'},
+  {g:'기하', u:'공간도형과 벡터', f:'벡터가 이루는 각', b:'cosθ = (a·b) / (|a||b|)',
+    when:'두 벡터 사이의 각의 크기(코사인 값)를 구할 때', caution:'내적을 두 벡터 크기의 곱으로 나눈다', example:'a·b=0 → cosθ=0 → θ=90°'},
 ];
 
 const LINK_FALLBACK = {
@@ -433,10 +580,24 @@ let linkGrade = null;     // '초등' | '중등' | '고등' | null(고르는 중
 let cardGrade = '전체';
 let cardType = '전체';      // '전체' | '정의' | '공식'
 let cardsShownAll = true;   // 처음엔 다 보이게
-const flipped = new Set();  // 가린 카드 인덱스 (전체보기 상태에서 개별로 가린 것)
+let onlyUnsure = false;     // 헷갈린 것만 보기
+let shuffleOn = false;      // 단원 안에서 순서 섞기(원본 CARDS는 건드리지 않음)
+const flipped = new Set();     // 가린 카드 인덱스 (전체보기 상태에서 개별로 가린 것)
+const detailOpen = new Set();  // 「자세히」가 펼쳐진 카드 인덱스
+const openUnits = new Set();   // 펼쳐진 단원 키(grade__unit)
+
+let progress = {};   // {'grade::formula name': 'know'|'unsure'}
+try{ progress = JSON.parse(localStorage.getItem('deolrim.links.progress') || '{}'); }catch(e){ progress = {}; }
+function saveProgress(){ try{ localStorage.setItem('deolrim.links.progress', JSON.stringify(progress)); }catch(e){} }
+const cardKey = (c) => c.g + '::' + c.f;
 
 const $ = (s,el)=> (el||document).querySelector(s);
 const esc = (s)=> String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function shuffleCopy(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
 
 /* ═══════════════════════ 렌더 ═══════════════════════ */
 function renderLink(){
@@ -484,6 +645,42 @@ function renderNotice(){
   $('#main').innerHTML = `<div class="hint">더올림수학을 다니면서 꼭 알아두면 좋은 것들이에요.</div><div class="noticeGrid">${h}</div>`;
 }
 
+function cardHtml(c){
+  const idx = CARDS.indexOf(c);
+  const on = cardsShownAll || flipped.has(idx);
+  const shape = c.shape ? `<div class="fcShape">${SHAPES[c.shape]}</div>` : '';
+  const back = c.props
+    ? `${shape}<div class="def">${esc(c.def)}</div>${c.props.length ? `<ul class="propList">${c.props.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>` : ''}`
+    : `${shape}<div class="form">${esc(c.b).replace(/\n/g,'<br>')}</div>`;
+  const key = cardKey(c);
+  const mark = progress[key];
+  let footer = '';
+  if(on){
+    const open = detailOpen.has(idx);
+    let detail = '';
+    if(c.when){
+      detail = open ? `<div class="detailPanel">
+          <div class="drow"><b>언제 쓰나</b><span>${esc(c.when)}</span></div>
+          <div class="drow"><b>조건·주의</b><span>${esc(c.caution)}</span></div>
+          <div class="drow"><b>예시</b><span>${esc(c.example)}</span></div>
+        </div>` : '';
+      detail = `<button class="detailToggle" data-detail="${idx}">${open?'간단히 ▴':'자세히 ▾'}</button>${detail}`;
+    }
+    footer = `<div class="fcFooter">${detail}
+      <div class="judgeRow">
+        <button data-unsure="${idx}" class="${mark==='unsure'?'active':''}">🤔 헷갈려요</button>
+        <button data-know="${idx}" class="${mark==='know'?'active':''}">✅ 알아요</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="fc${on?' on':''}" data-ci="${idx}" data-t="${TIER[c.g]||'hs'}">
+      <div class="fcIn">
+        <div class="fcFace fcFront"><span class="gradeTag">${esc(c.g)}</span>${esc(c.f)}</div>
+        <div class="fcFace fcBack"><span class="gradeTag">${esc(c.g)}</span>${back}</div>
+      </div>${footer}
+    </div>`;
+}
+
 function renderCard(){
   const grades = ['전체','초등','중1','중2','중3','고등'];
   const chips = grades.map(g=>`<button class="chip" data-cg="${esc(g)}" aria-pressed="${g===cardGrade}">${esc(g)}</button>`).join('');
@@ -492,29 +689,45 @@ function renderCard(){
   const list = CARDS.filter((c)=>
     (cardGrade==='전체' || c.g===cardGrade || (cardGrade==='고등' && TIER[c.g]==='hs'))
     && (cardType==='전체' || (cardType==='정의' ? !!c.def : !c.def)));
-  const cardsHtml = list.map((c)=>{
-    const idx = CARDS.indexOf(c);
-    const on = cardsShownAll || flipped.has(idx);
-    const shape = c.shape ? `<div class="fcShape">${SHAPES[c.shape]}</div>` : '';
-    const back = c.props
-      ? `${shape}<div class="def">${esc(c.def)}</div>${c.props.length ? `<ul class="propList">${c.props.map(p=>`<li>${esc(p)}</li>`).join('')}</ul>` : ''}`
-      : `${shape}<div class="form">${esc(c.b).replace(/\n/g,'<br>')}</div>`;
-    return `<div class="fc${on?' on':''}" data-ci="${idx}" data-t="${TIER[c.g]||'hs'}">
-      <div class="fcIn">
-        <div class="fcFace fcFront"><span class="gradeTag">${esc(c.g)}</span>${esc(c.f)}</div>
-        <div class="fcFace fcBack"><span class="gradeTag">${esc(c.g)}</span>${back}</div>
-      </div>
+
+  // 학년 → 단원 그룹 (CARDS 원본 순서를 그대로 따라가므로 같은 단원은 항상 붙어있다)
+  const groups = [];
+  const idxOf = new Map();
+  list.forEach(c=>{
+    const gk = c.g + '__' + c.u;
+    if(!idxOf.has(gk)){ idxOf.set(gk, groups.length); groups.push({g:c.g, u:c.u, key:gk, cards:[]}); }
+    groups[idxOf.get(gk)].cards.push(c);
+  });
+
+  const showAllGrades = cardGrade === '전체';
+  const unitsHtml = groups.map(gr=>{
+    const total = gr.cards.length;
+    const known = gr.cards.filter(c=>progress[cardKey(c)]==='know').length;
+    let cards = shuffleOn ? shuffleCopy(gr.cards) : gr.cards;
+    if(onlyUnsure) cards = cards.filter(c=>progress[cardKey(c)]==='unsure');
+    if(onlyUnsure && !cards.length) return ''; // 헷갈린 카드가 없는 단원은 숨김
+    const open = openUnits.has(gr.key);
+    return `<div class="unit${open?' open':''}" data-uk="${esc(gr.key)}">
+      <button class="unitHead" data-utoggle="${esc(gr.key)}">
+        ${showAllGrades ? `<span class="ug">${esc(gr.g)}</span>` : ''}
+        <span class="un">${esc(gr.u)}</span>
+        <span class="uprog">${known}/${total}</span>
+        <span class="uchev">›</span>
+      </button>
+      <div class="unitBody">${open ? cards.map(cardHtml).join('') : ''}</div>
     </div>`;
   }).join('');
+
   $('#main').innerHTML = `
-    <div class="hint">지금은 다 보이는 상태예요. 「전체 가리기」를 누르면 카드를 눌러야 답이 보입니다.</div>
+    <div class="hint">단원을 눌러서 펼치고, 카드 뒤집어서 「알아요·헷갈려요」로 진행률을 남겨보세요.</div>
     <div class="chips">${chips}</div>
     <div class="chips chipsSub">${typeChips}</div>
     <div class="toolbar">
       <button id="cardToggleAll">${cardsShownAll?'전체 가리기':'전체 보기'}</button>
-      <button id="cardShuffle">순서 섞기</button>
+      <button id="cardShuffle" aria-pressed="${shuffleOn}">순서 섞기</button>
+      <button id="cardOnlyUnsure" aria-pressed="${onlyUnsure}">헷갈린 것만</button>
     </div>
-    <div class="grid">${cardsHtml}</div>`;
+    <div class="unitList">${unitsHtml || '<div class="hint">해당하는 카드가 없어요.</div>'}</div>`;
 }
 
 function render(){
@@ -552,15 +765,42 @@ document.addEventListener('click', (e)=>{
   const toggleAll = e.target.closest('#cardToggleAll');
   if(toggleAll){ cardsShownAll = !cardsShownAll; if(cardsShownAll) flipped.clear(); renderCard(); return; }
   const shuffle = e.target.closest('#cardShuffle');
-  if(shuffle){
-    for(let i=CARDS.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [CARDS[i],CARDS[j]]=[CARDS[j],CARDS[i]]; }
-    flipped.clear(); cardsShownAll=false; renderCard(); return;
+  if(shuffle){ shuffleOn = !shuffleOn; renderCard(); return; }
+  const onlyUnsureBtn = e.target.closest('#cardOnlyUnsure');
+  if(onlyUnsureBtn){ onlyUnsure = !onlyUnsure; renderCard(); return; }
+  const utoggle = e.target.closest('[data-utoggle]');
+  if(utoggle){
+    const key = utoggle.dataset.utoggle;
+    if(openUnits.has(key)) openUnits.delete(key); else openUnits.add(key);
+    renderCard(); return;
+  }
+  const detailBtn = e.target.closest('[data-detail]');
+  if(detailBtn){
+    const idx = Number(detailBtn.dataset.detail);
+    if(detailOpen.has(idx)) detailOpen.delete(idx); else detailOpen.add(idx);
+    renderCard(); return;
+  }
+  const knowBtn = e.target.closest('[data-know]');
+  if(knowBtn){
+    const idx = Number(knowBtn.dataset.know);
+    const key = cardKey(CARDS[idx]);
+    progress[key] = progress[key]==='know' ? null : 'know';
+    if(!progress[key]) delete progress[key];
+    saveProgress(); renderCard(); return;
+  }
+  const unsureBtn = e.target.closest('[data-unsure]');
+  if(unsureBtn){
+    const idx = Number(unsureBtn.dataset.unsure);
+    const key = cardKey(CARDS[idx]);
+    progress[key] = progress[key]==='unsure' ? null : 'unsure';
+    if(!progress[key]) delete progress[key];
+    saveProgress(); renderCard(); return;
   }
   const fc = e.target.closest('.fc');
   if(fc && !cardsShownAll){
     const idx = Number(fc.dataset.ci);
     if(flipped.has(idx)) flipped.delete(idx); else flipped.add(idx);
-    fc.classList.toggle('on');
+    renderCard();
   }
 });
 
