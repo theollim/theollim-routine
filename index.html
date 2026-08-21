@@ -97,10 +97,10 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .unitBody{display:none;flex-direction:column;gap:10px;padding:0 12px 14px}
 .unit.open .unitBody{display:flex}
 .fc{perspective:1000px}
-.fcIn{position:relative;width:100%;height:220px;display:grid;transition:transform .4s cubic-bezier(.2,.8,.2,1);
+.fcIn{position:relative;width:100%;height:262px;display:grid;transition:transform .4s cubic-bezier(.2,.8,.2,1);
   transform-style:preserve-3d}
 .fc.on .fcIn{transform:rotateY(180deg)}
-.fcFace{grid-row:1;grid-column:1;height:220px;border-radius:13px;backface-visibility:hidden;
+.fcFace{grid-row:1;grid-column:1;height:262px;border-radius:13px;backface-visibility:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:22px 16px 14px;border-top:3px solid transparent;border-left:1px solid var(--line);
   border-right:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
@@ -208,7 +208,7 @@ const CARDS = [
   {g:'초등', u:'입체도형의 부피', f:'정육면체의 부피', b:'한 모서리 × 한 모서리 × 한 모서리', shape:'cube',
     when:'정육면체(주사위 모양)의 부피를 구할 때', caution:'한 모서리를 세 번 곱한다(3배 아님)', example:'한 모서리 4cm → 64cm³'},
   {g:'초등', u:'각도와 비율', f:'삼각형 세 각의 합', b:'180°',
-    when:'삼각형에서 모르는 한 각의 크기를 구할 때', caution:'삼각형 모양과 상관없이 항상 180°', example:'두 각이 50°,60° → 나머지 70°'},
+    when:'삼각형에서 모르는 한 각을 구하거나, 일직선 위에 나란히 있는 각들의 합을 구할 때', caution:'삼각형 모양과 상관없이 항상 180° · 일직선 위 각들도 합이 180°', example:'두 각이 50°,60° → 나머지 70° / 일직선에서 한 각이 120° → 나머지 60°'},
   {g:'초등', u:'각도와 비율', f:'사각형 네 각의 합', b:'360°',
     when:'사각형에서 모르는 한 각의 크기를 구할 때', caution:'사각형은 삼각형 2개로 나뉘어서 180°×2', example:'세 각이 80°,90°,100° → 나머지 90°'},
   {g:'초등', u:'각도와 비율', f:'비율(백분율)', b:'(비교하는 양 ÷ 기준량) × 100 (%)',
@@ -496,7 +496,7 @@ const SHAPES = (()=>{
       <polygon points="20,64 90,64 100,16 30,16"/>
       <line x1="30" y1="64" x2="30" y2="16" stroke-dasharray="3 4" opacity=".5"/>
       <line x1="27" y1="61" x2="33" y2="61"/><line x1="30" y1="58" x2="30" y2="64"/>
-      ${T(55,79,'밑변')}${T(16,42,'높이','end')}`),
+      ${T(55,79,'밑변')}${T(24,42,'높이','end',9)}`),
     trapezoid: wrap('0 0 120 84', `
       <polygon points="15,64 100,64 80,16 40,16"/>
       <line x1="40" y1="64" x2="40" y2="16" stroke-dasharray="3 4" opacity=".5"/>
@@ -528,10 +528,10 @@ const SHAPES = (()=>{
       <path d="M74,64 A44,44 0 0,0 55,28"/>
       ${T(50,58,'r','end',9)}${T(41,50,'x°','end',9)}${T(80,38,'l','start',9)}`),
     cuboid: wrap('0 0 120 90', `
-      <polygon points="20,35 70,35 70,78 20,78"/>
-      <polygon points="20,35 70,35 95,15 45,15"/>
-      <polygon points="70,35 95,15 95,58 70,78"/>
-      ${T(45,88,'가로')}${T(10,58,'높이','end')}${T(98,11,'세로','start')}`),
+      <polygon points="28,38 72,38 72,80 28,80"/>
+      <polygon points="28,38 72,38 92,20 48,20"/>
+      <polygon points="72,38 92,20 92,62 72,80"/>
+      ${T(50,89,'가로')}${T(24,60,'높이','end',9)}${T(94,17,'세로','start',9)}`),
     cube: wrap('0 0 120 90', `
       <polygon points="25,30 65,30 65,75 25,75"/>
       <polygon points="25,30 65,30 88,12 48,12"/>
