@@ -185,6 +185,9 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .tsRow.m button.on{background:var(--crit);border-color:var(--crit);color:var(--surface)}
 .tsRow.v button{padding:0;min-width:0;font-weight:750}
 .tsRow.v button.on{background:var(--crit);border-color:var(--crit)}
+.rlExpr{margin:7px 0 3px;font-size:14px;line-height:2.1;color:var(--ink);word-break:break-word}
+.rlExpr b{font-size:16px;font-weight:800}
+.rlExpr sup,.rlExpr sub{font-size:10.5px;line-height:0}
 .tsNote{background:var(--kkBg);border:1px solid var(--kkLine);border-radius:11px;padding:10px 12px;
   font-size:12px;line-height:1.7;color:var(--ink2);margin-top:10px;word-break:keep-all}
 .tsNote b{color:var(--ink)}
@@ -612,6 +615,12 @@ const CARDS = [
   {g:'중1', u:'원과 부채꼴', f:'자주 틀리는 짝 — 호와 현', pair:1, b:'호 — 중심각에 정비례한다\n현 — 정비례하지 않는다\n중심각 2배면 호도 2배\n현은 2배보다 짧다', when:'중심각이 몇 배가 되었다는 말이 나올 때, 호에 쓸지 현에 쓸지 가를 때.', caution:'호에서 통하던 비례식을 현에 그대로 옮겨 쓰는 실수. 현은 비례하지 않는다.', example:'중심각 30도일 때 호가 4cm이면\n중심각 60도일 때 호는 8cm.\n그러나 현은 8cm가 되지 않고 그보다 짧다.'},
   {g:'중1', u:'원과 부채꼴', f:'비례식 + 부채꼴', pair:1, b:'주인공 — 부채꼴\n도구 — 비례식\n중심각 : 360° = 호 : 원주 = 부채꼴 : 원',
     when:'부채꼴의 호나 넓이를 구할 때', caution:'공식을 외우지 않아도 비례식 하나로 전부 나온다 — 이 카드 하나가 호와 넓이 두 공식을 대신한다', example:'반지름 8, 중심각 45°\n호 = 16π × 45/360 = 2π'},
+
+  {g:'중1', u:'원과 부채꼴', f:'부채꼴 + 굴리기', pair:1, tool:'rollPoly', b:'주인공 — 호의 길이\n도구 — 굴리기\n한 칸 구를 때마다\n반지름이 다른 부채꼴이 하나씩 생긴다',
+    when:'다각형을 직선 위에서 굴릴 때 한 꼭짓점이 움직인 거리를 물을 때', caution:'반지름 = 그 칸의 축에서 그 점까지의 거리 — 변의 길이나 대각선이 그대로 반지름이 된다 / 중심각 = 180° − (축이 된 꼭짓점의 내각) / 그 점이 축이 되는 칸은 반지름이 0이라 움직이지 않는다 — 이 칸을 빠뜨리는 것이 아니라 세는 것이 함정이다 / 「만져보기」로 굴려 보면 어느 변이 어느 반지름이 되는지 보인다', example:'가로 12, 세로 5, 대각선 13인 직사각형\n꼭짓점 A가 한 바퀴 구르는 동안\n2π×12×90/360 + 2π×13×90/360 + 2π×5×90/360\n= 6π + 13π/2 + 5π/2 = 15π'},
+
+  {g:'중1', u:'원과 부채꼴', f:'반원 굴리기 — 곡면에서는 곧게', pair:1, tool:'rollPoly', b:'넘어짐 → 곡면으로 구름 → 넘어짐\n곡면 위에서는 중심의 높이가 그대로다\n→ 그 구간만 직선',
+    when:'반원을 직선 위에서 굴릴 때 중심 O가 움직인 거리를 물을 때', caution:'넘어지는 두 칸은 반지름 r, 중심각 90°인 부채꼴 / 가운데 칸은 호가 아니라 직선이고, 그 길이는 반원의 호의 길이 πr 과 같다 / 세 칸을 더하면 늘 2πr — 반지름 하나만 알면 끝난다', example:'반지름 4인 반원\n2π×4×90/360 + π×4 + 2π×4×90/360\n= 2π + 4π + 2π = 8π'},
 
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'다면체', shape:'polyhedron', def:'다각형인 면으로만 둘러싸인 입체도형', props:['면의 개수에 따라 사면체·오면체 …라고 한다','각기둥·각뿔·각뿔대는 다면체이다','원기둥·원뿔·구는 곡면이 있어 다면체가 아니다']},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'정다면체', shape:'platonic', b:'정사면체 · 정육면체 · 정팔면체\n정십이면체 · 정이십면체\n— 이 5가지뿐이다',
@@ -3668,12 +3677,22 @@ TOOLS.cubeSection = (()=>{
    그래서 「지나간 거리 = 부채꼴 호의 길이를 다 더한 것」이 된다. */
 TOOLS.rollPoly = (()=>{
   const SHAPES = {
-    tri : { nm:'정삼각형', a:3, mk:()=> reg(3, 3) },
-    sq  : { nm:'정사각형', a:3, mk:()=> reg(4, 3) },
-    rect: { nm:'직사각형 4×3', a:4, mk:()=> [[-2,0],[2,0],[2,3],[-2,3]] },
-    pent: { nm:'정오각형', a:2.4, mk:()=> reg(5, 2.4) },
-    hex : { nm:'정육각형', a:2.2, mk:()=> reg(6, 2.2) }
+    tri : { nm:'정삼각형', mk:()=> reg(3, 3) },
+    /* 5 · 5 · 4 — 세 변이 모두 정수인 뾰족한 이등변삼각형 (높이 √21) */
+    iso : { nm:'이등변삼각형 5·5·4', lb:['ㄱ','ㄴ','ㄷ'],
+            mk:()=> [[-2, 0], [2, 0], [0, Math.sqrt(21)]] },
+    /* 3 · 4 · 5 — 세 변이 모두 정수인 직각삼각형 */
+    rt  : { nm:'직각삼각형 3·4·5', lb:['B','C','A'],
+            mk:()=> [[-2, 0], [2, 0], [2, 3]] },
+    sq  : { nm:'정사각형', mk:()=> reg(4, 3) },
+    /* 길쭉한 직사각형 — 12×5 라야 대각선이 13 으로 딱 떨어진다 */
+    rect: { nm:'직사각형 12×5', mk:()=> [[-6,0],[6,0],[6,5],[-6,5]] },
+    pent: { nm:'정오각형', mk:()=> reg(5, 3) },
+    hex : { nm:'정육각형', mk:()=> reg(6, 2) },
+    /* 반원 — 다각형이 아니라 「넘어짐 → 곡면으로 구름 → 넘어짐」 으로 굴러간다 */
+    semi: { nm:'반원 (반지름 4)', semi:true, r:4 }
   };
+  const isSemi = ()=> !!SHAPES[key].semi;
   function reg(n, a){
     const out=[[-a/2, 0]]; let dir=0;
     for(let i=0;i<n-1;i++){
@@ -3692,16 +3711,67 @@ TOOLS.rollPoly = (()=>{
   let key='rect', poly=SHAPES[key].mk(), mark=0;
   let base=poly.map(p=>p.slice());            /* 이번 구르기가 시작될 때의 자리 */
   let pivot=null, need=0, done=0, rolling=false, trail=[], steps=[];
+  let laps=1;                                  /* 한 바퀴 · 두 바퀴 */
+  let ghosts=[];                               /* 지나온 자리 — 점선으로 남긴다 */
+  let hist=[];                                 /* 한 칸 뒤로용 기록 */
+  /* 반원 전용 — 중심 O 의 자리와 지름이 향한 각 */
+  let sO=[0,0], sPhi=0, sIdx=0, sBase=null;
+  const semiR = ()=> SHAPES[key].r;
+  /* 한 칸이 무엇인지 : 0 넘어짐(B축) · 1 곡면으로 구름 · 2 넘어짐(A축) */
+  function semiPlanStep(O, phi, idx){
+    const r=semiR(), d=[Math.cos(phi), Math.sin(phi)];
+    if(idx === 1) return { kind:'roll', len:Math.PI*r, r:r };
+    const sgn = idx === 0 ? 1 : -1;            /* 0 이면 B, 2 면 A 를 축으로 */
+    return { kind:'pivot', c:[O[0] + sgn*r*d[0], O[1] + sgn*r*d[1]], r:r, sweep:Math.PI/2 };
+  }
   let cv, ctx, root=null, raf=0, W=0,H=0,DPR=1, SC=1, OX=0, OY=0;
   const SPEED = 1.6;                          /* 라디안/초 — 눈으로 따라갈 수 있게 천천히 */
   let last=0;
 
   function reset(k){
     if(k) key=k;
+    if(isSemi()){
+      poly=[]; sO=[0, 0]; sPhi=0; sIdx=0; sBase=null; mark=0;
+      pivot=null; need=0; done=0; rolling=false; trail=[sO.slice()]; steps=[]; ghosts=[]; hist=[];
+      layout(); paint(); readout(); return;
+    }
     poly=SHAPES[key].mk(); base=poly.map(p=>p.slice());
     if(mark >= poly.length) mark=0;
-    pivot=null; need=0; done=0; rolling=false; trail=[poly[mark].slice()]; steps=[];
+    pivot=null; need=0; done=0; rolling=false; trail=[poly[mark].slice()]; steps=[]; ghosts=[]; hist=[];
     layout(); paint(); readout();
+  }
+  /* ── 반원 ── */
+  function semiApply(u){
+    const st=sBase, r=semiR();
+    if(st.kind === 'roll'){
+      sO=[st.O[0] + Math.PI*r*u, st.O[1]];
+      sPhi=st.phi - Math.PI*u;
+    } else {
+      sO=rotAbout(st.O, st.c, -(Math.PI/2)*u);
+      sPhi=st.phi - (Math.PI/2)*u;
+    }
+    const t=trail[trail.length-1];
+    if(!t || dist(t, sO) > 0.02) trail.push(sO.slice());
+  }
+  function semiPrep(){
+    const st=semiPlanStep(sO, sPhi, sIdx);
+    sBase={ kind:st.kind, O:sO.slice(), phi:sPhi, c:st.c };
+    need=st.kind === 'roll' ? 1 : Math.PI/2;      /* roll 은 진행률로만 센다 */
+    done=0;
+    return st;
+  }
+  function semiFinish(){
+    ghosts.push({ O:sBase.O.slice(), phi:sBase.phi });
+    const r=semiR();
+    if(sBase.kind === 'roll'){
+      semiApply(1);
+      steps.push({ kind:'line', r:r, len:Math.PI*r, x0:sBase.O[0], x1:sO[0] });
+    } else {
+      semiApply(1);
+      const a0=Math.atan2(sBase.O[1]-sBase.c[1], sBase.O[0]-sBase.c[0]);
+      steps.push({ r:r, th:Math.PI/2, c:sBase.c.slice(), a0:a0 });
+    }
+    sIdx=(sIdx+1)%3; rolling=false; readout(); paint();   /* 마지막 자국까지 그려지게 */
   }
   /* 다음에 축이 될 꼭짓점과 돌아야 할 각 */
   function prep(){
@@ -3723,17 +3793,69 @@ TOOLS.rollPoly = (()=>{
     const t=trail[trail.length-1];
     if(!t || dist(t, m) > 0.02) trail.push(m.slice());
   }
+  function pushHist(){                       /* 굴리기 직전 상태를 쌓아둔다 */
+    hist.push({ poly:poly.map(q=>q.slice()), trail:trail.map(q=>q.slice()),
+                steps:steps.slice(), ghosts:ghosts.slice(),
+                sO:sO.slice(), sPhi:sPhi, sIdx:sIdx });
+    if(hist.length > 40) hist.shift();
+  }
   function step(){                            /* 한 칸만 굴리기 */
     if(rolling) return;
-    if(!prep()) return;
+    if(isSemi()){ pushHist(); semiPrep(); rolling=true; last=0; return; }
+    pushHist();
+    if(!prep()){ hist.pop(); return; }
     rolling=true; last=0;
   }
+  function stepBack(){                        /* 한 칸 뒤로 */
+    if(rolling || !hist.length) return;
+    const h=hist.pop();
+    poly=h.poly; trail=h.trail; steps=h.steps; ghosts=h.ghosts;
+    sO=h.sO; sPhi=h.sPhi; sIdx=h.sIdx;
+    if(!isSemi()) base=poly.map(q=>q.slice());
+    pivot=null; need=0; done=0;
+    paint(); readout();
+  }
   function finishStep(){
+    ghosts.push({ poly:base.map(q=>q.slice()) });
     const r=dist(pivot, base[mark]);
-    steps.push({ r:r, th:need });
+    const a0=Math.atan2(base[mark][1] - pivot[1], base[mark][0] - pivot[0]);
+    steps.push({ r:r, th:need, c:pivot.slice(), a0:a0 });
     apply(need);
     poly=poly.map(p=> [p[0], Math.abs(p[1]) < 1e-9 ? 0 : p[1]]);
-    rolling=false; readout();
+    rolling=false; readout(); paint();          /* 마지막 자국까지 그려지게 */
+  }
+
+  /* 미리 한 번 굴려보고 — 몇 칸을 굴러야 P가 바닥에 닿는지, 화면이 얼마나 필요한지 잰다.
+     P가 공중에서 시작하면 꼭짓점 수보다 더 굴러야 한다. */
+  function plan(lp){
+    const L=lp || laps;
+    if(isSemi()){
+      const r=semiR();
+      return { steps:3*L, x0:-r-0.6, x1:L*r*(2+Math.PI) + r + 0.6, hi:2*r + 0.4 };
+    }
+    let q=SHAPES[key].mk().map(a=>a.slice());
+    const n=q.length;
+    /* 정해진 바퀴 수만큼 다 구를 때까지 + P가 아직 공중이면 바닥에 닿을 때까지 */
+    let cnt=0, hi=0, x1=-1e9, need2=0;
+    for(let t=0; t < n*L*2 + 2; t++){
+      let pi=-1, bx=-1e9;
+      q.forEach((a,i)=>{ if(a[1] < 1e-6 && a[0] > bx){ bx=a[0]; pi=i; } });
+      if(pi < 0) break;
+      const a=q[(pi-1+n)%n], b=q[(pi+1)%n], v=q[pi];
+      const u1=[a[0]-v[0], a[1]-v[1]], u2=[b[0]-v[0], b[1]-v[1]];
+      const inner=Math.acos(Math.max(-1, Math.min(1,
+        (u1[0]*u2[0] + u1[1]*u2[1]) / (Math.hypot(u1[0],u1[1]) * Math.hypot(u2[0],u2[1])))));
+      hi=Math.max(hi, dist(v, q[mark]));            /* 호의 꼭대기는 축에서 반지름만큼 위 */
+      q=q.map(a2=> rotAbout(a2, v, -(Math.PI - inner)))
+         .map(a2=> [a2[0], Math.abs(a2[1]) < 1e-9 ? 0 : a2[1]]);
+      cnt++;
+      if(cnt >= n*L && q[mark][1] < 1e-6){ need2=cnt; break; }
+      need2=cnt;
+    }
+    let x0=1e9;
+    SHAPES[key].mk().forEach(a=>{ x0=Math.min(x0, a[0]); hi=Math.max(hi, a[1]); });
+    q.forEach(a=> x1=Math.max(x1, a[0]));
+    return { steps:need2, x0:x0, x1:x1, hi:hi };
   }
 
   function layout(){
@@ -3742,15 +3864,11 @@ TOOLS.rollPoly = (()=>{
     DPR=Math.min(window.devicePixelRatio||1, 2);
     W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
     cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
-    /* 한 바퀴 굴러간 뒤의 자리까지, 자취의 가장 높은 곳까지 다 보이도록 */
-    const q=SHAPES[key].mk();
-    let per=0, minX=1e9, maxX=-1e9, maxR=0;
-    for(let i=0;i<q.length;i++) per += dist(q[i], q[(i+1)%q.length]);
-    q.forEach(a=>{ minX=Math.min(minX,a[0]); maxX=Math.max(maxX,a[0]);
-      q.forEach(b=> maxR=Math.max(maxR, dist(a,b))); });
-    const x0=minX - 0.5, x1=per + maxX + 0.5;
-    const wantW=x1 - x0, wantH=maxR + 1.2;
-    SC=Math.min(W/wantW, (H-30)/wantH);
+    /* 다 굴러간 뒤의 자리까지, 자취의 가장 높은 곳까지 빠짐없이 보이도록 */
+    const pl=plan();
+    const x0=pl.x0 - 0.5, x1=pl.x1 + 0.5;
+    const wantW=x1 - x0, wantH=pl.hi + 1.2;
+    SC=Math.min(W/wantW, (H-34)/wantH) * 0.95;   /* 선 굵기만큼 여유를 둔다 */
     OX=-x0*SC + (W - wantW*SC)/2; OY=H - 24;
   }
   const X=x=> OX + x*SC;
@@ -3759,18 +3877,86 @@ TOOLS.rollPoly = (()=>{
   function paint(){
     if(!ctx) return;
     const st=getComputedStyle(document.body), g=k=>st.getPropertyValue(k).trim();
-    const INK=g('--ink'), MUT=g('--muted'), RED=g('--crit'), OP=g('--opInk'), SUR=g('--surface');
+    const INK=g('--ink'), INK2=g('--ink2'), MUT=g('--muted'), RED=g('--crit'), OP=g('--opInk'), SUR=g('--surface');
     ctx.clearRect(0,0,W,H);
     /* 바닥 직선 */
     ctx.strokeStyle=MUT; ctx.lineWidth=1.6; ctx.globalAlpha=.6;
     ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.globalAlpha=1;
-    /* 자취 */
+    /* 자취와 바닥 사이 — 둘러싸인 부분을 칠한다 */
     if(trail.length > 1){
+      ctx.beginPath();
+      ctx.moveTo(X(trail[0][0]), Y(0));
+      trail.forEach(p=> ctx.lineTo(X(p[0]), Y(p[1])));
+      ctx.lineTo(X(trail[trail.length-1][0]), Y(0));
+      ctx.closePath();
+      ctx.fillStyle=RED; ctx.globalAlpha=.13; ctx.fill(); ctx.globalAlpha=1;
       ctx.strokeStyle=RED; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.lineCap='round';
       ctx.beginPath();
       trail.forEach((p,i)=> i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])));
       ctx.stroke();
     }
+    /* 지나온 자리 — 점선으로 남긴다 */
+    if(ghosts.length){
+      const GH2=g('--pairInk');                  /* 자국이 겹쳐도 구분되게 색을 번갈아 */
+      ctx.lineWidth=1.5; ctx.setLineDash([5,4]); ctx.lineJoin='round'; ctx.globalAlpha=.8;
+      ghosts.forEach((gh, gi)=>{
+        ctx.strokeStyle = gi % 2 ? GH2 : MUT;
+        ctx.beginPath();
+        if(gh.O){
+          const r=semiR(), N=48;
+          for(let i=0;i<=N;i++){
+            const a=gh.phi + Math.PI*i/N;
+            const px=gh.O[0] + r*Math.cos(a), py=gh.O[1] + r*Math.sin(a);
+            i ? ctx.lineTo(X(px), Y(py)) : ctx.moveTo(X(px), Y(py));
+          }
+        } else {
+          gh.poly.forEach((q,i)=> i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])));
+        }
+        ctx.closePath(); ctx.stroke();
+      });
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+    }
+    /* 지나간 호마다 — 어느 변이 반지름이 됐는지 남겨둔다 */
+    ctx.font='700 10.5px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    steps.forEach(sp=>{
+      if(sp.kind === 'line'){                    /* 곡면 구간 — 중심의 높이가 곧 반지름 */
+        ctx.strokeStyle=RED; ctx.globalAlpha=.5; ctx.lineWidth=1.3; ctx.setLineDash([4,3]);
+        [sp.x0, sp.x1].forEach(xx=>{
+          ctx.beginPath(); ctx.moveTo(X(xx), Y(0)); ctx.lineTo(X(xx), Y(sp.r)); ctx.stroke();
+        });
+        ctx.setLineDash([]); ctx.globalAlpha=1;
+        ctx.fillStyle=RED;
+        [sp.x0, sp.x1].forEach(xx=>{ ctx.beginPath(); ctx.arc(X(xx), Y(0), 3, 0, 6.2832); ctx.fill(); });
+        const t=numStr(sp.r), tw=ctx.measureText(t).width;
+        const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, X(sp.x0) + tw/2 + 7));
+        const ly=Math.max(10, Math.min(H-10, (Y(0)+Y(sp.r))/2));
+        ctx.fillStyle=SUR; ctx.globalAlpha=.92;
+        ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
+        ctx.globalAlpha=1; ctx.fillStyle=RED; ctx.fillText(t, lx, ly);
+        return;
+      }
+      if(sp.r < 1e-9 || !sp.c) return;
+      /* 부채꼴처럼 반지름 두 개를 다 긋는다 — 시작 자리와 끝 자리.
+         두 선분은 그때 그 도형의 변(또는 대각선)이라, 어느 길이가 반지름이 됐는지 보인다 */
+      const sx=X(sp.c[0]), sy=Y(sp.c[1]);
+      const pt=a=>[X(sp.c[0] + sp.r*Math.cos(a)), Y(sp.c[1] + sp.r*Math.sin(a))];
+      const P0=pt(sp.a0), P1=pt(sp.a0 - sp.th);
+      ctx.strokeStyle=RED; ctx.globalAlpha=.55; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+      [P0, P1].forEach(q=>{ ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(q[0],q[1]); ctx.stroke(); });
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(sx,sy,3.2,0,6.2832); ctx.fill();
+      /* 길이는 「도는 쪽」 반지름에 붙인다 — 굴러가는 방향과 맞게.
+         다만 그 반지름이 바닥에 거의 누워 있으면 반대쪽(출발 쪽)에 붙인다 */
+      const aEnd=sp.a0 - sp.th;
+      const q=(Math.abs(Math.sin(aEnd)) < 0.3) ? P0 : P1;
+      const t=numStr(sp.r), tw=ctx.measureText(t).width;
+      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, (sx+q[0])/2));
+      const ly=Math.max(10, Math.min(H-10, (sy+q[1])/2));
+      ctx.fillStyle=SUR; ctx.globalAlpha=.92;
+      ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=RED; ctx.fillText(t, lx, ly);
+    });
     /* 지금 도는 축과 반지름 */
     if(rolling && pivot){
       ctx.strokeStyle=OP; ctx.lineWidth=1.4; ctx.setLineDash([4,4]); ctx.globalAlpha=.85;
@@ -3780,43 +3966,146 @@ TOOLS.rollPoly = (()=>{
     }
     /* 도형 */
     ctx.beginPath();
-    poly.forEach((p,i)=> i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])));
+    if(isSemi()){
+      const r=semiR(), N=64;
+      for(let i=0;i<=N;i++){
+        const a=sPhi + Math.PI*i/N;
+        const px=sO[0] + r*Math.cos(a), py=sO[1] + r*Math.sin(a);
+        i ? ctx.lineTo(X(px), Y(py)) : ctx.moveTo(X(px), Y(py));
+      }
+    } else {
+      poly.forEach((p,i)=> i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])));
+    }
     ctx.closePath();
     ctx.fillStyle=MUT; ctx.globalAlpha=.13; ctx.fill(); ctx.globalAlpha=1;
     ctx.strokeStyle=INK; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.stroke();
+    /* 변의 길이 — 굴러가도 따라다닌다 */
+    ctx.font='700 10.5px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    if(isSemi()){
+      const r=semiR(), d=[Math.cos(sPhi), Math.sin(sPhi)];
+      const bx=sO[0] + r*d[0], by=sO[1] + r*d[1];
+      ctx.strokeStyle=INK; ctx.globalAlpha=.5; ctx.lineWidth=1.3; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(X(sO[0]),Y(sO[1])); ctx.lineTo(X(bx),Y(by)); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      const t=numStr(r), tw=ctx.measureText(t).width;
+      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, (X(sO[0])+X(bx))/2));
+      const ly=Math.max(10, Math.min(H-10, (Y(sO[1])+Y(by))/2));
+      ctx.fillStyle=SUR; ctx.globalAlpha=.9;
+      ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=INK2; ctx.fillText(t, lx, ly);
+    }
+    let gx=0, gy=0;
+    poly.forEach(q=>{ gx+=X(q[0]); gy+=Y(q[1]); });
+    gx/=poly.length; gy/=poly.length;
+    const seen={};
+    for(let i=0;i<poly.length;i++){
+      const a=poly[i], bq=poly[(i+1)%poly.length];
+      const t=numStr(dist(a, bq));
+      const smx=(X(a[0])+X(bq[0]))/2, smy=(Y(a[1])+Y(bq[1]))/2;
+      let ox=smx-gx, oy=smy-gy; const L2=Math.hypot(ox,oy)||1;
+      const tw=ctx.measureText(t).width;
+      const px=Math.max(tw/2+5, Math.min(W-tw/2-5, smx + ox/L2*13));
+      const py=Math.max(10, Math.min(H-10, smy + oy/L2*13));
+      ctx.fillStyle=SUR; ctx.globalAlpha=.88;
+      ctx.beginPath(); ctx.rect(px-tw/2-3.5, py-7.5, tw+7, 15); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=INK2; ctx.fillText(t, px, py);
+      seen[t]=1;
+    }
     /* 표시한 점 */
-    const m=poly[mark];
+    const m=isSemi() ? sO : poly[mark];
     ctx.beginPath(); ctx.arc(X(m[0]), Y(m[1]), 7.5, 0, 6.2832);
     ctx.fillStyle=RED; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle=SUR; ctx.stroke();
     ctx.font='700 11px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
     ctx.fillStyle=RED; ctx.textAlign='center'; ctx.textBaseline='bottom';
-    ctx.fillText('P', X(m[0]), Y(m[1]) - 11);
+    ctx.fillText(isSemi() ? 'O' : 'P', X(m[0]), Y(m[1]) - 11);
   }
 
   /* 숫자를 π의 몇 배로 읽어준다 */
   function piStr(x){
+    if(Math.abs(x) < 1e-9) return '0';
     const c=x/Math.PI;
-    for(let q=1;q<=12;q++){
-      const n=c*q;
-      if(Math.abs(n - Math.round(n)) < 1e-6){
-        const nn=Math.round(n);
-        if(q===1) return nn===1 ? 'π' : nn + 'π';
-        return nn + 'π/' + q;
+    const rat=(v, tail)=>{                       /* v 를 기약분수로, 안 되면 null */
+      for(let q=1;q<=12;q++){
+        const n=v*q;
+        if(Math.abs(n - Math.round(n)) < 1e-7 && Math.round(n) !== 0){
+          const nn=Math.round(n);
+          const head = nn===1 ? '' : String(nn);      /* 1π 가 아니라 π 로 */
+          return q===1 ? head + tail + 'π' : head + tail + 'π/' + q;
+        }
       }
+      return null;
+    };
+    const a=rat(c, '');
+    if(a) return a;
+    for(const b of [2,3,5,6,7,10]){              /* 5√3π 처럼 무리수도 정확하게 */
+      const t=rat(c/Math.sqrt(b), '√' + b);
+      if(t) return t;
     }
     return c.toFixed(2) + 'π';
   }
+  /* 각도 — 정수면 정수로, 아니면 소수 한 자리 */
+  function degStr(th){
+    const d=th*180/Math.PI;
+    return Math.abs(d - Math.round(d)) < 0.05 ? String(Math.round(d)) : d.toFixed(1);
+  }
+  /* 반지름을 √ 꼴로 읽어준다 — 3√2 처럼 */
+  function numStr(r){
+    if(Math.abs(r - Math.round(r)) < 1e-9) return String(Math.round(r));
+    for(const b of [2,3,5,6,7,10]){
+      const a=r/Math.sqrt(b);
+      for(let q=1;q<=4;q++){
+        const n=a*q;
+        if(Math.abs(n - Math.round(n)) < 1e-9 && Math.round(n) !== 0){
+          const nn=Math.round(n);
+          const head = q===1 ? (nn===1 ? '' : nn) : nn + '/' + q;
+          return head + '√' + b;
+        }
+      }
+    }
+    return String(+r.toFixed(2));
+  }
+  /* 교재 풀이처럼 — 2π × (반지름) × (중심각)/360 을 늘어놓는다 */
+  const stepVal = s => s.kind === 'line' ? s.len : s.r*s.th;
+  function exprHtml(){
+    const use=steps.filter(s=> stepVal(s) > 1e-9);
+    if(!use.length) return '';
+    const g=[];                                   /* 같은 항끼리 묶는다 */
+    use.forEach(s=>{
+      const rs=numStr(s.r);
+      const k=(s.kind === 'line' ? 'L' : 'A') + rs + '|' + (s.kind === 'line' ? '' : degStr(s.th));
+      const at=g.find(x=> x.k===k);
+      if(at) at.n++;
+      else g.push({ k:k, rs:rs, deg:s.kind === 'line' ? null : degStr(s.th), n:1, val:stepVal(s) });
+    });
+    const term=x=> x.deg === null
+      ? `π × ${x.rs}`
+      : `2π × ${x.rs} × <sup>${x.deg}</sup>⁄<sub>360</sub>`;
+    const head=g.map(x=> x.n > 1 ? `(${term(x)}) × ${x.n}` : term(x)).join(' + ');
+    const tot=use.reduce((a,s)=> a + stepVal(s), 0);
+    const mid=g.length > 1 ? ' = ' + g.map(x=> piStr(x.val*x.n)).join(' + ') : '';
+    return head + mid + ' = <b>' + piStr(tot) + '</b>';
+  }
   function readout(){
     if(!root) return;
-    const tot=steps.reduce((a,s)=> a + s.r*s.th, 0);
+    const tot=steps.reduce((a,s)=> a + stepVal(s), 0);
     root.querySelector('#rlBig').textContent = steps.length ? piStr(tot) : '0';
+    root.querySelector('#rlExpr').innerHTML = steps.length ? exprHtml() : '';
+    const zero=steps.some(s=> stepVal(s) <= 1e-9);
     root.querySelector('#rlSum').innerHTML = steps.length
-      ? steps.map((s,i)=> `${i+1}번째 · 반지름 ${(+s.r.toFixed(2))} × ${Math.round(s.th*180/Math.PI)}° = ${piStr(s.r*s.th)}`).join('<br>')
-      : '「한 칸 굴리기」를 눌러보세요. 닿아 있는 꼭짓점을 축으로 돕니다.';
-    const back = poly[mark][1] < 0.001 && steps.length;
-    root.querySelector('#rlNote').textContent = back
-      ? 'P가 다시 바닥에 닿았습니다. 지금까지 그린 자취의 길이가 답이에요.'
-      : (steps.length ? '표시한 점이 축이 되면 반지름이 0이라 그 칸에서는 움직이지 않아요.' : '');
+      ? steps.map((s,i)=> s.kind === 'line'
+          ? `${i+1}번째 · 곡면으로 구름 · 곧게 π × ${numStr(s.r)} = ${piStr(s.len)}`
+          : `${i+1}번째 · 반지름 ${numStr(s.r)} × ${degStr(s.th)}° = ${piStr(stepVal(s))}`).join('<br>')
+        + (zero ? '<br>반지름이 0인 칸은 제자리라서 식에서 뺐어요.' : '')
+      : (isSemi()
+          ? '「한 칸 굴리기」를 눌러보세요. 넘어짐 → 곡면으로 구름 → 넘어짐 순서예요.'
+          : '「한 칸 굴리기」를 눌러보세요. 닿아 있는 꼭짓점을 축으로 돕니다.');
+    const py=isSemi() ? sO[1] - semiR() : poly[mark][1];
+    const back = Math.abs(py) < 0.001 && steps.length;
+    root.querySelector('#rlNote').textContent = isSemi()
+      ? (steps.length ? '곡면 위를 구르는 동안 중심 O 는 높이가 그대로여서 곧게 갑니다.' : '')
+      : (back ? 'P가 다시 바닥에 닿았습니다. 지금까지 그린 자취의 길이가 답이에요.'
+              : (steps.length ? '표시한 점이 축이 되면 반지름이 0이라 그 칸에서는 움직이지 않아요.' : ''));
   }
 
   return {
@@ -3830,17 +4119,21 @@ TOOLS.rollPoly = (()=>{
         <div class="tsRead">
           <div class="tsInfo"><div class="tsLbl" style="margin:0 0 3px">P가 지나간 거리</div>
             <div class="tsBig" id="rlBig">0</div>
+            <div class="rlExpr" id="rlExpr"></div>
             <div class="tsSub" id="rlSum"></div>
             <div class="tsSub" id="rlNote" style="color:var(--opInk);font-weight:700"></div></div>
         </div>
       </div>
       <div class="tsCard">
-        <div class="tsRow"><button id="rlStep" style="flex:1 1 0">▸ 한 칸 굴리기</button>
+        <div class="tsRow"><button id="rlBack" style="flex:1 1 0">◂ 뒤로</button>
+          <button id="rlStep" style="flex:1 1 0">▸ 한 칸</button>
+          <button id="rlRe">처음</button></div>
+        <div class="tsRow" style="margin-top:7px">
           <button id="rlAll" style="flex:1 1 0">≫ 한 바퀴</button>
-          <button id="rlRe">처음으로</button></div>
+          <button id="rlAll2" style="flex:1 1 0">≫ 두 바퀴</button></div>
         <div class="tsLbl">도형</div>
         <div class="tsRow" id="rlShapes"></div>
-        <div class="tsLbl">P를 어느 꼭짓점에 둘까</div>
+        <div class="tsLbl" id="rlMarkLbl">P를 어느 꼭짓점에 둘까</div>
         <div class="tsRow" id="rlMarks"></div>
         <div class="tsNote">굴러갈 때 도형은 <b>바닥에 닿아 있는 꼭짓점</b>을 축으로 돕니다.
           그래서 표시한 점 P는 <b>반지름 = (축까지의 거리)</b>, <b>중심각 = 180° − (그 꼭짓점의 내각)</b> 인 부채꼴의 호를 그려요.<br><br>
@@ -3851,30 +4144,53 @@ TOOLS.rollPoly = (()=>{
     init(sheet){
       root=sheet; cv=root.querySelector('#rlCv'); ctx=cv.getContext('2d');
       const sync=()=>{
+        root.querySelector('#rlAll').classList.toggle('on', laps===1 && steps.length>0);
+        root.querySelector('#rlAll2').classList.toggle('on', laps===2 && steps.length>0);
         root.querySelector('#rlShapes').innerHTML = Object.keys(SHAPES).map(k=>
           `<button data-rs="${k}" class="${k===key?'on':''}">${esc(SHAPES[k].nm)}</button>`).join('');
+        const lb=SHAPES[key].lb;
+        if(isSemi()){
+          root.querySelector('#rlMarks').innerHTML =
+            '<button class="on" disabled style="opacity:.9">중심 O</button>';
+          root.querySelector('#rlMarkLbl').textContent = '반원은 중심 O 가 그리는 자취를 봅니다';
+        } else {
+          root.querySelector('#rlMarkLbl').textContent = 'P를 어느 꼭짓점에 둘까';
         root.querySelector('#rlMarks').innerHTML = poly.map((_,i)=>
-          `<button data-rm="${i}" class="${i===mark?'on':''}">${i+1}번</button>`).join('');
+          `<button data-rm="${i}" class="${i===mark?'on':''}">${lb ? esc(lb[i]) : (i+1)+'번'}</button>`).join('');
+        }
       };
       root.addEventListener('click', e=>{
         const t=e.target.closest('button'); if(!t) return;
-        if(t.dataset.rs){ mark=0; reset(t.dataset.rs); sync(); return; }
-        if(t.dataset.rm !== undefined){ mark=+t.dataset.rm; reset(); sync(); return; }
+        if(t.dataset.rs){ mark=0; laps=1; reset(t.dataset.rs); sync(); return; }
+        if(t.dataset.rm !== undefined){ mark=+t.dataset.rm; laps=1; reset(); sync(); return; }
+        if(t.id==='rlBack'){ stepBack(); return; }
         if(t.id==='rlStep'){ step(); return; }
-        if(t.id==='rlAll'){ rollAll(); return; }
-        if(t.id==='rlRe'){ reset(); sync(); return; }
+        if(t.id==='rlAll'){ rollAll(1); sync(); return; }
+        if(t.id==='rlAll2'){ rollAll(2); sync(); return; }
+        if(t.id==='rlRe'){ laps=1; reset(); sync(); return; }
       });
       let queue=0;
-      function rollAll(){ queue=poly.length; if(!rolling) step(); }
+      function rollAll(lp){                     /* 정해진 바퀴 수 + P가 바닥에 닿을 때까지 */
+        laps=lp; reset();
+        queue=plan().steps;
+        if(!rolling) step();
+      }
       const onResize=()=>{ layout(); paint(); };
       window.addEventListener('resize', onResize);
       (function loop(ts){
         if(rolling){
           if(!last) last=ts;
           const dt=(ts-last)/1000; last=ts;
-          done=Math.min(need, done + SPEED*dt);
-          apply(done); paint();
-          if(done >= need - 1e-9){ finishStep(); if(queue > 0){ queue--; if(queue>0) step(); } }
+          if(isSemi()){
+            const sp=sBase && sBase.kind === 'roll' ? 0.55 : SPEED;
+            done=Math.min(need, done + sp*dt);
+            semiApply(done/need); paint();
+            if(done >= need - 1e-9){ semiFinish(); if(queue > 0){ queue--; if(queue>0) step(); } }
+          } else {
+            done=Math.min(need, done + SPEED*dt);
+            apply(done); paint();
+            if(done >= need - 1e-9){ finishStep(); if(queue > 0){ queue--; if(queue>0) step(); } }
+          }
         }
         raf=requestAnimationFrame(loop);
       })(0);
