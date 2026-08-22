@@ -23,12 +23,13 @@
   --advInk:#b45309; --advBg:rgba(180,83,9,.13); --advLine:rgba(180,83,9,.35);
   --opInk:#7c3aed; --opBg:rgba(124,58,237,.10); --opLine:rgba(124,58,237,.32);
   --pairInk:#0e8f8a; --pairBg:rgba(14,143,138,.12); --pairLine:rgba(14,143,138,.34);
+  --kkInk:#7a5c00; --kkBg:#fdf3cd; --kkLine:rgba(250,225,0,.75);
 }
 @media (prefers-color-scheme: dark){
-  :root{ --pairInk:#4fd1c5; --pairBg:rgba(79,209,197,.15); --pairLine:rgba(79,209,197,.38); --tdInk:#e6a86b; --tdBg:#241d15; --tdLine:rgba(230,168,107,.3); --surface:#1c1a17; --plane:#100f0d; --sunk:#26241f; --ink:#fbf9f4; --ink2:#c6c1b4; --muted:#8e887c; --line:rgba(255,255,255,.12);
+  :root{ --pairInk:#4fd1c5; --pairBg:rgba(79,209,197,.15); --pairLine:rgba(79,209,197,.38); --kkInk:#f7e04a; --kkBg:rgba(250,225,0,.12); --kkLine:rgba(250,225,0,.42); --tdInk:#e6a86b; --tdBg:#241d15; --tdLine:rgba(230,168,107,.3); --surface:#1c1a17; --plane:#100f0d; --sunk:#26241f; --ink:#fbf9f4; --ink2:#c6c1b4; --muted:#8e887c; --line:rgba(255,255,255,.12);
     --goodBg:rgba(12,163,12,.16); --warnBg:rgba(250,178,25,.14); --critBg:rgba(208,59,59,.18); }
 }
-:root[data-theme="dark"]{ --pairInk:#4fd1c5; --pairBg:rgba(79,209,197,.15); --pairLine:rgba(79,209,197,.38); --opInk:#c4a2ff; --opBg:rgba(167,139,250,.14); --opLine:rgba(167,139,250,.38); --advInk:#f0b429; --advBg:rgba(240,180,41,.16); --advLine:rgba(240,180,41,.4); --tdInk:#e6a86b; --tdBg:#241d15; --tdLine:rgba(230,168,107,.3); --surface:#1c1a17; --plane:#100f0d; --sunk:#26241f; --ink:#fbf9f4; --ink2:#c6c1b4; --muted:#8e887c; --line:rgba(255,255,255,.12);
+:root[data-theme="dark"]{ --pairInk:#4fd1c5; --pairBg:rgba(79,209,197,.15); --pairLine:rgba(79,209,197,.38); --opInk:#c4a2ff; --opBg:rgba(167,139,250,.14); --opLine:rgba(167,139,250,.38); --advInk:#f0b429; --advBg:rgba(240,180,41,.16); --advLine:rgba(240,180,41,.4); --kkInk:#f7e04a; --kkBg:rgba(250,225,0,.12); --kkLine:rgba(250,225,0,.42); --tdInk:#e6a86b; --tdBg:#241d15; --tdLine:rgba(230,168,107,.3); --surface:#1c1a17; --plane:#100f0d; --sunk:#26241f; --ink:#fbf9f4; --ink2:#c6c1b4; --muted:#8e887c; --line:rgba(255,255,255,.12);
   --goodBg:rgba(12,163,12,.16); --warnBg:rgba(250,178,25,.14); --critBg:rgba(208,59,59,.18); }
 :root[data-theme="light"]{ --surface:#fffdf8; --plane:#f6f3ec; --sunk:#efebe1; --ink:#17150f; --ink2:#514d44; --muted:#8b8579; --line:rgba(23,21,15,.11); --tdInk:#a4562a; --tdBg:#fdf3e6; --tdLine:rgba(164,86,42,.28);
   --goodBg:rgba(12,163,12,.10); --warnBg:rgba(250,178,25,.16); --critBg:rgba(208,59,59,.10); }
@@ -73,6 +74,10 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .hintTool::after{content:'';flex:1;height:1px;background:var(--line)}
 .linkCard.tool{border-color:var(--accent);background:var(--accentBg)}
 .linkCard.tool .go{color:var(--accent)}
+.linkCard.kakao{margin-top:14px;border-color:var(--kkLine);background:var(--kkBg)}
+.linkCard.kakao .lab{color:var(--kkInk)}
+.linkCard.kakao .go{color:var(--kkInk)}
+.hint.kakaoNote{margin:6px 4px 0;font-size:11.5px}
 @keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
 
 /* ── 어디서부터 탭 ── */
@@ -1546,6 +1551,10 @@ const LINK_GROUPS = {
 };
 
 /* 학습 도구 — 탈리 폼이 아니라 고정 주소(앱·사이트)로 바로 보내는 버튼 */
+/* 더올림 카카오톡 채널 — 누르면 채팅창이 바로 열린다 */
+const KAKAO = { label:'더올림에 질문하기', emoji:'💬', note:'카톡 채널',
+  url:'https://pf.kakao.com/_PwxoGX/chat' };
+
 const MATHOLIC = {
   label:'매쓰홀릭', emoji:'🧮', note:'앱 열기',
   web:'https://www.matholic.com/',
@@ -2516,7 +2525,13 @@ function renderLink(){
         <div class="lab">${esc(g)}</div>
         <div class="go">체크인 · 등원 · 하원 ›</div>
       </button>`).join('');
-    $('#main').innerHTML = `<div class="hint">학년을 먼저 골라주세요.</div><div class="gradeGrid">${h}</div>`;
+    $('#main').innerHTML = `<div class="hint">학년을 먼저 골라주세요.</div><div class="gradeGrid">${h}</div>
+      <a class="linkCard kakao" href="${esc(KAKAO.url)}" target="_blank" rel="noopener">
+        <div class="emo">${KAKAO.emoji}</div>
+        <div class="lab">${esc(KAKAO.label)}</div>
+        <div class="go">${esc(KAKAO.note)} ›</div>
+      </a>
+      <div class="hint kakaoNote">모르는 문제가 있으면 사진을 찍어 보내세요.</div>`;
     return;
   }
   const keys = LINK_GROUPS[linkGrade].keys;
@@ -2547,8 +2562,14 @@ function renderLink(){
         <div class="lab">${esc(a.label)}</div>
         <div class="go">${esc(a.note)} ›</div>
       </a>`).join('') : '';
+  const kakaoHtml = `
+    <a class="linkCard kakao" href="${esc(KAKAO.url)}" target="_blank" rel="noopener">
+      <div class="emo">${KAKAO.emoji}</div>
+      <div class="lab">${esc(KAKAO.label)}</div>
+      <div class="go">${esc(KAKAO.note)} ›</div>
+    </a>`;
   $('#main').innerHTML = `<button class="backBtn" id="linkBack">‹ ${esc(linkGrade)} 다시 고르기</button>
-    <div class="hint">눌러서 바로 폼으로 이동합니다. 매일 아침 자동으로 최신 주소를 확인해요.</div>${h}${appsHtml}`;
+    <div class="hint">눌러서 바로 열립니다. 매일 아침 자동으로 최신 주소를 확인해요.</div>${h}${appsHtml}${kakaoHtml}`;
 }
 
 function renderNotice(){
