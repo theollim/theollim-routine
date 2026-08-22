@@ -3882,6 +3882,23 @@ TOOLS.rollPoly = (()=>{
     const st=getComputedStyle(document.body), g=k=>st.getPropertyValue(k).trim();
     const INK=g('--ink'), INK2=g('--ink2'), MUT=g('--muted'), RED=g('--crit'), OP=g('--opInk'), SUR=g('--surface');
     ctx.clearRect(0,0,W,H);
+    /* 길이 숫자들이 서로 겹치지 않게 — 먼저 놓인 것을 피해 조금씩 밀어낸다 */
+    const boxes=[];
+    const fits=(x,y,w,h)=> !boxes.some(b=> Math.abs(b[0]-x) < (b[2]+w)/2 + 2 && Math.abs(b[1]-y) < (b[3]+h)/2 + 2);
+    function putLbl(x, y, t, col, dx, dy){
+      const bw=ctx.measureText(t).width + 7, bh=15;
+      const L=Math.hypot(dx, dy) || 1; dx/=L; dy/=L;
+      let px=x, py=y;
+      for(let k=0;k<10;k++){
+        px=Math.max(bw/2+3, Math.min(W - bw/2 - 3, x + dx*k*9));
+        py=Math.max(9, Math.min(H-9, y + dy*k*9));
+        if(fits(px, py, bw, bh)) break;
+      }
+      boxes.push([px, py, bw, bh]);
+      ctx.fillStyle=SUR; ctx.globalAlpha=.92;
+      ctx.beginPath(); ctx.rect(px - bw/2, py - bh/2, bw, bh); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=col; ctx.fillText(t, px, py);
+    }
     /* 바닥 직선 */
     ctx.strokeStyle=MUT; ctx.lineWidth=1.6; ctx.globalAlpha=.6;
     ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.globalAlpha=1;
@@ -3931,12 +3948,8 @@ TOOLS.rollPoly = (()=>{
         ctx.setLineDash([]); ctx.globalAlpha=1;
         ctx.fillStyle=RED;
         [sp.x0, sp.x1].forEach(xx=>{ ctx.beginPath(); ctx.arc(X(xx), Y(0), 3, 0, 6.2832); ctx.fill(); });
-        const t=numStr(sp.r), tw=ctx.measureText(t).width;
-        const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, X(sp.x0) + tw/2 + 7));
-        const ly=Math.max(10, Math.min(H-10, (Y(0)+Y(sp.r))/2));
-        ctx.fillStyle=SUR; ctx.globalAlpha=.92;
-        ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
-        ctx.globalAlpha=1; ctx.fillStyle=RED; ctx.fillText(t, lx, ly);
+        const t=numStr(sp.r);
+        putLbl(X(sp.x0) + ctx.measureText(t).width/2 + 7, (Y(0)+Y(sp.r))/2, t, RED, 1, 0);
         return;
       }
       if(sp.r < 1e-9 || !sp.c) return;
@@ -3944,21 +3957,16 @@ TOOLS.rollPoly = (()=>{
          두 선분은 그때 그 도형의 변(또는 대각선)이라, 어느 길이가 반지름이 됐는지 보인다 */
       const sx=X(sp.c[0]), sy=Y(sp.c[1]);
       const pt=a=>[X(sp.c[0] + sp.r*Math.cos(a)), Y(sp.c[1] + sp.r*Math.sin(a))];
+      /* 반지름은 「굴러간 쪽」 하나만 긋는다 — 도형이 가 있는 방향과 맞게.
+         다만 그 선이 바닥에 거의 누우면 안 보이니 출발 쪽을 대신 긋는다 */
       const P0=pt(sp.a0), P1=pt(sp.a0 - sp.th);
-      ctx.strokeStyle=RED; ctx.globalAlpha=.55; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
-      [P0, P1].forEach(q=>{ ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(q[0],q[1]); ctx.stroke(); });
-      ctx.setLineDash([]); ctx.globalAlpha=1;
-      ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(sx,sy,3.2,0,6.2832); ctx.fill();
-      /* 길이는 「도는 쪽」 반지름에 붙인다 — 굴러가는 방향과 맞게.
-         다만 그 반지름이 바닥에 거의 누워 있으면 반대쪽(출발 쪽)에 붙인다 */
       const aEnd=sp.a0 - sp.th;
       const q=(Math.abs(Math.sin(aEnd)) < 0.3) ? P0 : P1;
-      const t=numStr(sp.r), tw=ctx.measureText(t).width;
-      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, (sx+q[0])/2));
-      const ly=Math.max(10, Math.min(H-10, (sy+q[1])/2));
-      ctx.fillStyle=SUR; ctx.globalAlpha=.92;
-      ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
-      ctx.globalAlpha=1; ctx.fillStyle=RED; ctx.fillText(t, lx, ly);
+      ctx.strokeStyle=RED; ctx.globalAlpha=.55; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(sx,sy); ctx.lineTo(q[0],q[1]); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(sx,sy,3.2,0,6.2832); ctx.fill();
+      putLbl((sx+q[0])/2, (sy+q[1])/2, numStr(sp.r), RED, q[0]-sx, q[1]-sy);
     });
     /* 지금 도는 축과 반지름 */
     if(rolling && pivot){
@@ -3991,12 +3999,7 @@ TOOLS.rollPoly = (()=>{
       ctx.strokeStyle=INK; ctx.globalAlpha=.5; ctx.lineWidth=1.3; ctx.setLineDash([4,3]);
       ctx.beginPath(); ctx.moveTo(X(sO[0]),Y(sO[1])); ctx.lineTo(X(bx),Y(by)); ctx.stroke();
       ctx.setLineDash([]); ctx.globalAlpha=1;
-      const t=numStr(r), tw=ctx.measureText(t).width;
-      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, (X(sO[0])+X(bx))/2));
-      const ly=Math.max(10, Math.min(H-10, (Y(sO[1])+Y(by))/2));
-      ctx.fillStyle=SUR; ctx.globalAlpha=.9;
-      ctx.beginPath(); ctx.rect(lx-tw/2-3.5, ly-7.5, tw+7, 15); ctx.fill();
-      ctx.globalAlpha=1; ctx.fillStyle=INK2; ctx.fillText(t, lx, ly);
+      putLbl((X(sO[0])+X(bx))/2, (Y(sO[1])+Y(by))/2, numStr(r), INK2, X(bx)-X(sO[0]), Y(by)-Y(sO[1]));
     }
     let gx=0, gy=0;
     poly.forEach(q=>{ gx+=X(q[0]); gy+=Y(q[1]); });
@@ -4007,13 +4010,26 @@ TOOLS.rollPoly = (()=>{
       const t=numStr(dist(a, bq));
       const smx=(X(a[0])+X(bq[0]))/2, smy=(Y(a[1])+Y(bq[1]))/2;
       let ox=smx-gx, oy=smy-gy; const L2=Math.hypot(ox,oy)||1;
-      const tw=ctx.measureText(t).width;
-      const px=Math.max(tw/2+5, Math.min(W-tw/2-5, smx + ox/L2*13));
-      const py=Math.max(10, Math.min(H-10, smy + oy/L2*13));
-      ctx.fillStyle=SUR; ctx.globalAlpha=.88;
-      ctx.beginPath(); ctx.rect(px-tw/2-3.5, py-7.5, tw+7, 15); ctx.fill();
-      ctx.globalAlpha=1; ctx.fillStyle=INK2; ctx.fillText(t, px, py);
+      putLbl(smx + ox/L2*13, smy + oy/L2*13, t, INK2, ox, oy);
       seen[t]=1;
+    }
+    /* P에서 그은 대각선 — 어느 길이가 반지름이 되는지 보이고, 중3 피타고라스로도 이어진다 */
+    if(!isSemi() && poly.length > 3){
+      const n=poly.length, A=poly[mark], dia=[];
+      ctx.strokeStyle=INK; ctx.globalAlpha=.42; ctx.lineWidth=1.4; ctx.setLineDash([5,4]);
+      for(let i=0;i<n;i++){
+        if(i === mark || i === (mark+1)%n || i === (mark+n-1)%n) continue;
+        const B=poly[i];
+        ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(B[0]), Y(B[1])); ctx.stroke();
+        dia.push(B);
+      }
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      dia.forEach(B=>{
+        const mx=(X(A[0])+X(B[0]))/2, my=(Y(A[1])+Y(B[1]))/2;
+        let ox=mx-gx, oy=my-gy;
+        if(Math.hypot(ox, oy) < 4){ ox=-(Y(B[1])-Y(A[1])); oy=X(B[0])-X(A[0]); }
+        putLbl(mx, my, numStr(dist(A, B)), INK2, ox, oy);
+      });
     }
     /* 표시한 점 */
     const m=isSemi() ? sO : poly[mark];
@@ -4234,7 +4250,8 @@ TOOLS.tether = (()=>{
   let key='r53', tie=2, L=4, raf=0, root=null, cv=null, ctx=null;
   let wall=false, wallSide=-1;                 /* 담(울타리)이 붙어 있나 · 어느 변이 담인가 */
   let inside=false, holes={0:1};               /* 말뚝이 울타리 안쪽 · 줄이 빠져나가는 구멍들 */
-  let W=0,H=0,DPR=1,SC=1,OX=0,OY=0, playing=false, tAnim=0, last=0;
+  let W=0,H=0,DPR=1,SC=1,OX=0,OY=0, playing=false, tAnim=1, last=0;
+  let stage=99;                                /* 몇 번째 구간까지 펼쳤나 (99 = 전부) */
 
   const P = ()=> SH[key].mk();
   function inner(V, i){
@@ -4253,25 +4270,26 @@ TOOLS.tether = (()=>{
     if(wall){
       const sw=Math.PI - inner(V,tie);
       const a0 = wallSide < 0 ? dirOf(Vv,B) : dirOf(Vv,A) - sw;
-      out.push({ c:Vv, r:L, a0:a0, sw:sw, path:[Vv], main:1 });
+      out.push({ c:Vv, r:L, a0:a0, sw:sw, path:[Vv], main:1, ring:0 });
     } else {
-      out.push({ c:Vv, r:L, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,tie), path:[Vv], main:1 });
+      out.push({ c:Vv, r:L, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,tie), path:[Vv], main:1, ring:0 });
     }
     dirs.forEach(d=>{
       let rem=L, cur=tie, path=[Vv];
-      for(let k=0;k<n;k++){
+      for(let i=0;i<n;i++){
         const nx=(cur+d+n)%n;
         rem -= dist(V[cur], V[nx]);
         if(rem <= 1e-9) break;
         path=path.concat([V[nx]]);
         const s=Math.PI - inner(V,nx), a1=dirOf(V[cur], V[nx]);
-        out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - s, sw:s, path:path.slice(), side:d });
+        out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - s, sw:s, path:path.slice(), side:d, ring:i+1 });
         cur=nx;
       }
     });
     return out;
   }
   const areaOf = s => 0.5*s.r*s.r*s.sw;
+  const maxRing = ()=> sectors().reduce((a,s)=> Math.max(a, s.ring), 0);
 
   const centerOf = V => { let x=0,y=0; V.forEach(p=>{x+=p[0];y+=p[1];}); return [x/V.length, y/V.length]; };
   /* 말뚝이 안쪽에 있고 줄이 구멍으로 빠져나가는 경우 */
@@ -4281,7 +4299,7 @@ TOOLS.tether = (()=>{
       const h=+k, rem0=L - dist(C, V[h]);
       if(rem0 <= 1e-9) return;
       const A=V[(h-1+n)%n], Vv=V[h];
-      out.push({ c:Vv, r:rem0, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,h), path:[C,Vv], main:1, hole:h });
+      out.push({ c:Vv, r:rem0, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,h), path:[C,Vv], main:1, hole:h, ring:0 });
       [1,-1].forEach(d=>{
         let rem=rem0, cur=h, path=[C,Vv];
         for(let i=0;i<n;i++){
@@ -4290,7 +4308,7 @@ TOOLS.tether = (()=>{
           if(rem <= 1e-9) break;
           path=path.concat([V[nx]]);
           const sw2=Math.PI - inner(V,nx), a1=dirOf(V[cur], V[nx]);
-          out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - sw2, sw:sw2, path:path.slice(), hole:h, side:d });
+          out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - sw2, sw:sw2, path:path.slice(), hole:h, side:d, ring:i+1 });
           cur=nx;
         }
       });
@@ -4328,9 +4346,17 @@ TOOLS.tether = (()=>{
           GRN=g('--good'), RED=g('--crit');
     ctx.clearRect(0,0,W,H);
     const secs=sectors();
-    const t=playing ? tAnim : 1;
+    const maxRing=secs.reduce((a,s)=> Math.max(a, s.ring), 0);
+    const stg=Math.min(stage, maxRing+1);
     ctx.font='700 11px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
     ctx.textAlign='center'; ctx.textBaseline='middle';
+    const tag=(x,y,txt,col)=>{
+      const tw=ctx.measureText(txt).width;
+      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, x)), ly=Math.max(9, Math.min(H-9, y));
+      ctx.fillStyle=SUR; ctx.globalAlpha=.92;
+      ctx.beginPath(); ctx.rect(lx-tw/2-3, ly-7.5, tw+6, 15); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=col; ctx.fillText(txt, lx, ly);
+    };
     const wedge=(c,r,a1,a2,main)=>{
       if(a2 - a1 <= 1e-9) return;
       ctx.beginPath(); ctx.moveTo(X(c[0]), Y(c[1]));
@@ -4346,26 +4372,39 @@ TOOLS.tether = (()=>{
     /* 구멍(또는 묶인 자리)마다 — 가운데에서 양쪽으로 동시에 퍼진다 */
     const groups={};
     secs.forEach(s=>{ const k=s.hole===undefined ? 'x' : s.hole; (groups[k]=groups[k]||[]).push(s); });
-    const ropes=[];
+    const ropes=[], labels=[];
     Object.keys(groups).forEach(k=>{
       const g=groups[k], main=g.find(s=>s.main);
       if(!main) return;
       const half=main.sw/2, am=main.a0 + half;
+      /* 구간(ring)을 하나씩 — 지금 펼치는 구간만 부드럽게 자란다 */
+      const frac2 = r => r < stg-1 ? 1 : (r === stg-1 ? tAnim : 0);
       [1,-1].forEach(d=>{
-        const chain=g.filter(s=> s.side===d);
-        const tot=half + chain.reduce((a,s)=> a + s.sw, 0);
-        let rem=t*tot;
-        const h=Math.min(half, rem); rem -= h;
-        if(d>0) wedge(main.c, main.r, am, am + h, 1); else wedge(main.c, main.r, am - h, am, 1);
-        let rope={ path:main.path, c:main.c, r:main.r, a:d>0 ? am + h : am - h };
+        const chain=g.filter(s=> s.side===d).sort((a,b)=> a.ring - b.ring);
+        const f0=frac2(0), h=half*f0;
+        if(h > 1e-9){
+          if(d>0) wedge(main.c, main.r, am, am + h, 1); else wedge(main.c, main.r, am - h, am, 1);
+        }
+        let rope=f0 > 0 ? { path:main.path, c:main.c, r:main.r, a:d>0 ? am + h : am - h } : null;
         chain.forEach(sc=>{
-          const sh=Math.min(sc.sw, rem); rem -= sh;
+          const f=frac2(sc.ring), sh=sc.sw*f;
           if(sh <= 1e-9) return;
           if(d>0) wedge(sc.c, sc.r, sc.a0, sc.a0 + sh, 0);
           else wedge(sc.c, sc.r, sc.a0 + sc.sw - sh, sc.a0 + sc.sw, 0);
           rope={ path:sc.path, c:sc.c, r:sc.r, a:d>0 ? sc.a0 + sh : sc.a0 + sc.sw - sh };
         });
-        ropes.push(rope);
+        if(rope) ropes.push(rope);
+        /* 답지처럼 — 반지름과 중심각을 구간마다 적는다 (그리기는 맨 나중에) */
+        if(d > 0){
+          [main].concat(chain).forEach(sc=>{
+            if(frac2(sc.ring) < 1) return;
+            const mid=sc.a0 + sc.sw/2, px=sc.r*SC;
+            labels.push([sc.c[0] + sc.r*0.86*Math.cos(mid), sc.c[1] + sc.r*0.86*Math.sin(mid),
+                         (+sc.r.toFixed(2)) + 'm', GRN]);
+            if(px > 46) labels.push([sc.c[0] + sc.r*0.46*Math.cos(mid), sc.c[1] + sc.r*0.46*Math.sin(mid),
+                         Math.round(sc.sw*180/Math.PI) + '°', INK2]);
+          });
+        }
       });
     });
     /* 도형(담·건물) */
@@ -4408,6 +4447,8 @@ TOOLS.tether = (()=>{
       ctx.beginPath(); ctx.moveTo(X(p1[0]),Y(p1[1])); ctx.lineTo(X(p2[0]),Y(p2[1])); ctx.stroke();
       ctx.globalAlpha=1;
     }
+    /* 구간마다의 반지름·중심각 — 도형과 줄 위에 */
+    labels.forEach(l=> tag(X(l[0]), Y(l[1]), l[2], l[3]));
     /* 말뚝 */
     const tp=inside ? centerOf(V) : V[tie];
     ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(X(tp[0]),Y(tp[1]),6,0,6.2832); ctx.fill();
@@ -4467,10 +4508,13 @@ TOOLS.tether = (()=>{
         </div></div>
       </div>
       <div class="tsCard">
-        <div class="tsLbl">줄 길이 — <b id="thLen">4 m</b></div>
+        <div class="tsLbl">줄 길이 — <b id="thLen">4 m</b> <span id="thStepLbl" style="float:right;font-weight:800;color:var(--opInk)"></span></div>
         <input id="thRange" type="range" min="1" max="16" step="1" value="4"
           style="width:100%;accent-color:var(--opInk);height:34px">
-        <div class="tsRow" style="margin-top:4px"><button id="thPlay" style="flex:1 1 0">▶ 줄 돌려보기</button></div>
+        <div class="tsRow" style="margin-top:6px">
+          <button id="thBack" style="flex:1 1 0">◂ 뒤로</button>
+          <button id="thStep" style="flex:1 1 0">▸ 한 구간</button>
+          <button id="thAll" style="flex:1 1 0">≫ 전체</button></div>
         <div class="tsLbl">담·건물 모양</div>
         <div class="tsRow" id="thShapes"></div>
         <div class="tsLbl">묶는 자리</div>
@@ -4503,13 +4547,15 @@ TOOLS.tether = (()=>{
         root.querySelector('#thInside').classList.toggle('on', inside);
         root.querySelector('#thWallLbl').style.display = inside ? 'none' : '';
         root.querySelector('#thWallRow').style.display = inside ? 'none' : '';
-        root.querySelector('#thPlay').classList.toggle('on', playing);
+        const mx=maxRing()+1, cur=Math.min(stage, mx);
+        root.querySelector('#thStep').textContent = cur >= mx ? '↻ 처음부터' : '▸ 한 구간';
+        root.querySelector('#thStepLbl').textContent = '구간 ' + cur + ' / ' + mx;
         root.querySelector('#thWall').classList.toggle('on', wall);
         root.querySelector('#thWallSide').style.display = wall ? '' : 'none';
       };
       root.addEventListener('click', e=>{
         const t=e.target.closest('button'); if(!t) return;
-        if(t.dataset.ts){ key=t.dataset.ts; tie=0; holes={0:1}; sync(); layout(); paint(); return; }
+        if(t.dataset.ts){ key=t.dataset.ts; tie=0; holes={0:1}; stage=99; tAnim=1; playing=false; sync(); layout(); paint(); return; }
         if(t.dataset.tt !== undefined){
           const i=+t.dataset.tt;
           if(inside){ if(holes[i]) delete holes[i]; else holes[i]=1;
@@ -4517,20 +4563,25 @@ TOOLS.tether = (()=>{
           else tie=i;
           sync(); layout(); paint(); return;
         }
-        if(t.id==='thInside'){ inside=!inside; if(inside) wall=false; sync(); layout(); paint(); return; }
-        if(t.id==='thPlay'){ playing=!playing; tAnim=0; last=0; sync(); paint(); return; }
-        if(t.id==='thWall'){ wall=!wall; sync(); layout(); paint(); return; }
+        if(t.id==='thInside'){ inside=!inside; if(inside) wall=false; stage=99; tAnim=1; playing=false; sync(); layout(); paint(); return; }
+        if(t.id==='thStep'){ const mx=maxRing()+1;
+          if(stage >= mx){ stage=1; } else { stage=Math.min(mx, stage+1); }
+          tAnim=0; playing=true; last=0; sync(); paint(); return; }
+        if(t.id==='thBack'){ stage=Math.max(0, Math.min(stage, maxRing()+1) - 1);
+          tAnim=1; playing=false; sync(); paint(); return; }
+        if(t.id==='thAll'){ stage=99; tAnim=1; playing=false; sync(); paint(); return; }
+        if(t.id==='thWall'){ wall=!wall; stage=99; tAnim=1; playing=false; sync(); layout(); paint(); return; }
         if(t.id==='thWallSide'){ wallSide=-wallSide; sync(); layout(); paint(); return; }
       });
       root.querySelector('#thRange').addEventListener('input', e=>{
-        L=+e.target.value; layout(); paint();
+        L=+e.target.value; stage=99; tAnim=1; playing=false; sync(); layout(); paint();
       });
       const onResize=()=>{ layout(); paint(); };
       window.addEventListener('resize', onResize);
       (function loop(ts){
         if(playing){
           if(!last) last=ts;
-          tAnim=Math.min(1, tAnim + (ts-last)/2600); last=ts;
+          tAnim=Math.min(1, tAnim + (ts-last)/900); last=ts;   /* 한 구간이 자라는 시간 */
           paint();
           if(tAnim >= 1){ playing=false; sync(); }
         }
