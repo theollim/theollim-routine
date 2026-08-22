@@ -131,7 +131,10 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .toolsBtn[aria-expanded="true"]{background:var(--sunk)}
 .toolsNow{font-size:11.5px;color:var(--muted);flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:10px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:10px;
+  scrollbar-width:none;-ms-overflow-style:none}
+.chips::-webkit-scrollbar{display:none}
+.chip.chipG{padding:6px 11px;font-size:12.5px;flex:1 1 auto;justify-content:center}
 .chipsSub{margin-bottom:12px}
 .chip{flex:0 0 auto;min-height:42px;padding:6px 15px;border-radius:999px;font-size:13px;border:1px solid var(--line);
   color:var(--ink2);background:var(--surface);white-space:nowrap;display:inline-flex;align-items:center}
@@ -1578,10 +1581,9 @@ function inGrade(c, g){
   if(g === '전체') return true;
   if(g === '초등') return c.g === '초등';
   if(g === '고등') return TIER[c.g] === 'hs';
-  const m = /^(중[123])-([12])$/.exec(g);
-  if(m) return c.g === m[1] && termOf(c) === Number(m[2]);
-  return c.g === g;
+  return c.g === g;          // 중1 · 중2 · 중3
 }
+const isMid = (g)=> g === '중1' || g === '중2' || g === '중3';
 
 const TIER = {
   '초등':'es', '중1':'m1', '중2':'m2', '중3':'m3',
@@ -1687,7 +1689,8 @@ const SHAPES = (()=>{
   const DG = (x1,y1,x2,y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-dasharray="3 3" opacity=".5" stroke-width="1.5"/>`;
   const T = (x,y,label,anchor,size) => {
     const a = `x="${x}" y="${y}" font-size="${size||10}" text-anchor="${anchor||'middle'}" font-weight="700"`;
-    return `<text ${a} class="halo">${label}</text><text ${a} fill="currentColor" stroke="none">${label}</text>`;
+    return `<text ${a} class="halo" fill="none" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">${label}</text>`
+         + `<text ${a} fill="currentColor" stroke="none">${label}</text>`;
   };
   return {
     rect: wrap('0 0 120 84', `
@@ -2428,6 +2431,7 @@ let LINKS = null;         // /api/links 결과
 let linkGrade = null;     // '초등' | '중등' | '고등' | null(고르는 중)
 let cardGrade = '전체';
 let hsSubject = '전체';   // 「고등」을 골랐을 때의 과목 칩
+let cardTerm = '전체';    // 「중1·중2·중3」을 골랐을 때의 학기 칩 ('전체' | 1 | 2)
 let cardType = '전체';      // '전체' | '정의' | '공식'
 let cardsShownAll = false;  // 처음엔 앞면(도형·그래프)부터. 눌러야 공식이 열린다
 let onlyUnsure = false;     // 헷갈린 것만 보기
@@ -2597,9 +2601,10 @@ function hash32(str){
   return h >>> 0;
 }
 function pickToday(){
-  const scope = cardGrade + (cardGrade==='고등' ? '/' + hsSubject : '');
+  const scope = cardGrade + (cardGrade==='고등' ? '/' + hsSubject : '/' + cardTerm);
   const store = 'deolrim.links.today.' + dayKey() + '.' + scope;
   const pool = CARDS.filter(c=> inGrade(c, cardGrade)
+    && (cardTerm === '전체' || termOf(c) === cardTerm)
     && (cardGrade!=='고등' || hsSubject==='전체' || c.g===hsSubject) && !c.adv);
   if(!pool.length) return [];
   let saved = null;
@@ -2636,7 +2641,7 @@ function todayHtml(){
 }
 
 function renderCard(){
-  const grades = ['전체','초등','중1-1','중1-2','중2-1','중2-2','중3-1','중3-2','고등'];
+  const grades = ['전체','초등','중1','중2','중3','고등'];
   // 「엮기」 = 자주 틀리는 짝 · 순서 카드 (pair). 정의/공식과는 성격이 달라 따로 센다.
   const matchType = (c, t)=> t==='전체' ? true
     : t==='엮기' ? !!c.pair
@@ -2644,21 +2649,28 @@ function renderCard(){
     : (!c.def && !c.pair);
   const byType = (c)=> matchType(c, cardType);
   const byAdv  = (c)=> showAdv || !c.adv;
-  const gCount = (g)=> CARDS.filter(c=>inGrade(c,g) && byType(c) && byAdv(c)).length;
+  const inTerm = (c)=> cardTerm === '전체' || termOf(c) === cardTerm;
   const chips = grades.map(g=>
-    `<button class="chip" data-cg="${esc(g)}" aria-pressed="${g===cardGrade}">${esc(g)}<i>${gCount(g)}</i></button>`).join('');
-  const subChips = (cardGrade==='고등')
-    ? `<div class="chips chipsSub">` + ['전체'].concat(HS_SUBJECTS).map(k=>{
+    `<button class="chip chipG" data-cg="${esc(g)}" aria-pressed="${g===cardGrade}">${esc(g)}</button>`).join('');
+  let subChips = '';
+  if(cardGrade === '고등'){
+    subChips = `<div class="chips chipsSub">` + ['전체'].concat(HS_SUBJECTS).map(k=>{
         const n = CARDS.filter(c=>TIER[c.g]==='hs' && (k==='전체'||c.g===k) && byType(c) && byAdv(c)).length;
         return `<button class="chip" data-hs="${esc(k)}" aria-pressed="${k===hsSubject}">${esc(k)}<i>${n}</i></button>`;
-      }).join('') + `</div>` : '';
+      }).join('') + `</div>`;
+  } else if(isMid(cardGrade)){
+    subChips = `<div class="chips chipsSub">` + [['전체','전체'],[1,'1학기'],[2,'2학기']].map(([v,lab])=>{
+        const n = CARDS.filter(c=>c.g===cardGrade && (v==='전체'||termOf(c)===v) && byType(c) && byAdv(c)).length;
+        return `<button class="chip" data-tm="${esc(String(v))}" aria-pressed="${v===cardTerm}">${esc(lab)}<i>${n}</i></button>`;
+      }).join('') + `</div>`;
+  }
   const types = ['전체','정의','공식','엮기'];
-  const tCount = (t)=> CARDS.filter(c=>inGrade(c,cardGrade)
+  const tCount = (t)=> CARDS.filter(c=>inGrade(c,cardGrade) && inTerm(c)
       && (cardGrade!=='고등' || hsSubject==='전체' || c.g===hsSubject)
       && matchType(c, t) && byAdv(c)).length;
   const typeChips = types.map(t=>
     `<button class="chip${t==='엮기'?' chipPair':''}" data-ct="${esc(t)}" aria-pressed="${t===cardType}">${esc(t)}<i>${tCount(t)}</i></button>`).join('');
-  const list = CARDS.filter((c)=> inGrade(c, cardGrade)
+  const list = CARDS.filter((c)=> inGrade(c, cardGrade) && inTerm(c)
     && (cardGrade!=='고등' || hsSubject==='전체' || c.g===hsSubject)
     && byType(c) && byAdv(c));
 
@@ -2712,8 +2724,30 @@ function renderCard(){
     </div>` : ''}
     <div class="unitList">${unitsHtml || '<div class="hint">해당하는 카드가 없어요.</div>'}</div>`;
   fitForms();
+  paintHalos();
   scrollChips();
   toTopSync();
+}
+
+/* 도형 글씨의 배경색 테두리를 실제 배경색으로 칠한다.
+   CSS 변수를 SVG stroke 에서 못 읽는 브라우저(갤럭시 브라우저 등)가 있어
+   계산된 배경색을 직접 넣어야 어디서나 같게 보인다. */
+function bgOf(el){
+  let n = el;
+  while(n && n !== document.documentElement){
+    const c = getComputedStyle(n).backgroundColor;
+    if(c && c !== 'transparent' && c.replace(/\s/g,'') !== 'rgba(0,0,0,0)') return c;
+    n = n.parentElement;
+  }
+  return getComputedStyle(document.body).backgroundColor || '#ffffff';
+}
+function paintHalos(){
+  document.querySelectorAll('.fcShape').forEach(box=>{
+    const halos = box.querySelectorAll('text.halo');
+    if(!halos.length) return;
+    const bg = bgOf(box);
+    halos.forEach(t=>{ t.style.stroke = bg; t.style.fill = 'none'; t.style.strokeWidth = '2.2'; });
+  });
 }
 
 /* 단원 제목을 헤더 바로 아래로 끌어온다 */
@@ -2812,7 +2846,18 @@ document.addEventListener('click', (e)=>{
   const linkBack = e.target.closest('#linkBack');
   if(linkBack){ linkGrade = null; renderLink(); return; }
   const chip = e.target.closest('[data-cg]');
-  if(chip){ cardGrade = chip.dataset.cg; if(cardGrade!=='고등') hsSubject='전체'; renderCard(); return; }
+  if(chip){
+    cardGrade = chip.dataset.cg;
+    if(cardGrade!=='고등') hsSubject = '전체';
+    if(!isMid(cardGrade)) cardTerm = '전체';
+    renderCard(); return;
+  }
+  const tmChip = e.target.closest('[data-tm]');
+  if(tmChip){
+    const v = tmChip.dataset.tm;
+    cardTerm = (v === '전체') ? '전체' : Number(v);
+    renderCard(); return;
+  }
   const hsChip = e.target.closest('[data-hs]');
   if(hsChip){ hsSubject = hsChip.dataset.hs; renderCard(); return; }
   const typeChip = e.target.closest('[data-ct]');
