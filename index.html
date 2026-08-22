@@ -139,6 +139,77 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .opSteps{margin:0;padding-left:19px;font-size:13px;line-height:1.55}
 .opSteps li{margin-bottom:5px;word-break:keep-all}
 .opLink{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--muted);word-break:keep-all}
+/* ── 만져보기 도구 (전체화면) ── */
+.toolBtn{width:100%;min-height:44px;margin-top:9px;border-radius:11px;background:var(--opBg);
+  border:1px solid var(--opLine);color:var(--opInk);font-size:13px;font-weight:750}
+.seeCard{width:100%;text-align:left;display:flex;align-items:center;gap:13px;margin-bottom:9px;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px;min-height:64px}
+.seeIco{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--opBg);border:1px solid var(--opLine);
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.seeTxt{flex:1 1 auto;min-width:0}
+.seeTag{font-size:10px;font-weight:800;color:var(--opInk);letter-spacing:.02em}
+.seeNm{font-size:15px;font-weight:750;letter-spacing:-.015em;margin-top:1px}
+.seeSub{font-size:11.5px;color:var(--muted);margin-top:2px;word-break:keep-all;line-height:1.45}
+.seeGo{flex:0 0 auto;font-size:13px;font-weight:700;color:var(--opInk)}
+.toolSheet{position:fixed;inset:0;z-index:60;background:var(--plane);overflow-y:auto;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.toolSheet[hidden]{display:none}
+.tsHead{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;padding:11px 14px;padding-top:calc(11px + env(safe-area-inset-top))}
+.tsHead h2{font-size:15.5px;font-weight:800;letter-spacing:-.015em;margin:0}
+.tsHead .s{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:1px}
+.tsClose{margin-left:auto;flex:0 0 auto;min-width:44px;min-height:36px;padding:0 13px;border-radius:10px;
+  border:1px solid var(--line);background:var(--plane);color:var(--ink2);font-size:13px;font-weight:700}
+.tsBody{padding:12px 14px calc(28px + env(safe-area-inset-bottom));max-width:620px;margin:0 auto}
+.tsCard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px}
+.tsStage{position:relative;width:100%;aspect-ratio:1/1;max-height:54vh;min-height:250px;border-radius:11px;
+  overflow:hidden;background:var(--plane);touch-action:none}
+.tsStage canvas{display:block;width:100%;height:100%}
+.tsTip{position:absolute;left:9px;top:8px;font-size:10.5px;color:var(--muted);pointer-events:none;
+  background:var(--surface);padding:3px 8px;border-radius:999px;border:1px solid var(--line)}
+.tsRead{display:flex;align-items:center;gap:12px;margin-top:10px}
+.tsRead canvas{width:92px;height:92px;flex:0 0 auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.tsInfo{flex:1 1 auto;min-width:0}
+.tsBig{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.tsName{font-size:14px;font-weight:750;color:var(--crit);margin-top:2px}
+.tsSub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.6;word-break:keep-all}
+.tsLbl{font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;margin:0 0 7px}
+.tsLbl+.tsLbl{margin-top:13px}
+.tsRow{display:flex;flex-wrap:wrap;gap:6px}
+.tsRow button{min-height:40px;padding:0 13px;border-radius:10px;border:1px solid var(--line);
+  background:var(--plane);color:var(--ink);font-size:13px;font-weight:650}
+.tsRow button.on{background:var(--opInk);border-color:var(--opInk);color:var(--surface);font-weight:750}
+.tsRow.v{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
+.tsRow.m{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.tsRow.m button{padding:0;min-width:0;font-size:12px;font-weight:700}
+.tsRow.m button.on{background:var(--crit);border-color:var(--crit);color:var(--surface)}
+.tsRow.v button{padding:0;min-width:0;font-weight:750}
+.tsRow.v button.on{background:var(--crit);border-color:var(--crit)}
+.tsNote{background:var(--kkBg);border:1px solid var(--kkLine);border-radius:11px;padding:10px 12px;
+  font-size:12px;line-height:1.7;color:var(--ink2);margin-top:10px;word-break:keep-all}
+.tsNote b{color:var(--ink)}
+/* ── 눌러 보는 그림 ── */
+.opFig{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
+.opFigTop{display:flex;align-items:center;gap:13px}
+.opFigArt{flex:0 0 auto;width:112px;height:112px;color:var(--muted)}
+.opFigArt svg{width:100%;height:100%;display:block}
+.opFigLeg{display:flex;gap:13px;margin-top:9px}
+.opFigLeg span{font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:4px;color:var(--muted);white-space:nowrap}
+.opFigLeg span::before{content:"";flex:0 0 auto;width:13px;height:3px;border-radius:2px}
+.opFigLeg .h::before{background:var(--ink)}
+.opFigLeg .m::before{background:var(--opInk)}
+.opFigNow{flex:1 1 auto;min-width:0}
+.opFigT{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.01em;word-break:keep-all}
+.opFigC{font-size:11.5px;color:var(--muted);margin-top:3px}
+.opFigNote{font-size:12px;line-height:1.55;color:var(--opInk);font-weight:750;margin-top:7px;word-break:keep-all}
+.opFigBtns{display:flex;gap:7px;margin-top:11px}
+.opFigBtns button{flex:1 1 0;min-height:42px;border-radius:11px;border:1px solid var(--opLine);
+  background:var(--opBg);color:var(--opInk);font-size:13px;font-weight:750}
+.opFigBtns button.ghost{flex:0 0 auto;padding:0 15px;background:var(--surface);border-color:var(--line);color:var(--ink2);font-weight:650}
+.opFigList{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.opFigList span{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--line);color:var(--muted)}
+.opFigList span.on{background:var(--opBg);border-color:var(--opLine);color:var(--opInk);font-weight:750}
 .opBlock.hint{background:var(--opBg);border-color:var(--opLine)}
 .opBlock.ans .opAns{font-size:18px;font-weight:800;margin-bottom:7px}
 .opMore{width:100%;min-height:46px;border-radius:12px;background:var(--opBg);border:1px solid var(--opLine);
@@ -283,7 +354,7 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom)}
 nav .in{display:flex;max-width:480px;margin:0 auto;width:100%}
-nav button{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--muted)}
+nav button{flex:1;min-width:0;padding:9px 2px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--muted);white-space:nowrap}
 nav button.on{color:var(--accent);font-weight:650}
 nav button .ic{font-size:19px}
 </style>
@@ -296,6 +367,7 @@ nav button .ic{font-size:19px}
   </div>
 </header>
 <main id="main"></main>
+<div id="toolSheet" class="toolSheet" hidden></div>
 <button id="toTop" aria-label="맨 위로">↑</button>
 <nav>
   <div class="in">
@@ -303,6 +375,7 @@ nav button .ic{font-size:19px}
     <button data-tab="notice"><span class="ic">📌</span>공지</button>
     <button data-tab="card"><span class="ic">🧠</span>공식암기</button>
     <button data-tab="open"><span class="ic">👣</span>어디서부터</button>
+    <button data-tab="see"><span class="ic">👀</span>눈으로 보기</button>
   </div>
 </nav>
 
@@ -528,7 +601,7 @@ const CARDS = [
   {g:'중1', u:'원과 부채꼴', f:'원과 부채꼴', def:'원: 평면 위의 한 점에서 일정한 거리에 있는 점들의 집합 / 부채꼴: 원에서 두 반지름과 호로 둘러싸인 도형', shape:'sector', props:['부채꼴에서 두 반지름이 이루는 각을 중심각이라 한다','현: 원 위의 두 점을 이은 선분 / 활꼴: 현과 호로 둘러싸인 도형']},
   {g:'중1', u:'원과 부채꼴', f:'원의 둘레 · 넓이', b:'둘레 = 2πr\n넓이 = πr²', shape:'circle',
     when:'원 모양의 둘레(원주)나 넓이를 구할 때', caution:'π(파이)는 3.14가 아니라 문자 그대로 둔다', example:'반지름 5cm → 둘레 10π, 넓이 25π'},
-  {g:'중1', u:'원과 부채꼴', f:'호의 길이', b:'2πr × (x/360)\n(x는 중심각)', shape:'sector',
+  {g:'중1', u:'원과 부채꼴', f:'호의 길이', tool:'rollPoly', b:'2πr × (x/360)\n(x는 중심각)', shape:'sector',
     when:'부채꼴의 호의 길이를 구할 때', caution:'원 둘레에서 중심각이 차지하는 비율만큼만', example:'r=6, x=60° → 12π×(60/360)=2π'},
   {g:'중1', u:'원과 부채꼴', f:'부채꼴의 넓이 (중심각 알 때)', b:'πr² × (x/360)\n(x는 중심각)', shape:'sector',
     when:'부채꼴의 중심각을 알고 있을 때 넓이를 구함', caution:'중심각이 전체 360°에서 차지하는 비율만큼만', example:'r=6,x=60° → 36π×(60/360)=6π'},
@@ -543,6 +616,8 @@ const CARDS = [
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'다면체', shape:'polyhedron', def:'다각형인 면으로만 둘러싸인 입체도형', props:['면의 개수에 따라 사면체·오면체 …라고 한다','각기둥·각뿔·각뿔대는 다면체이다','원기둥·원뿔·구는 곡면이 있어 다면체가 아니다']},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'정다면체', shape:'platonic', b:'정사면체 · 정육면체 · 정팔면체\n정십이면체 · 정이십면체\n— 이 5가지뿐이다',
     when:'정다면체의 종류·면의 모양을 물을 때', caution:'면의 모양: 정삼각형(4·8·20면체), 정사각형(6면체), 정오각형(12면체)', example:'각 꼭짓점에 모인 면의 개수 → 정사면체 3개'},
+  {g:'중1', u:'입체도형의 부피와 겉넓이', f:'정육면체의 단면', tool:'cubeSection', b:'세 점을 지나는 평면으로 자른다\n삼각형 · 사각형 · 오각형 · 육각형\n면이 6개라 칠각형은 없다',
+    when:'세 꼭짓점을 지나는 평면으로 자른 단면의 모양을 물을 때', caution:'세 점을 골라도 네 번째 꼭짓점이 그 평면 위에 딸려 올 수 있다 — 삼각형이라고 단정하지 말 것 / 단면의 변의 개수 = 그 평면이 지나는 면의 개수 / 마주 보는 면의 잘린 자국은 서로 평행해서 정오각형은 나오지 않는다 / 꼭짓점만 골라서는 정삼각형과 직사각형뿐 — 오각형·육각형은 모서리 위의 점이어야 나온다', example:'윗면 ABCD · 아랫면 EFGH 에서\n세 꼭짓점 B, D, H 를 지나는 평면\n→ B 아래의 F 도 같은 평면 위에 있다\n단면은 삼각형이 아니라 사각형 BFHD\nBF = 모서리, BD = 면의 대각선\n두 변의 비가 1 : √2 인 직사각형'},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'회전체', shape:'rotationBody', def:'평면도형을 한 직선(회전축)을 축으로 1회전 시켜 얻은 입체도형', props:['원기둥·원뿔·원뿔대·구가 회전체이다','회전축에 수직인 평면으로 자른 단면은 항상 원이다','회전축을 품는 평면으로 자른 단면은 모두 합동이고 선대칭도형이다']},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'각기둥과 각뿔', shape:'prismPyramid', def:'각기둥: 밑면이 다각형이고 옆면이 모두 직사각형인 입체도형 / 각뿔: 밑면이 다각형이고 옆면이 모두 삼각형이며 한 점에서 모이는 입체도형', props:['두 밑면이 서로 평행하고 합동이면 각기둥이다','n각기둥: 면 n+2개, 꼭짓점 2n개, 모서리 3n개','n각뿔: 면 n+1개, 꼭짓점 n+1개, 모서리 2n개']},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'각기둥의 부피', b:'밑넓이 × 높이', shape:'prism',
@@ -1667,12 +1742,12 @@ const OPENERS = [
    ans:'가운데 수 × 9.',
    why:['여덟 개가 □−8, □−7, □−6, □−1, □+1, □+6, □+7, □+8 이라 ±가 전부 상쇄된다','남는 것은 □가 아홉 개','문자가 왜 필요한지를 알려주는 카드 — 숫자로는 우연처럼 보인다']},
 
-  {lv:'초등', q:'시침과 분침은\n하루에 몇 번 겹칠까?',
-   steps:['12시에 겹친다는 것부터 확인한다','그다음은 1시 몇 분쯤일지 어림해 본다','12시간 동안 몇 번인지 세어 본다'],
+  {lv:'초등', q:'짧은바늘과 긴바늘이 딱 포개지는 때는\n하루에 몇 번일까?\n12번일까?', fig:'clockOverlap',
+   steps:['12시에 딱 포개지는 것부터 확인한다','아래 시계를 눌러 1시, 2시, 3시 … 차례로 본다','11시에도 포개지는 때가 있는지 본다'],
    link:'초등 시각 × 중1 일차방정식',
-   hint:'12시에 겹칩니다. 다음은 1시 5분쯤이죠. 12시간 동안 몇 번인지 세어 보세요. 12번일까요?',
-   ans:'하루 22번.',
-   why:['12시간에 11번이다','분침이 시침보다 정확히 한 바퀴 더 돌 때마다 겹친다','12시간 동안 분침은 12바퀴, 시침은 1바퀴 → 차이가 11바퀴']},
+   hint:'12시 → 1시 5분 → 2시 11분 → 3시 16분 … 한 시간에 한 번씩 오는데, 조금씩 뒤로 밀려요. 10시 55분 다음은 11시 몇 분일까요? 아니면 바로 12시일까요?',
+   ans:'하루 22번. (12시간에 11번)',
+   why:['12시, 1시 5분, 2시 11분, 3시 16분 … 10시 55분 — 세어 보면 11번','포개지는 때가 1시간이 아니라 1시간 5분쯤씩 뒤로 밀린다','그래서 11시대에는 한 번도 없고, 11번째에 12시로 되돌아온다']},
 
   {lv:'초등', q:'어떤 그림은 한 붓에 그려지고\n어떤 것은 안 된다.\n무엇이 다를까?',
    steps:['되는 것 몇 개, 안 되는 것 몇 개를 그려 본다 (조각조각 떨어진 그림은 빼고)','점마다 선이 몇 개 모이는지 센다','홀수인 점이 몇 개인지 비교한다'],
@@ -1745,11 +1820,11 @@ const OPENERS = [
    why:['열 번 만에 천 장이 넘는다','더하기가 아니라 곱하기로 늘어난다는 것을 처음 만나는 자리','중2 「종이 30번 접기」 카드로 이어진다']},
 
   {lv:'초등', q:'하루 동안 시침과 분침이\n직각을 이루는 순간은\n몇 번일까?',
-   steps:['겹치는 것이 12시간에 11번이었음을 떠올린다','겹침과 겹침 사이에 직각이 몇 번 생기는지 본다','12시간을 세고 두 배 한다'],
+   steps:['포개지는 것이 12시간에 11번이었음을 떠올린다','포개짐과 포개짐 사이에 직각이 몇 번 생기는지 본다','12시간을 세고 두 배 한다'],
    link:'초등 시각 × 중1 일차방정식',
-   hint:'분침이 시침을 한 바퀴 앞지르는 동안, 90° 앞선 순간과 270° 앞선 순간이 각각 한 번씩 있습니다.',
+   hint:'포개진 다음 긴바늘이 앞서 나가다가 직각이 되고, 반대편으로 갔다가 또 한 번 직각이 됩니다. 한 번 포개지고 다음에 포개질 때까지 직각이 몇 번인가요?',
    ans:'하루 44번.',
-   why:['12시간에 22번 — 앞지르기 11번 × 2','겹침 카드와 짝으로 보면 규칙이 한눈에 들어온다','같은 상황을 각도로 바꿔 보는 연습']},
+   why:['한 번 포개지고 다음까지 직각이 두 번 — 90° 앞설 때와 270° 앞설 때','12시간에 11 × 2 = 22번, 하루면 44번','포개짐 카드와 짝으로 보면 규칙이 한눈에 들어온다']},
 
   {lv:'초등', q:'길이 30m인 버스가\n길이 200m인 터널을 완전히 통과하려면\n몇 m를 가야 할까?',
    steps:['버스 앞이 터널 입구에 닿는 순간을 그려 본다','버스 뒤가 터널 출구를 빠져나오는 순간을 그려 본다','그 사이에 버스 앞이 움직인 거리를 잰다'],
@@ -3034,6 +3109,818 @@ let shapeFirst = true;      // 그림이 있는 카드는 그림을 앞면으로
 try{ shapeFirst = localStorage.getItem('deolrim.links.shapeFirst') !== '0'; }catch(e){}
 try{ toolsOpen = localStorage.getItem('deolrim.links.tools') === '1'; }catch(e){}
 const opStage = new Map();  // 어디서부터 카드가 몇 단까지 열렸나 (0~3)
+const opFig = new Map();    // 눌러 보는 그림이 몇 번째를 보고 있나
+
+/* ═══════════ 눌러 보는 그림 — 시계 ═══════════ */
+const CLOCK = (()=>{
+  const R = 42;                                  /* 문자판 반지름 — 숫자는 그 바깥에 둔다 */
+  let face = '';
+  for(let i = 0; i < 12; i++){
+    const a = i * 30 * Math.PI / 180, big = i % 3 === 0, s = big ? 7 : 4;
+    const x1 = 60 + Math.sin(a) * (R - s), y1 = 60 - Math.cos(a) * (R - s);
+    const x2 = 60 + Math.sin(a) * R,       y2 = 60 - Math.cos(a) * R;
+    face += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke-width="${big ? 2.6 : 1.5}"/>`;
+  }
+  /* 숫자는 12·3·6·9 만 — 초등이 시각을 바로 읽을 수 있게, 바늘과 겹치지 않도록 문자판 바깥에 */
+  let nums = '';
+  [[12,0],[3,90],[6,180],[9,270]].forEach(([n, d])=>{
+    const a = d * Math.PI / 180, x = 60 + Math.sin(a) * 53, y = 60 - Math.cos(a) * 53;
+    nums += `<text x="${x.toFixed(1)}" y="${(y + 4.2).toFixed(1)}" font-size="12" font-weight="700"
+      text-anchor="middle" fill="var(--ink2)" stroke="none">${n}</text>`;
+  });
+  const hand = (deg, len, w, color)=>{
+    const a = deg * Math.PI / 180;
+    return `<line x1="60" y1="60" x2="${(60 + Math.sin(a) * len).toFixed(1)}" y2="${(60 - Math.cos(a) * len).toFixed(1)}" stroke="${color}" stroke-width="${w}"/>`;
+  };
+  /* hDeg 시침 각도 · mDeg 분침 각도 (12시 방향이 0°, 시계 방향) */
+  return (hDeg, mDeg)=> `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none"
+      stroke="currentColor" stroke-linecap="round">
+      <circle cx="60" cy="60" r="${R}" stroke-width="2.2"/>${face}${nums}
+      ${hand(mDeg, 33, 2.6, 'var(--opInk)')}
+      ${hand(hDeg, 21, 4.6, 'var(--ink)')}
+      <circle cx="60" cy="60" r="3.2" fill="var(--ink)" stroke="none"/>
+    </svg>`;
+})();
+
+/* 겹치는 시각 — 12시간에 11번, 720/11분마다 */
+const OVERLAPS = Array.from({length: 11}, (_, k)=>{
+  const t = 720 * k / 11;                       // 12시 이후 몇 분인가
+  const h = Math.floor(t / 60), mm = Math.round(t - h * 60);
+  return { deg: 360 * k / 11, label: k === 0 ? '12시 정각' : (h === 0 ? 12 : h) + '시 ' + mm + '분쯤' };
+});
+
+const OPFIGS = {
+  clockOverlap: {
+    n: 12,
+    title: '눌러서 하나씩 보기',
+    at(k){
+      if(k >= 11) return { deg: 0, big: '다시 12시', sub: '한 바퀴 — 모두 11번',
+        note: '10시 55분 다음이 11시가 아니라 바로 12시예요. 11시대에는 한 번도 포개지지 않아요.' };
+      const o = OVERLAPS[k];
+      return { deg: o.deg, big: o.label, sub: (k + 1) + '번째',
+        note: k === 10 ? '이제 다음을 눌러 보세요. 11시 몇 분일까요?' : '' };
+    },
+    chips(k){ return OVERLAPS.map((o, i)=> ({ t: o.label, on: i <= k })); }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   만져보기 — 전체화면 도구
+   카드에 tool:'...' 이 붙어 있으면 「만져보기」 버튼이 생기고,
+   누르면 이 시트가 화면 가득 열린다.
+   ═══════════════════════════════════════════════════════════════ */
+const TOOLS = {};
+let toolNow = null;
+
+function openTool(key){
+  const T = TOOLS[key];
+  if(!T) return;
+  const sheet = $('#toolSheet');
+  sheet.innerHTML = `<div class="tsHead">
+      <div><h2>${esc(T.title)}</h2><span class="s">${esc(T.sub)}</span></div>
+      <button class="tsClose" id="tsClose">닫기</button>
+    </div><div class="tsBody">${T.html()}</div>`;
+  sheet.hidden = false;
+  document.body.style.overflow = 'hidden';
+  toolNow = { key: key, stop: T.init(sheet) || null };
+}
+function closeTool(){
+  if(toolNow && typeof toolNow.stop === 'function') toolNow.stop();
+  toolNow = null;
+  const sheet = $('#toolSheet');
+  sheet.hidden = true; sheet.innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+/* ═══════ 정육면체의 단면 ═══════
+   꼭짓점 이름은 교과서·문제집과 같게 — 윗면 ABCD, 아랫면 EFGH (E가 A 아래).
+   z축이 위쪽이다. */
+TOOLS.cubeSection = (()=>{
+  const V = [
+    [-1,-1, 1], [ 1,-1, 1], [ 1, 1, 1], [-1, 1, 1],   /* A B C D — 윗면 */
+    [-1,-1,-1], [ 1,-1,-1], [ 1, 1,-1], [-1, 1,-1]    /* E F G H — 아랫면 */
+  ];
+  const EG = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  const FC = [
+    {v:[0,1,2,3], n:[0,0, 1]}, {v:[4,5,6,7], n:[0,0,-1]},
+    {v:[0,1,5,4], n:[0,-1,0]}, {v:[1,2,6,5], n:[ 1,0,0]},
+    {v:[2,3,7,6], n:[0, 1,0]}, {v:[3,0,4,7], n:[-1,0,0]}
+  ];
+  const LB = ['A','B','C','D','E','F','G','H'];
+
+  const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+  const add=(a,b)=>[a[0]+b[0],a[1]+b[1],a[2]+b[2]];
+  const mul=(a,s)=>[a[0]*s,a[1]*s,a[2]*s];
+  const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+  const crs=(a,b)=>[a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+  const len=a=>Math.sqrt(dot(a,a));
+  const nrm=a=>{ const l=len(a); return l<1e-12?[0,0,0]:[a[0]/l,a[1]/l,a[2]/l]; };
+
+  /* 미리 맞춰둔 자리 — 모두 손으로 검산한 값 */
+  const PRE = {
+    tri  : [[0,.5],[1,.5],[9,.5]],        /* 꼭짓점 B 를 자른다 → 정삼각형 */
+    quad : [[8,.5],[9,.5],[10,.5]],       /* 밑면과 나란히 → 정사각형 */
+    penta: [[0,.75],[2,.75],[5,.5]],      /* B·C·G 를 잘라낸다 → 오각형 */
+    hexa : [[0,.5],[5,.5],[11,.5]]        /* 모서리 여섯의 중점 → 정육각형 */
+  };
+  /* 문제집에 자주 나오는 꼭짓점 조합 */
+  /* 점 번호 — 0~7 은 꼭짓점, 100+k 는 k번 모서리의 중점 */
+  const MID = e => 100 + e;
+  const ptOfId = id => id < 100 ? V[id]
+    : mul(add(V[EG[id-100][0]], V[EG[id-100][1]]), 0.5);
+  const nameOfId = id => id < 100 ? LB[id]
+    : LB[EG[id-100][0]] + LB[EG[id-100][1]] + '의 중점';
+  const ALLIDS = [0,1,2,3,4,5,6,7].concat(EG.map((_,k)=> MID(k)));
+
+  const VPRE = [
+    { t:'B, D, H', v:[1,3,7] },                 /* F 가 딸려 와서 직사각형 */
+    { t:'A, C, F', v:[0,2,5] },                 /* 꼭짓점 B 를 잘라낸 정삼각형 */
+    { t:'D, AB중점, F', v:[3, MID(0), 5] },     /* 마름모 */
+    { t:'AB중점, DA중점, F', v:[MID(0), MID(3), 5] }, /* 등변사다리꼴 — H도 딸려 온다 */
+    { t:'AB·FG·DH 중점', v:[MID(0), MID(5), MID(11)] }  /* 여섯 모서리를 지나는 정육각형 */
+  ];
+
+  let yaw=-0.62, pitch=0.62, zoom=1;
+  let mode='free';                                   /* free | vertex */
+  let pts=[{e:0,t:.5},{e:5,t:.5},{e:11,t:.5}];
+  let vsel=[1,3,7];                                  /* 점 모드에서 고른 세 점 (점 번호) */
+  let showLabel=true, onlySection=false, spinning=false;
+  let drag=null, cv, ctx, scv, sctx, stage, W=0,H=0,DPR=1,CX=0,CY=0,SC=1, raf=0, root=null;
+  const CAMD = 7.5;
+
+  const ptOn=(e,t)=>{ const a=V[EG[e][0]], b=V[EG[e][1]]; return add(a, mul(sub(b,a), t)); };
+  const P = i => mode==='vertex' ? ptOfId(vsel[i]) : ptOn(pts[i].e, pts[i].t);
+  const ready = ()=> mode!=='vertex' || vsel.length===3;
+
+  function planeOf(){
+    if(!ready()) return null;
+    const p=P(0), q=P(1), r=P(2);
+    const n=crs(sub(q,p), sub(r,p));
+    if(len(n) < 1e-7) return null;
+    return { n:nrm(n), d:dot(nrm(n), p) };
+  }
+  function section(pl){
+    if(!pl) return null;
+    const raw=[];
+    for(let k=0;k<EG.length;k++){
+      const a=V[EG[k][0]], b=V[EG[k][1]];
+      const da=dot(pl.n,a)-pl.d, db=dot(pl.n,b)-pl.d;
+      if(Math.abs(da)<1e-9 && Math.abs(db)<1e-9) continue;
+      if(da*db > 1e-12) continue;
+      const t=da/(da-db);
+      if(t < -1e-9 || t > 1+1e-9) continue;
+      raw.push(add(a, mul(sub(b,a), t)));
+    }
+    const u=[];
+    raw.forEach(p=>{ if(!u.some(q=> len(sub(p,q)) < 1e-6)) u.push(p); });
+    if(u.length < 3) return null;
+    let c=[0,0,0]; u.forEach(p=> c=add(c,p)); c=mul(c, 1/u.length);
+    const ax=nrm(sub(u[0],c)), ay=crs(pl.n, ax);
+    u.sort((a,b)=> Math.atan2(dot(sub(a,c),ay), dot(sub(a,c),ax)) - Math.atan2(dot(sub(b,c),ay), dot(sub(b,c),ax)));
+    return { poly:u, center:c, ax:ax, ay:ay };
+  }
+  function faceOfEdge(p,q){
+    for(let f=0;f<FC.length;f++){
+      const n=FC[f].n, d=dot(n, V[FC[f].v[0]]);
+      if(Math.abs(dot(n,p)-d) < 1e-6 && Math.abs(dot(n,q)-d) < 1e-6) return f;
+    }
+    return -1;
+  }
+  function shapeName(sec){
+    if(!sec) return '';
+    const p=sec.poly, n=p.length, s=[], ang=[];
+    for(let i=0;i<n;i++) s.push(len(sub(p[(i+1)%n], p[i])));
+    for(let i=0;i<n;i++){
+      const a=sub(p[(i-1+n)%n], p[i]), b=sub(p[(i+1)%n], p[i]);
+      ang.push(Math.acos(Math.max(-1, Math.min(1, dot(a,b)/(len(a)*len(b))))) * 180/Math.PI);
+    }
+    const eps=0.035;
+    const same=arr=>{ const mx=Math.max.apply(null,arr), mn=Math.min.apply(null,arr); return (mx-mn)/mx < eps; };
+    const eq=(a,b)=> Math.abs(a-b)/Math.max(a,b) < eps;
+    const right=a=> Math.abs(a-90) < 2.2;
+    const par=(i,j)=>{
+      const u=nrm(sub(p[(i+1)%n], p[i])), v=nrm(sub(p[(j+1)%n], p[j]));
+      return len(crs(u,v)) < 0.03;
+    };
+    const regular = same(s) && same(ang);
+    if(n===3){
+      if(regular) return '정삼각형';
+      if(ang.some(right)) return '직각삼각형';
+      if(eq(s[0],s[1])||eq(s[1],s[2])||eq(s[0],s[2])) return '이등변삼각형';
+      return '';
+    }
+    if(n===4){
+      const allRight = ang.every(right);
+      if(same(s) && allRight) return '정사각형';
+      if(allRight) return '직사각형';
+      if(same(s)) return '마름모';
+      if(par(0,2) && par(1,3)) return '평행사변형';
+      if(par(0,2) || par(1,3)) return '사다리꼴';
+      return '';
+    }
+    if(regular) return n===6 ? '정육각형' : '';
+    return '';
+  }
+
+  /* ── 색은 앱 테마에서 그때그때 읽는다 (다크모드) ── */
+  let CO = {};
+  function readColors(){
+    const s = getComputedStyle(document.body);
+    const g = k => s.getPropertyValue(k).trim();
+    CO = { ink:g('--ink'), ink2:g('--ink2'), muted:g('--muted'), surface:g('--surface'),
+           line:g('--muted'), red:g('--crit'), fill:g('--critBg') };
+  }
+
+  function rot(p){
+    const cy=Math.cos(yaw), sy=Math.sin(yaw);
+    const x=p[0]*cy - p[1]*sy, y=p[0]*sy + p[1]*cy, z=p[2];
+    const cp=Math.cos(pitch), sp=Math.sin(pitch);
+    return [x, y*cp - z*sp, y*sp + z*cp];
+  }
+  function proj(p){
+    const r=rot(p), k=CAMD/(CAMD + r[1]);
+    return { x:CX + r[0]*k*SC, y:CY - r[2]*k*SC, z:r[1] };
+  }
+  function resize(){
+    if(!stage) return;
+    const b=stage.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1, 2);
+    W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
+    cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    CX=W/2; CY=H/2; SC=Math.min(W,H)*0.222*zoom;
+    draw();
+  }
+  function visibleFaces(){
+    const camR=[0,-CAMD,0];
+    return FC.map(f=>{
+      let c=[0,0,0]; f.v.forEach(i=> c=add(c, V[i])); c=mul(c, 0.25);
+      return dot(rot(f.n), sub(camR, rot(c))) > 0;
+    });
+  }
+  function draw(){
+    if(!ctx) return;
+    readColors();
+    ctx.clearRect(0,0,W,H);
+    const vis=visibleFaces();
+    const S=V.map(proj);
+    const sec=section(planeOf());
+    const edgeVisible=k=>{
+      for(let f=0;f<FC.length;f++){
+        if(!vis[f]) continue;
+        const fv=FC[f].v;
+        for(let i=0;i<4;i++){
+          const a=fv[i], b=fv[(i+1)%4];
+          if((a===EG[k][0]&&b===EG[k][1])||(a===EG[k][1]&&b===EG[k][0])) return true;
+        }
+      }
+      return false;
+    };
+    if(!onlySection){
+      ctx.lineWidth=1.6; ctx.strokeStyle=CO.muted; ctx.globalAlpha=.55; ctx.setLineDash([5,5]);
+      for(let k=0;k<12;k++){
+        if(edgeVisible(k)) continue;
+        ctx.beginPath(); ctx.moveTo(S[EG[k][0]].x,S[EG[k][0]].y); ctx.lineTo(S[EG[k][1]].x,S[EG[k][1]].y); ctx.stroke();
+      }
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.fillStyle=CO.muted; ctx.globalAlpha=.10;
+      FC.forEach((f,i)=>{
+        if(!vis[i]) return;
+        ctx.beginPath();
+        f.v.forEach((vi,j)=>{ const s=S[vi]; j?ctx.lineTo(s.x,s.y):ctx.moveTo(s.x,s.y); });
+        ctx.closePath(); ctx.fill();
+      });
+      ctx.globalAlpha=1;
+    }
+    if(sec){
+      const Q=sec.poly.map(proj);
+      ctx.beginPath();
+      Q.forEach((q,i)=> i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));
+      ctx.closePath();
+      ctx.fillStyle=CO.red; ctx.globalAlpha=.24; ctx.fill(); ctx.globalAlpha=1;
+      ctx.lineWidth=2.6; ctx.strokeStyle=CO.red; ctx.lineJoin='round';
+      for(let i=0;i<Q.length;i++){
+        const f=faceOfEdge(sec.poly[i], sec.poly[(i+1)%sec.poly.length]);
+        ctx.setLineDash((f<0 || vis[f] || onlySection) ? [] : [5,5]);
+        ctx.beginPath(); ctx.moveTo(Q[i].x,Q[i].y); ctx.lineTo(Q[(i+1)%Q.length].x,Q[(i+1)%Q.length].y); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+    if(!onlySection){
+      ctx.lineWidth=2.4; ctx.strokeStyle=CO.ink; ctx.lineCap='round';
+      for(let k=0;k<12;k++){
+        if(!edgeVisible(k)) continue;
+        ctx.beginPath(); ctx.moveTo(S[EG[k][0]].x,S[EG[k][0]].y); ctx.lineTo(S[EG[k][1]].x,S[EG[k][1]].y); ctx.stroke();
+      }
+      /* 모서리의 중점 — 점 모드에서 고를 수 있는 자리 */
+      if(mode==='vertex'){
+        for(let k=0;k<12;k++){
+          const id=MID(k), q=proj(ptOfId(id)), picked = vsel.indexOf(id) > -1;
+          ctx.beginPath(); ctx.arc(q.x,q.y, picked?8.5:4.6, 0, 6.2832);
+          ctx.fillStyle = picked ? CO.red : CO.surface; ctx.fill();
+          ctx.lineWidth = picked ? 2.2 : 1.5;
+          ctx.strokeStyle = picked ? CO.surface : CO.muted; ctx.stroke();
+        }
+      }
+      if(showLabel){
+        ctx.font='700 13px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        for(let i=0;i<8;i++){
+          const q=proj(add(V[i], mul(nrm(V[i]), 0.26)));
+          const picked = mode==='vertex' && vsel.indexOf(i) > -1;
+          ctx.fillStyle = picked ? CO.red : CO.surface;
+          ctx.beginPath(); ctx.arc(q.x,q.y,10,0,6.2832); ctx.fill();
+          ctx.lineWidth=1.4; ctx.strokeStyle = picked ? CO.red : CO.muted; ctx.stroke();
+          ctx.fillStyle = picked ? CO.surface : CO.ink2;
+          ctx.fillText(LB[i], q.x, q.y);
+        }
+      }
+    }
+    if(mode==='free'){
+      for(let i=0;i<3;i++){
+        const s=proj(P(i));
+        ctx.beginPath(); ctx.arc(s.x,s.y,8.5,0,6.2832);
+        ctx.fillStyle=CO.red; ctx.fill();
+        ctx.lineWidth=2.2; ctx.strokeStyle=CO.surface; ctx.stroke();
+      }
+    }
+    drawShape(sec); readout(sec);
+  }
+  function drawShape(sec){
+    if(!sctx) return;
+    const w=scv.width, h=scv.height;
+    sctx.clearRect(0,0,w,h);
+    if(!sec) return;
+    let p2=sec.poly.map(p=>{ const v=sub(p,sec.center); return [dot(v,sec.ax), dot(v,sec.ay)]; });
+    /* 가장 긴 변을 가로로 눕혀 보여준다 — 직사각형인지 마름모인지 한눈에 보이게 */
+    let li=0, lm=-1;
+    for(let i=0;i<p2.length;i++){
+      const j=(i+1)%p2.length, dd=Math.hypot(p2[j][0]-p2[i][0], p2[j][1]-p2[i][1]);
+      if(dd > lm){ lm=dd; li=i; }
+    }
+    const lj=(li+1)%p2.length;
+    const th=Math.atan2(p2[lj][1]-p2[li][1], p2[lj][0]-p2[li][0]);
+    const ct=Math.cos(-th), st2=Math.sin(-th);
+    p2=p2.map(q=> [q[0]*ct - q[1]*st2, q[0]*st2 + q[1]*ct]);
+    let mx=0; p2.forEach(q=> mx=Math.max(mx, Math.hypot(q[0],q[1])));
+    const k=(Math.min(w,h)/2 - 14)/mx;
+    sctx.save(); sctx.translate(w/2, h/2);
+    sctx.beginPath();
+    p2.forEach((q,i)=>{ const x=q[0]*k, y=-q[1]*k; i?sctx.lineTo(x,y):sctx.moveTo(x,y); });
+    sctx.closePath();
+    sctx.fillStyle=CO.red; sctx.globalAlpha=.20; sctx.fill(); sctx.globalAlpha=1;
+    sctx.lineWidth=3.6; sctx.strokeStyle=CO.red; sctx.lineJoin='round'; sctx.stroke();
+    sctx.restore();
+  }
+  function readout(sec){
+    if(!root) return;
+    const n = sec ? sec.poly.length : 0;
+    const nm = sec ? shapeName(sec) : '';
+    root.querySelector('#tsN').textContent = n ? (n + '각형') : '—';
+    root.querySelector('#tsNm').textContent = nm;
+    const d = root.querySelector('#tsD');
+    if(mode==='vertex' && vsel.length < 3){
+      d.textContent = '점을 세 개 골라주세요. (' + vsel.length + '/3)';
+    } else if(mode==='vertex' && !sec){
+      d.textContent = vsel.map(nameOfId).join(' · ') + ' — 세 점이 한 직선 위에 있어 평면이 정해지지 않습니다.';
+    } else if(mode==='vertex'){
+      d.innerHTML = esc(vsel.map(nameOfId).join(' · ')) + '<br>자른 면이 지나는 정육면체의 면 : <b>' + n + '개</b>';
+    } else if(!sec){
+      d.textContent = '세 점이 한 직선 위에 있어 평면이 정해지지 않습니다. 다른 점을 골라보세요.';
+    } else {
+      d.innerHTML = '자른 면이 지나는 정육면체의 면 : <b>' + n + '개</b>';
+    }
+  }
+
+  function segDist(px,py,ax,ay,bx,by){
+    const dx=bx-ax, dy=by-ay, L=dx*dx+dy*dy;
+    let t=L ? ((px-ax)*dx + (py-ay)*dy)/L : 0;
+    t=Math.max(0, Math.min(1, t));
+    return { d:Math.hypot(px-(ax+dx*t), py-(ay+dy*t)), t:t };
+  }
+
+  return {
+    title:'정육면체의 단면',
+    sub:'세 점을 지나는 평면으로 잘라보기',
+    emoji:'🧊', tag:'중1 · 다면체와 회전체',
+    blurb:'꼭짓점·중점을 골라 자르면 단면이 무슨 도형인지 바로 나옵니다. 돌려 보고 실제 모양도 봐요.',
+    html(){
+      return `<div class="tsCard">
+        <div class="tsStage" id="tsStage"><canvas id="tsCv"></canvas>
+          <div class="tsTip" id="tsTip"></div></div>
+        <div class="tsRead">
+          <canvas id="tsShape" width="184" height="184"></canvas>
+          <div class="tsInfo"><div class="tsBig" id="tsN">—</div>
+            <div class="tsName" id="tsNm"></div><div class="tsSub" id="tsD"></div></div>
+        </div>
+      </div>
+      <div class="tsCard">
+        <div class="tsLbl">자르는 방법</div>
+        <div class="tsRow"><button data-tm="vertex">꼭짓점·중점으로</button><button data-tm="free">모서리 위 아무 곳</button></div>
+        <div id="tsVwrap">
+          <div class="tsLbl">꼭짓점 — 세 개까지</div>
+          <div class="tsRow v" id="tsVrow"></div>
+          <div class="tsLbl">모서리의 중점</div>
+          <div class="tsRow m" id="tsMrow"></div>
+          <div class="tsLbl">문제집에 자주 나오는 것</div>
+          <div class="tsRow" id="tsVpre"></div>
+        </div>
+        <div id="tsFwrap">
+          <div class="tsLbl">이런 모양으로 맞춰보기</div>
+          <div class="tsRow">
+            <button data-pre="tri">삼각형</button><button data-pre="quad">사각형</button>
+            <button data-pre="penta">오각형</button><button data-pre="hexa">육각형</button>
+            <button data-pre="rand">아무거나</button>
+          </div>
+        </div>
+        <div class="tsLbl">보기 설정</div>
+        <div class="tsRow">
+          <button id="tsLab">꼭짓점 이름</button><button id="tsOnly">단면만 보기</button>
+          <button id="tsSpin">돌리기</button><button id="tsRe">시점 처음으로</button>
+        </div>
+        <div class="tsNote">꼭짓점 이름은 문제집과 같습니다 — <b>윗면 ABCD · 아랫면 EFGH</b>, E가 A 바로 아래.
+          도형을 돌려 보고 문제집 그림과 이름이 맞는지 먼저 맞춰보세요.<br><br>
+          세 꼭짓점을 골랐는데 <b>네 번째 꼭짓점이 딸려 오는</b> 경우가 있습니다. B·D·H 를 고르면 F 도 같은 평면 위에 있어서,
+          단면이 삼각형이 아니라 <b>직사각형</b>이 됩니다. 「세 점이니까 삼각형」이 이 단원에서 가장 자주 틀리는 자리예요.<br><br>
+          꼭짓점만 골라서는 <b>정삼각형과 직사각형</b>밖에 나오지 않습니다. <b>모서리의 중점</b>을 섞으면 마름모·사다리꼴·정육각형까지 나오고,
+          그래도 안 나오는 오각형은 <b>모서리 위 아무 곳</b>으로 바꿔야 볼 수 있어요.
+          한 번 자를 때 나오는 단면은 육각형까지입니다 — 면이 여섯 개뿐이라 칠각형은 없어요.
+          <b>정오각형</b>도 나오지 않습니다. 마주 보는 면의 잘린 자국은 서로 평행한데, 정오각형에는 평행한 변이 한 쌍도 없거든요.</div>
+      </div>`;
+    },
+    init(sheet){
+      root = sheet;
+      stage = root.querySelector('#tsStage');
+      cv = root.querySelector('#tsCv'); ctx = cv.getContext('2d');
+      scv = root.querySelector('#tsShape'); sctx = scv.getContext('2d');
+
+      const syncUI=()=>{
+        root.querySelectorAll('[data-tm]').forEach(b=> b.classList.toggle('on', b.dataset.tm===mode));
+        root.querySelector('#tsVwrap').style.display = mode==='vertex' ? '' : 'none';
+        root.querySelector('#tsFwrap').style.display = mode==='free' ? '' : 'none';
+        root.querySelector('#tsTip').textContent = mode==='vertex'
+          ? '꼭짓점과 중점을 눌러 고르세요 · 빈 곳을 끌면 돌아갑니다'
+          : '빨간 점을 끌어보세요 · 빈 곳을 끌면 돌아갑니다';
+        root.querySelectorAll('#tsVrow button, #tsMrow button').forEach(b=> b.classList.toggle('on', vsel.indexOf(+b.dataset.v) > -1));
+        root.querySelector('#tsLab').classList.toggle('on', showLabel);
+        root.querySelector('#tsOnly').classList.toggle('on', onlySection);
+        root.querySelector('#tsSpin').classList.toggle('on', spinning);
+      };
+      const pickV=i=>{
+        const at=vsel.indexOf(i);
+        if(at > -1) vsel.splice(at,1);
+        else { if(vsel.length >= 3) vsel.shift(); vsel.push(i); }
+        syncUI(); draw();
+      };
+
+      root.querySelector('#tsVrow').innerHTML =
+        LB.map((n,i)=>`<button data-v="${i}">${n}</button>`).join('');
+      root.querySelector('#tsMrow').innerHTML =
+        EG.map((e,k)=>`<button data-v="${MID(k)}">${LB[e[0]]}${LB[e[1]]}</button>`).join('');
+      root.querySelector('#tsVpre').innerHTML =
+        VPRE.map((p,i)=>`<button data-vp="${i}">${esc(p.t)}</button>`).join('');
+
+      const onClick=e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.tm){ mode=t.dataset.tm; syncUI(); draw(); return; }
+        if(t.dataset.v !== undefined){ pickV(+t.dataset.v); return; }
+        if(t.dataset.vp !== undefined){ vsel = VPRE[+t.dataset.vp].v.slice(); mode='vertex'; syncUI(); draw(); return; }
+        if(t.dataset.pre){
+          const k=t.dataset.pre; mode='free';
+          if(k==='rand'){
+            const used={};
+            for(let i=0;i<3;i++){ let e2; do{ e2=Math.floor(Math.random()*12); }while(used[e2]); used[e2]=1;
+              pts[i]={ e:e2, t:0.15 + Math.random()*0.7 }; }
+          } else pts = PRE[k].map(a=>({ e:a[0], t:a[1] }));
+          syncUI(); draw(); return;
+        }
+        if(t.id==='tsLab'){ showLabel=!showLabel; syncUI(); draw(); return; }
+        if(t.id==='tsOnly'){ onlySection=!onlySection; syncUI(); draw(); return; }
+        if(t.id==='tsSpin'){ spinning=!spinning; syncUI(); return; }
+        if(t.id==='tsRe'){ yaw=-0.62; pitch=0.62; zoom=1; resize(); return; }
+      };
+      root.addEventListener('click', onClick);
+
+      const pos=ev=>{ const b=stage.getBoundingClientRect(); return { x:ev.clientX-b.left, y:ev.clientY-b.top }; };
+      const onDown=ev=>{
+        stage.setPointerCapture(ev.pointerId);
+        const m=pos(ev);
+        spinning=false; syncUI();
+        if(mode==='vertex'){
+          let best=-1, bd=24;
+          for(let i=0;i<8;i++){ const s=proj(add(V[i], mul(nrm(V[i]), 0.26)));
+            const d=Math.hypot(m.x-s.x, m.y-s.y); if(d<bd){ bd=d; best=i; } }
+          for(let k=0;k<12;k++){ const s=proj(ptOfId(MID(k)));
+            const d=Math.hypot(m.x-s.x, m.y-s.y); if(d<bd){ bd=d; best=MID(k); } }
+          if(best>=0){ drag=null; pickV(best); ev.preventDefault(); return; }
+          drag={ kind:'rot', x:m.x, y:m.y };
+        } else {
+          let best=-1, bd=24;
+          for(let i=0;i<3;i++){ const s=proj(P(i));
+            const d=Math.hypot(m.x-s.x, m.y-s.y); if(d<bd){ bd=d; best=i; } }
+          drag = best>=0 ? { kind:'pt', i:best } : { kind:'rot', x:m.x, y:m.y };
+        }
+        ev.preventDefault();
+      };
+      const onMove=ev=>{
+        if(!drag) return;
+        const m=pos(ev);
+        if(drag.kind==='rot'){
+          yaw += (m.x-drag.x)*0.011; pitch += (m.y-drag.y)*0.011;
+          pitch = Math.max(0.06, Math.min(1.50, pitch));
+          drag.x=m.x; drag.y=m.y; draw();
+        } else {
+          const cur=pts[drag.i]; let bE=cur.e, bT=cur.t, bd=1e9;
+          for(let k=0;k<12;k++){
+            const a=proj(V[EG[k][0]]), b=proj(V[EG[k][1]]);
+            const r=segDist(m.x,m.y,a.x,a.y,b.x,b.y);
+            const w=(k===cur.e) ? 0.62 : 1;      /* 지금 모서리를 조금 우대해 덜 튀게 */
+            if(r.d*w < bd){ bd=r.d*w; bE=k; bT=r.t; }
+          }
+          const taken = pts.some((p,j)=> j!==drag.i && p.e===bE);
+          if(!taken || bE===cur.e) pts[drag.i]={ e:bE, t:Math.max(0.02, Math.min(0.98, bT)) };
+          draw();
+        }
+        ev.preventDefault();
+      };
+      const endDrag=()=>{ drag=null; };
+      stage.addEventListener('pointerdown', onDown);
+      stage.addEventListener('pointermove', onMove);
+      stage.addEventListener('pointerup', endDrag);
+      stage.addEventListener('pointercancel', endDrag);
+
+      const onResize=()=> resize();
+      window.addEventListener('resize', onResize);
+
+      (function loop(){ if(spinning && !drag){ yaw += 0.006; draw(); } raf=requestAnimationFrame(loop); })();
+
+      syncUI();
+      requestAnimationFrame(resize);
+      return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; sctx=null; };
+    }
+  };
+})();
+
+
+/* ═══════ 굴리기 — 다각형이 직선 위를 굴러갈 때 꼭짓점이 그리는 자취 ═══════
+   한 번 구를 때마다 닿아 있는 꼭짓점을 축으로 돈다.
+   표시한 점은 그 축에서 떨어진 거리를 반지름으로 하는 호를 그린다.
+   그래서 「지나간 거리 = 부채꼴 호의 길이를 다 더한 것」이 된다. */
+TOOLS.rollPoly = (()=>{
+  const SHAPES = {
+    tri : { nm:'정삼각형', a:3, mk:()=> reg(3, 3) },
+    sq  : { nm:'정사각형', a:3, mk:()=> reg(4, 3) },
+    rect: { nm:'직사각형 4×3', a:4, mk:()=> [[-2,0],[2,0],[2,3],[-2,3]] },
+    pent: { nm:'정오각형', a:2.4, mk:()=> reg(5, 2.4) },
+    hex : { nm:'정육각형', a:2.2, mk:()=> reg(6, 2.2) }
+  };
+  function reg(n, a){
+    const out=[[-a/2, 0]]; let dir=0;
+    for(let i=0;i<n-1;i++){
+      const p=out[out.length-1];
+      out.push([p[0] + a*Math.cos(dir), p[1] + a*Math.sin(dir)]);
+      dir += 2*Math.PI/n;
+    }
+    return out;
+  }
+  const rotAbout=(p, c, th)=>{
+    const s=Math.sin(th), co=Math.cos(th), dx=p[0]-c[0], dy=p[1]-c[1];
+    return [c[0] + dx*co - dy*s, c[1] + dx*s + dy*co];
+  };
+  const dist=(a,b)=> Math.hypot(a[0]-b[0], a[1]-b[1]);
+
+  let key='rect', poly=SHAPES[key].mk(), mark=0;
+  let base=poly.map(p=>p.slice());            /* 이번 구르기가 시작될 때의 자리 */
+  let pivot=null, need=0, done=0, rolling=false, trail=[], steps=[];
+  let cv, ctx, root=null, raf=0, W=0,H=0,DPR=1, SC=1, OX=0, OY=0;
+  const SPEED = 1.6;                          /* 라디안/초 — 눈으로 따라갈 수 있게 천천히 */
+  let last=0;
+
+  function reset(k){
+    if(k) key=k;
+    poly=SHAPES[key].mk(); base=poly.map(p=>p.slice());
+    if(mark >= poly.length) mark=0;
+    pivot=null; need=0; done=0; rolling=false; trail=[poly[mark].slice()]; steps=[];
+    layout(); paint(); readout();
+  }
+  /* 다음에 축이 될 꼭짓점과 돌아야 할 각 */
+  function prep(){
+    let pi=-1, bx=-1e9;
+    poly.forEach((p,i)=>{ if(p[1] < 0.001 && p[0] > bx){ bx=p[0]; pi=i; } });
+    if(pi < 0) return false;
+    const n=poly.length;
+    const a=poly[(pi-1+n)%n], b=poly[(pi+1)%n], v=poly[pi];
+    const u1=[a[0]-v[0], a[1]-v[1]], u2=[b[0]-v[0], b[1]-v[1]];
+    const inner=Math.acos(Math.max(-1, Math.min(1,
+      (u1[0]*u2[0] + u1[1]*u2[1]) / (Math.hypot(u1[0],u1[1]) * Math.hypot(u2[0],u2[1])))));
+    pivot=v.slice(); need=Math.PI - inner; done=0;
+    base=poly.map(p=>p.slice());
+    return true;
+  }
+  function apply(th){
+    poly = base.map(p=> rotAbout(p, pivot, -th));
+    const m=poly[mark];
+    const t=trail[trail.length-1];
+    if(!t || dist(t, m) > 0.02) trail.push(m.slice());
+  }
+  function step(){                            /* 한 칸만 굴리기 */
+    if(rolling) return;
+    if(!prep()) return;
+    rolling=true; last=0;
+  }
+  function finishStep(){
+    const r=dist(pivot, base[mark]);
+    steps.push({ r:r, th:need });
+    apply(need);
+    poly=poly.map(p=> [p[0], Math.abs(p[1]) < 1e-9 ? 0 : p[1]]);
+    rolling=false; readout();
+  }
+
+  function layout(){
+    if(!cv || !root) return;
+    const b=cv.parentElement.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1, 2);
+    W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    /* 한 바퀴 굴러간 뒤의 자리까지, 자취의 가장 높은 곳까지 다 보이도록 */
+    const q=SHAPES[key].mk();
+    let per=0, minX=1e9, maxX=-1e9, maxR=0;
+    for(let i=0;i<q.length;i++) per += dist(q[i], q[(i+1)%q.length]);
+    q.forEach(a=>{ minX=Math.min(minX,a[0]); maxX=Math.max(maxX,a[0]);
+      q.forEach(b=> maxR=Math.max(maxR, dist(a,b))); });
+    const x0=minX - 0.5, x1=per + maxX + 0.5;
+    const wantW=x1 - x0, wantH=maxR + 1.2;
+    SC=Math.min(W/wantW, (H-30)/wantH);
+    OX=-x0*SC + (W - wantW*SC)/2; OY=H - 24;
+  }
+  const X=x=> OX + x*SC;
+  const Y=y=> OY - y*SC;
+
+  function paint(){
+    if(!ctx) return;
+    const st=getComputedStyle(document.body), g=k=>st.getPropertyValue(k).trim();
+    const INK=g('--ink'), MUT=g('--muted'), RED=g('--crit'), OP=g('--opInk'), SUR=g('--surface');
+    ctx.clearRect(0,0,W,H);
+    /* 바닥 직선 */
+    ctx.strokeStyle=MUT; ctx.lineWidth=1.6; ctx.globalAlpha=.6;
+    ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); ctx.stroke(); ctx.globalAlpha=1;
+    /* 자취 */
+    if(trail.length > 1){
+      ctx.strokeStyle=RED; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.lineCap='round';
+      ctx.beginPath();
+      trail.forEach((p,i)=> i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])));
+      ctx.stroke();
+    }
+    /* 지금 도는 축과 반지름 */
+    if(rolling && pivot){
+      ctx.strokeStyle=OP; ctx.lineWidth=1.4; ctx.setLineDash([4,4]); ctx.globalAlpha=.85;
+      ctx.beginPath(); ctx.moveTo(X(pivot[0]), Y(pivot[1])); ctx.lineTo(X(poly[mark][0]), Y(poly[mark][1])); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha=1;
+      ctx.fillStyle=OP; ctx.beginPath(); ctx.arc(X(pivot[0]), Y(pivot[1]), 4, 0, 6.2832); ctx.fill();
+    }
+    /* 도형 */
+    ctx.beginPath();
+    poly.forEach((p,i)=> i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])));
+    ctx.closePath();
+    ctx.fillStyle=MUT; ctx.globalAlpha=.13; ctx.fill(); ctx.globalAlpha=1;
+    ctx.strokeStyle=INK; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.stroke();
+    /* 표시한 점 */
+    const m=poly[mark];
+    ctx.beginPath(); ctx.arc(X(m[0]), Y(m[1]), 7.5, 0, 6.2832);
+    ctx.fillStyle=RED; ctx.fill(); ctx.lineWidth=2; ctx.strokeStyle=SUR; ctx.stroke();
+    ctx.font='700 11px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    ctx.fillStyle=RED; ctx.textAlign='center'; ctx.textBaseline='bottom';
+    ctx.fillText('P', X(m[0]), Y(m[1]) - 11);
+  }
+
+  /* 숫자를 π의 몇 배로 읽어준다 */
+  function piStr(x){
+    const c=x/Math.PI;
+    for(let q=1;q<=12;q++){
+      const n=c*q;
+      if(Math.abs(n - Math.round(n)) < 1e-6){
+        const nn=Math.round(n);
+        if(q===1) return nn===1 ? 'π' : nn + 'π';
+        return nn + 'π/' + q;
+      }
+    }
+    return c.toFixed(2) + 'π';
+  }
+  function readout(){
+    if(!root) return;
+    const tot=steps.reduce((a,s)=> a + s.r*s.th, 0);
+    root.querySelector('#rlBig').textContent = steps.length ? piStr(tot) : '0';
+    root.querySelector('#rlSum').innerHTML = steps.length
+      ? steps.map((s,i)=> `${i+1}번째 · 반지름 ${(+s.r.toFixed(2))} × ${Math.round(s.th*180/Math.PI)}° = ${piStr(s.r*s.th)}`).join('<br>')
+      : '「한 칸 굴리기」를 눌러보세요. 닿아 있는 꼭짓점을 축으로 돕니다.';
+    const back = poly[mark][1] < 0.001 && steps.length;
+    root.querySelector('#rlNote').textContent = back
+      ? 'P가 다시 바닥에 닿았습니다. 지금까지 그린 자취의 길이가 답이에요.'
+      : (steps.length ? '표시한 점이 축이 되면 반지름이 0이라 그 칸에서는 움직이지 않아요.' : '');
+  }
+
+  return {
+    title:'굴리기', sub:'다각형이 굴러갈 때 꼭짓점이 그리는 자취',
+    emoji:'⚙️', tag:'중1 · 원과 부채꼴',
+    blurb:'직선 위를 한 칸씩 굴려보세요. 표시한 점이 그리는 것이 부채꼴 호라는 게 눈에 보입니다.',
+    html(){
+      return `<div class="tsCard">
+        <div class="tsStage" style="aspect-ratio:16/9;min-height:190px"><canvas id="rlCv"></canvas>
+          <div class="tsTip">한 칸씩 굴려보세요 · 빨간 점이 지나간 자리가 자취예요</div></div>
+        <div class="tsRead">
+          <div class="tsInfo"><div class="tsLbl" style="margin:0 0 3px">P가 지나간 거리</div>
+            <div class="tsBig" id="rlBig">0</div>
+            <div class="tsSub" id="rlSum"></div>
+            <div class="tsSub" id="rlNote" style="color:var(--opInk);font-weight:700"></div></div>
+        </div>
+      </div>
+      <div class="tsCard">
+        <div class="tsRow"><button id="rlStep" style="flex:1 1 0">▸ 한 칸 굴리기</button>
+          <button id="rlAll" style="flex:1 1 0">≫ 한 바퀴</button>
+          <button id="rlRe">처음으로</button></div>
+        <div class="tsLbl">도형</div>
+        <div class="tsRow" id="rlShapes"></div>
+        <div class="tsLbl">P를 어느 꼭짓점에 둘까</div>
+        <div class="tsRow" id="rlMarks"></div>
+        <div class="tsNote">굴러갈 때 도형은 <b>바닥에 닿아 있는 꼭짓점</b>을 축으로 돕니다.
+          그래서 표시한 점 P는 <b>반지름 = (축까지의 거리)</b>, <b>중심각 = 180° − (그 꼭짓점의 내각)</b> 인 부채꼴의 호를 그려요.<br><br>
+          P가 축이 되는 칸에서는 <b>반지름이 0</b>이라 P가 움직이지 않습니다. 이 한 칸을 빠뜨려서 틀리는 경우가 많아요.<br><br>
+          자취의 길이는 <b>호의 길이를 다 더한 것</b>입니다 — 「원과 부채꼴」에서 배운 호의 길이 공식이 여기서 쓰여요.</div>
+      </div>`;
+    },
+    init(sheet){
+      root=sheet; cv=root.querySelector('#rlCv'); ctx=cv.getContext('2d');
+      const sync=()=>{
+        root.querySelector('#rlShapes').innerHTML = Object.keys(SHAPES).map(k=>
+          `<button data-rs="${k}" class="${k===key?'on':''}">${esc(SHAPES[k].nm)}</button>`).join('');
+        root.querySelector('#rlMarks').innerHTML = poly.map((_,i)=>
+          `<button data-rm="${i}" class="${i===mark?'on':''}">${i+1}번</button>`).join('');
+      };
+      root.addEventListener('click', e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.rs){ mark=0; reset(t.dataset.rs); sync(); return; }
+        if(t.dataset.rm !== undefined){ mark=+t.dataset.rm; reset(); sync(); return; }
+        if(t.id==='rlStep'){ step(); return; }
+        if(t.id==='rlAll'){ rollAll(); return; }
+        if(t.id==='rlRe'){ reset(); sync(); return; }
+      });
+      let queue=0;
+      function rollAll(){ queue=poly.length; if(!rolling) step(); }
+      const onResize=()=>{ layout(); paint(); };
+      window.addEventListener('resize', onResize);
+      (function loop(ts){
+        if(rolling){
+          if(!last) last=ts;
+          const dt=(ts-last)/1000; last=ts;
+          done=Math.min(need, done + SPEED*dt);
+          apply(done); paint();
+          if(done >= need - 1e-9){ finishStep(); if(queue > 0){ queue--; if(queue>0) step(); } }
+        }
+        raf=requestAnimationFrame(loop);
+      })(0);
+      sync(); reset();
+      requestAnimationFrame(()=>{ layout(); paint(); readout(); });
+      return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; };
+    }
+  };
+})();
+
+/* 「눈으로 보기」 탭에 늘어놓는 순서 */
+const TOOL_ORDER = ['cubeSection', 'rollPoly'];
+
+function renderSee(){
+  const list = TOOL_ORDER.filter(k=> TOOLS[k]).map(k=>{
+    const T = TOOLS[k];
+    return `<button class="seeCard" data-tool="${esc(k)}">
+      <span class="seeIco">${T.emoji || '✋'}</span>
+      <span class="seeTxt"><span class="seeTag">${esc(T.tag || '')}</span>
+        <span class="seeNm" style="display:block">${esc(T.title)}</span>
+        <span class="seeSub" style="display:block">${esc(T.blurb || T.sub)}</span></span>
+      <span class="seeGo">열기 ›</span>
+    </button>`;
+  }).join('');
+  $('#main').innerHTML = `<div class="hint">머릿속으로 안 그려지는 것은 <b>움직여 보면</b> 그려집니다.<br>손으로 끌어보고, 굴려보고, 잘라보세요.</div>${list}`;
+}
+
+function opFigHtml(o, i){
+  const F = OPFIGS[o.fig];
+  if(!F) return '';
+  const k = opFig.get(i) || 0, s = F.at(k);
+  const chips = F.chips(k).map(c=>`<span class="${c.on ? 'on' : ''}">${esc(c.t)}</span>`).join('');
+  return `<div class="opFig">
+    <div class="opFigTop">
+      <div class="opFigArt">${CLOCK(s.deg, s.deg)}</div>
+      <div class="opFigNow"><div class="opFigT">${esc(s.big)}</div><div class="opFigC">${esc(s.sub)}</div>
+        ${s.note ? `<div class="opFigNote">${esc(s.note)}</div>` : ''}</div>
+    </div>
+    <div class="opFigLeg"><span class="h">짧은바늘</span><span class="m">긴바늘</span></div>
+    <div class="opFigBtns">
+      ${k > 0 ? `<button class="ghost" data-fig="${i}" data-figk="${k - 1}">‹ 이전</button>` : ''}
+      <button data-fig="${i}" data-figk="${k >= F.n - 1 ? 0 : k + 1}">${k >= F.n - 1 ? '처음부터 ↻' : '다음 ›'}</button>
+    </div>
+    <div class="opFigList">${chips}</div>
+  </div>`;
+}
 let openLv = '전체';        // 어디서부터 학년 칩
 let askOpen = false;        // 질문 약속 펼침
 let thought = {};           // 「생각해봤어요」 기록
@@ -3241,7 +4128,9 @@ function cardHtml(c, opts){
         </div>` : '';
       detail = `<button class="detailToggle" data-detail="${idx}">${open?'간단히 ▴':'자세히 ▾'}</button>${detail}`;
     }
-    footer = `<div class="fcFooter">${detail}
+    const tool = c.tool && TOOLS[c.tool]
+      ? `<button class="toolBtn" data-tool="${esc(c.tool)}">✋ 만져보기</button>` : '';
+    footer = `<div class="fcFooter">${detail}${tool}
       <div class="judgeRow">
         <button data-unsure="${idx}" class="${mark==='unsure'?'active':''}">🤔 헷갈려요</button>
         <button data-know="${idx}" class="${mark==='know'?'active':''}">✅ 알아요</button>
@@ -3463,6 +4352,7 @@ function renderOpen(){
       body += `<div class="opBlock">
         <b>첫 걸음</b>
         <ol class="opSteps">${o.steps.map(x=>`<li>${mk(x)}</li>`).join('')}</ol>
+        ${opFigHtml(o, i)}
         <div class="opLink">잇는 곳 · ${esc(o.link)}</div>
       </div>`;
     }
@@ -3486,10 +4376,12 @@ function renderOpen(){
 function render(){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===TAB));
   $('#hdrSub').textContent = TAB==='link' ? '체크인 · 등원 · 하원' : TAB==='notice' ? '공지사항'
-    : TAB==='open' ? '답이 아니라 첫 걸음' : '초·중·고 공식 암기';
+    : TAB==='open' ? '답이 아니라 첫 걸음'
+    : TAB==='see' ? '움직이는 것을 보고 만지기' : '초·중·고 공식 암기';
   if(TAB==='link') renderLink();
   else if(TAB==='notice') renderNotice();
   else if(TAB==='open') renderOpen();
+  else if(TAB==='see') renderSee();
   else renderCard();
 }
 
@@ -3554,6 +4446,15 @@ document.addEventListener('click', (e)=>{
   if(opLv){ openLv = opLv.dataset.ol; opStage.clear(); renderOpen(); window.scrollTo(0,0); return; }
   const askBtn = e.target.closest('#askToggle');
   if(askBtn){ askOpen = !askOpen; renderLink(); return; }
+  const toolBtn = e.target.closest('[data-tool]');
+  if(toolBtn){ openTool(toolBtn.dataset.tool); return; }
+  if(e.target.closest('#tsClose')){ closeTool(); return; }
+  const opFigBtn = e.target.closest('[data-fig]');
+  if(opFigBtn){
+    const y = window.pageYOffset;
+    opFig.set(+opFigBtn.dataset.fig, +opFigBtn.dataset.figk);
+    renderOpen(); window.scrollTo(0, y); return;   /* 누른 자리에 그대로 머문다 */
+  }
   const opMore = e.target.closest('[data-op]');
   if(opMore){ const i=+opMore.dataset.op; opStage.set(i, Math.min(2,(opStage.get(i)||0)+1)); renderOpen(); return; }
   const opThink = e.target.closest('[data-think]');
