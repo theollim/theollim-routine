@@ -622,6 +622,9 @@ const CARDS = [
   {g:'중1', u:'원과 부채꼴', f:'반원 굴리기 — 곡면에서는 곧게', pair:1, tool:'rollPoly', b:'넘어짐 → 곡면으로 구름 → 넘어짐\n곡면 위에서는 중심의 높이가 그대로다\n→ 그 구간만 직선',
     when:'반원을 직선 위에서 굴릴 때 중심 O가 움직인 거리를 물을 때', caution:'넘어지는 두 칸은 반지름 r, 중심각 90°인 부채꼴 / 가운데 칸은 호가 아니라 직선이고, 그 길이는 반원의 호의 길이 πr 과 같다 / 세 칸을 더하면 늘 2πr — 반지름 하나만 알면 끝난다', example:'반지름 4인 반원\n2π×4×90/360 + π×4 + 2π×4×90/360\n= 2π + 4π + 2π = 8π'},
 
+  {g:'중1', u:'원과 부채꼴', f:'부채꼴 + 묶인 줄', pair:1, tool:'tether', b:'주인공 — 부채꼴의 넓이\n도구 — 모퉁이 돌기\n모퉁이를 돌 때마다\n줄이 짧아진 부채꼴이 하나씩 붙는다',
+    when:'말뚝이나 건물 모퉁이에 묶인 동물이 움직일 수 있는 넓이를 물을 때', caution:'묶인 자리에서 도는 각 = 360° − (그 꼭짓점의 내각) — 직각이면 270° / 모퉁이를 돌면 남은 줄 = 줄 − 지나온 변, 도는 각 = 180° − (그 꼭짓점의 내각) / 양쪽으로 다 감긴다 — 한쪽만 세면 틀린다 / 남은 줄이 0 이하가 되면 거기서 끝 / 담이나 울타리가 붙어 있으면 처음 도는 각이 180° − (내각) 으로 줄고, 감기는 쪽도 담 반대편 한 방향뿐이다 / 말뚝이 울타리 안쪽에 있고 구멍으로 줄이 나가면, 구멍까지 쓴 줄을 빼고 그 구멍에서 다시 시작한다', example:'가로 5, 세로 3인 물탱크의 꼭짓점에\n4m 호스를 묶으면\nπ×4²×270/360 + π×1²×90/360\n= 12π + π/4 = 49π/4'},
+
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'다면체', shape:'polyhedron', def:'다각형인 면으로만 둘러싸인 입체도형', props:['면의 개수에 따라 사면체·오면체 …라고 한다','각기둥·각뿔·각뿔대는 다면체이다','원기둥·원뿔·구는 곡면이 있어 다면체가 아니다']},
   {g:'중1', u:'입체도형의 부피와 겉넓이', f:'정다면체', shape:'platonic', b:'정사면체 · 정육면체 · 정팔면체\n정십이면체 · 정이십면체\n— 이 5가지뿐이다',
     when:'정다면체의 종류·면의 모양을 물을 때', caution:'면의 모양: 정삼각형(4·8·20면체), 정사각형(6면체), 정오각형(12면체)', example:'각 꼭짓점에 모인 면의 개수 → 정사면체 3개'},
@@ -4201,8 +4204,347 @@ TOOLS.rollPoly = (()=>{
   };
 })();
 
+
+/* ═══════ 묶인 줄 — 말뚝에 묶인 동물이 움직일 수 있는 넓이 ═══════
+   묶인 꼭짓점에서 (360° − 그 꼭짓점의 내각) 만큼 돌고,
+   모퉁이를 돌 때마다 줄이 변의 길이만큼 짧아진 부채꼴이 하나씩 더 생긴다. */
+TOOLS.tether = (()=>{
+  const SH = {
+    r53 : { nm:'직사각형 5×3', mk:()=> [[0,0],[5,0],[5,3],[0,3]] },
+    r74 : { nm:'직사각형 7×4', mk:()=> [[0,0],[7,0],[7,4],[0,4]] },
+    r43 : { nm:'직사각형 4×3', mk:()=> [[0,0],[4,0],[4,3],[0,3]] },
+    sq  : { nm:'정사각형 4', mk:()=> [[0,0],[4,0],[4,4],[0,4]] },
+    tri : { nm:'정삼각형 6', mk:()=> reg2(3, 6) },
+    pent: { nm:'정오각형 6', mk:()=> reg2(5, 6) },
+    hex : { nm:'정육각형 6', mk:()=> reg2(6, 6) }
+  };
+  function reg2(n, a){
+    const out=[[0,0]]; let dir=0;
+    for(let i=0;i<n-1;i++){
+      const p=out[out.length-1];
+      out.push([p[0] + a*Math.cos(dir), p[1] + a*Math.sin(dir)]);
+      dir += 2*Math.PI/n;
+    }
+    return out;
+  }
+  const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+  const dist=(a,b)=>Math.hypot(a[0]-b[0], a[1]-b[1]);
+  const dirOf=(p,q)=>Math.atan2(q[1]-p[1], q[0]-p[0]);
+
+  let key='r53', tie=2, L=4, raf=0, root=null, cv=null, ctx=null;
+  let wall=false, wallSide=-1;                 /* 담(울타리)이 붙어 있나 · 어느 변이 담인가 */
+  let inside=false, holes={0:1};               /* 말뚝이 울타리 안쪽 · 줄이 빠져나가는 구멍들 */
+  let W=0,H=0,DPR=1,SC=1,OX=0,OY=0, playing=false, tAnim=0, last=0;
+
+  const P = ()=> SH[key].mk();
+  function inner(V, i){
+    const n=V.length, a=V[(i-1+n)%n], b=V[(i+1)%n], v=V[i];
+    const u1=sub(a,v), u2=sub(b,v);
+    return Math.acos(Math.max(-1, Math.min(1,
+      (u1[0]*u2[0] + u1[1]*u2[1]) / (Math.hypot(u1[0],u1[1]) * Math.hypot(u2[0],u2[1])))));
+  }
+  /* 부채꼴 목록 — 가운데(묶인 자리) → 한쪽으로 감기 → 반대쪽으로 감기 */
+  function sectors(){
+    if(inside) return insideSectors();
+    const V=P(), n=V.length, out=[];
+    const A=V[(tie-1+n)%n], B=V[(tie+1)%n], Vv=V[tie];
+    /* 담이 붙어 있으면 반쪽만 — 담 너머로는 못 간다 */
+    const dirs = wall ? [ -wallSide ] : [1,-1];
+    if(wall){
+      const sw=Math.PI - inner(V,tie);
+      const a0 = wallSide < 0 ? dirOf(Vv,B) : dirOf(Vv,A) - sw;
+      out.push({ c:Vv, r:L, a0:a0, sw:sw, path:[Vv], main:1 });
+    } else {
+      out.push({ c:Vv, r:L, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,tie), path:[Vv], main:1 });
+    }
+    dirs.forEach(d=>{
+      let rem=L, cur=tie, path=[Vv];
+      for(let k=0;k<n;k++){
+        const nx=(cur+d+n)%n;
+        rem -= dist(V[cur], V[nx]);
+        if(rem <= 1e-9) break;
+        path=path.concat([V[nx]]);
+        const s=Math.PI - inner(V,nx), a1=dirOf(V[cur], V[nx]);
+        out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - s, sw:s, path:path.slice(), side:d });
+        cur=nx;
+      }
+    });
+    return out;
+  }
+  const areaOf = s => 0.5*s.r*s.r*s.sw;
+
+  const centerOf = V => { let x=0,y=0; V.forEach(p=>{x+=p[0];y+=p[1];}); return [x/V.length, y/V.length]; };
+  /* 말뚝이 안쪽에 있고 줄이 구멍으로 빠져나가는 경우 */
+  function insideSectors(){
+    const V=P(), n=V.length, C=centerOf(V), out=[];
+    Object.keys(holes).forEach(k=>{
+      const h=+k, rem0=L - dist(C, V[h]);
+      if(rem0 <= 1e-9) return;
+      const A=V[(h-1+n)%n], Vv=V[h];
+      out.push({ c:Vv, r:rem0, a0:dirOf(Vv,A), sw:2*Math.PI - inner(V,h), path:[C,Vv], main:1, hole:h });
+      [1,-1].forEach(d=>{
+        let rem=rem0, cur=h, path=[C,Vv];
+        for(let i=0;i<n;i++){
+          const nx=(cur+d+n)%n;
+          rem -= dist(V[cur], V[nx]);
+          if(rem <= 1e-9) break;
+          path=path.concat([V[nx]]);
+          const sw2=Math.PI - inner(V,nx), a1=dirOf(V[cur], V[nx]);
+          out.push({ c:V[nx], r:rem, a0:d>0 ? a1 : a1 - sw2, sw:sw2, path:path.slice(), hole:h, side:d });
+          cur=nx;
+        }
+      });
+    });
+    return out;
+  }
+
+  function layout(){
+    if(!cv) return;
+    const b=cv.parentElement.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1, 2);
+    W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+    const V=P();
+    let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+    V.forEach(p=>{ x0=Math.min(x0,p[0]); x1=Math.max(x1,p[0]); y0=Math.min(y0,p[1]); y1=Math.max(y1,p[1]); });
+    sectors().forEach(s=>{                        /* 부채꼴이 닿는 데까지 다 보이게 */
+      x0=Math.min(x0, s.c[0]-s.r); x1=Math.max(x1, s.c[0]+s.r);
+      y0=Math.min(y0, s.c[1]-s.r); y1=Math.max(y1, s.c[1]+s.r);
+    });
+    const t=V[tie];
+    x0=Math.min(x0, t[0]-L); x1=Math.max(x1, t[0]+L);
+    y0=Math.min(y0, t[1]-L); y1=Math.max(y1, t[1]+L);
+    const m=0.5;
+    SC=Math.min(W/(x1-x0+2*m), H/(y1-y0+2*m)) * 0.95;
+    OX=(W - (x1-x0)*SC)/2 - x0*SC;
+    OY=H - (H - (y1-y0)*SC)/2 + y0*SC;
+  }
+  const X=x=> OX + x*SC, Y=y=> OY - y*SC;
+
+  function paint(){
+    if(!ctx) return;
+    const st=getComputedStyle(document.body), g=k=>st.getPropertyValue(k).trim();
+    const INK=g('--ink'), INK2=g('--ink2'), MUT=g('--muted'), SUR=g('--surface'),
+          GRN=g('--good'), RED=g('--crit');
+    ctx.clearRect(0,0,W,H);
+    const secs=sectors();
+    const t=playing ? tAnim : 1;
+    ctx.font='700 11px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    const wedge=(c,r,a1,a2,main)=>{
+      if(a2 - a1 <= 1e-9) return;
+      ctx.beginPath(); ctx.moveTo(X(c[0]), Y(c[1]));
+      const N=Math.max(6, Math.round((a2-a1)/0.05));
+      for(let i=0;i<=N;i++){
+        const a=a1 + (a2-a1)*i/N;
+        ctx.lineTo(X(c[0] + r*Math.cos(a)), Y(c[1] + r*Math.sin(a)));
+      }
+      ctx.closePath();
+      ctx.fillStyle=GRN; ctx.globalAlpha=main ? .18 : .3; ctx.fill(); ctx.globalAlpha=1;
+      ctx.strokeStyle=GRN; ctx.lineWidth=1.8; ctx.stroke();
+    };
+    /* 구멍(또는 묶인 자리)마다 — 가운데에서 양쪽으로 동시에 퍼진다 */
+    const groups={};
+    secs.forEach(s=>{ const k=s.hole===undefined ? 'x' : s.hole; (groups[k]=groups[k]||[]).push(s); });
+    const ropes=[];
+    Object.keys(groups).forEach(k=>{
+      const g=groups[k], main=g.find(s=>s.main);
+      if(!main) return;
+      const half=main.sw/2, am=main.a0 + half;
+      [1,-1].forEach(d=>{
+        const chain=g.filter(s=> s.side===d);
+        const tot=half + chain.reduce((a,s)=> a + s.sw, 0);
+        let rem=t*tot;
+        const h=Math.min(half, rem); rem -= h;
+        if(d>0) wedge(main.c, main.r, am, am + h, 1); else wedge(main.c, main.r, am - h, am, 1);
+        let rope={ path:main.path, c:main.c, r:main.r, a:d>0 ? am + h : am - h };
+        chain.forEach(sc=>{
+          const sh=Math.min(sc.sw, rem); rem -= sh;
+          if(sh <= 1e-9) return;
+          if(d>0) wedge(sc.c, sc.r, sc.a0, sc.a0 + sh, 0);
+          else wedge(sc.c, sc.r, sc.a0 + sc.sw - sh, sc.a0 + sc.sw, 0);
+          rope={ path:sc.path, c:sc.c, r:sc.r, a:d>0 ? sc.a0 + sh : sc.a0 + sc.sw - sh };
+        });
+        ropes.push(rope);
+      });
+    });
+    /* 도형(담·건물) */
+    const V=P();
+    ctx.beginPath();
+    V.forEach((p,i)=> i ? ctx.lineTo(X(p[0]),Y(p[1])) : ctx.moveTo(X(p[0]),Y(p[1])));
+    ctx.closePath();
+    ctx.fillStyle=SUR; ctx.fill();
+    ctx.fillStyle=MUT; ctx.globalAlpha=.18; ctx.fill(); ctx.globalAlpha=1;
+    ctx.strokeStyle=INK; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.stroke();
+    /* 변의 길이 */
+    let gx=0, gy=0; V.forEach(p=>{ gx+=X(p[0]); gy+=Y(p[1]); }); gx/=V.length; gy/=V.length;
+    V.forEach((p,i)=>{
+      const q=V[(i+1)%V.length], t=String(+dist(p,q).toFixed(2));
+      const mx=(X(p[0])+X(q[0]))/2, my=(Y(p[1])+Y(q[1]))/2;
+      let ox=mx-gx, oy=my-gy; const l=Math.hypot(ox,oy)||1;
+      const tw=ctx.measureText(t).width;
+      const lx=Math.max(tw/2+5, Math.min(W-tw/2-5, mx - ox/l*13));
+      const ly=Math.max(9, Math.min(H-9, my - oy/l*13));
+      ctx.fillStyle=SUR; ctx.globalAlpha=.9;
+      ctx.beginPath(); ctx.rect(lx-tw/2-3, ly-7.5, tw+6, 15); ctx.fill();
+      ctx.globalAlpha=1; ctx.fillStyle=INK2; ctx.fillText(t, lx, ly);
+    });
+    /* 줄 — 지금 어디까지 갔나 */
+    /* 줄 — 양쪽 끝 두 가닥 */
+    ctx.strokeStyle=RED; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.lineCap='round';
+    ropes.forEach(rp=>{
+      ctx.beginPath();
+      rp.path.forEach((p,i)=> i ? ctx.lineTo(X(p[0]),Y(p[1])) : ctx.moveTo(X(p[0]),Y(p[1])));
+      ctx.lineTo(X(rp.c[0] + rp.r*Math.cos(rp.a)), Y(rp.c[1] + rp.r*Math.sin(rp.a)));
+      ctx.stroke();
+    });
+    /* 담(울타리) */
+    if(wall){
+      const n=V.length, W2=V[wallSide<0 ? (tie-1+n)%n : (tie+1)%n], t0=V[tie];
+      const dx=W2[0]-t0[0], dy=W2[1]-t0[1], l=Math.hypot(dx,dy)||1;
+      const far=(x,k)=> [t0[0] + dx/l*k, t0[1] + dy/l*k];
+      const p1=far(0,-60), p2=far(0,60);
+      ctx.strokeStyle=INK2; ctx.lineWidth=4; ctx.lineCap='butt'; ctx.globalAlpha=.75;
+      ctx.beginPath(); ctx.moveTo(X(p1[0]),Y(p1[1])); ctx.lineTo(X(p2[0]),Y(p2[1])); ctx.stroke();
+      ctx.globalAlpha=1;
+    }
+    /* 말뚝 */
+    const tp=inside ? centerOf(V) : V[tie];
+    ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(X(tp[0]),Y(tp[1]),6,0,6.2832); ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle=SUR; ctx.stroke();
+    readout(secs);
+  }
+
+  function frac(x){                              /* 넓이를 π 꼴로 — π/4, 49π/4 처럼 */
+    if(Math.abs(x) < 1e-9) return '0';
+    const c=x/Math.PI;
+    for(let q=1;q<=24;q++){
+      const n=c*q;
+      if(Math.abs(n - Math.round(n)) < 1e-7){
+        const nn=Math.round(n), head=nn===1 ? '' : String(nn);
+        return q===1 ? head + 'π' : head + 'π/' + q;
+      }
+    }
+    return (+c.toFixed(3)) + 'π';
+  }
+  function readout(secs){
+    if(!root) return;
+    if(!secs.length){
+      root.querySelector('#thBig').innerHTML = '0 <small style="font-size:14px">m²</small>';
+      root.querySelector('#thExpr').innerHTML = '';
+      root.querySelector('#thSum').textContent = '줄이 짧아서 구멍 밖으로 나갈 수 없어요. 줄을 늘려보세요.';
+      root.querySelector('#thLen').textContent = L + ' m';
+      return;
+    }
+    const tot=secs.reduce((a,s)=> a + areaOf(s), 0);
+    root.querySelector('#thBig').innerHTML = frac(tot) + ' <small style="font-size:14px">m²</small>';
+    root.querySelector('#thExpr').innerHTML = secs.map(s=>
+      `π × ${+s.r.toFixed(2)}² × <sup>${Math.round(s.sw*180/Math.PI)}</sup>⁄<sub>360</sub>`).join(' + ')
+      + ' = ' + secs.map(s=> frac(areaOf(s))).join(' + ')
+      + ' = <b>' + frac(tot) + '</b>';
+    root.querySelector('#thSum').innerHTML = secs.map((s,i)=>
+      (s.main ? (inside ? `${s.hole+1}번 구멍 · 밖에 남은 줄 ${+s.r.toFixed(2)} · ${Math.round(s.sw*180/Math.PI)}°`
+                        : `묶인 자리 · 줄 ${+s.r.toFixed(2)} · ${Math.round(s.sw*180/Math.PI)}°`)
+              : `모퉁이를 돌아 · 남은 줄 ${+s.r.toFixed(2)} · ${Math.round(s.sw*180/Math.PI)}°`)
+      + ` → ${frac(areaOf(s))}`).join('<br>')
+      + (inside ? '<br>구멍마다 따로 세어 더한 값입니다 — 영역이 서로 겹치면 겹친 만큼 빼야 해요.' : '');
+    root.querySelector('#thLen').textContent = L + ' m';
+  }
+
+  return {
+    title:'묶인 줄', sub:'말뚝에 묶인 동물이 움직일 수 있는 넓이',
+    emoji:'🐕', tag:'중1 · 원과 부채꼴',
+    blurb:'줄 길이를 밀어 보세요. 모퉁이를 돌 때마다 줄이 짧아진 부채꼴이 하나씩 붙습니다.',
+    html(){
+      return `<div class="tsCard">
+        <div class="tsStage" style="aspect-ratio:4/3;min-height:230px"><canvas id="thCv"></canvas>
+          <div class="tsTip">초록색이 움직일 수 있는 자리예요</div></div>
+        <div class="tsRead"><div class="tsInfo">
+          <div class="tsLbl" style="margin:0 0 3px">움직일 수 있는 넓이</div>
+          <div class="tsBig" id="thBig">—</div>
+          <div class="rlExpr" id="thExpr"></div>
+          <div class="tsSub" id="thSum"></div>
+        </div></div>
+      </div>
+      <div class="tsCard">
+        <div class="tsLbl">줄 길이 — <b id="thLen">4 m</b></div>
+        <input id="thRange" type="range" min="1" max="16" step="1" value="4"
+          style="width:100%;accent-color:var(--opInk);height:34px">
+        <div class="tsRow" style="margin-top:4px"><button id="thPlay" style="flex:1 1 0">▶ 줄 돌려보기</button></div>
+        <div class="tsLbl">담·건물 모양</div>
+        <div class="tsRow" id="thShapes"></div>
+        <div class="tsLbl">묶는 자리</div>
+        <div class="tsRow"><button id="thInside">울타리 안쪽(중앙)에 말뚝</button></div>
+        <div class="tsLbl" id="thTieLbl">어느 꼭짓점에 묶을까</div>
+        <div class="tsRow" id="thTies"></div>
+        <div class="tsLbl" id="thWallLbl">담(울타리)</div>
+        <div class="tsRow" id="thWallRow"><button id="thWall">담이 붙어 있음</button>
+          <button id="thWallSide">담 쪽 바꾸기</button></div>
+        <div class="tsNote">묶인 자리에서는 <b>360° − (그 꼭짓점의 내각)</b> 만큼 돌 수 있습니다.
+          직각이면 270°, 정육각형이면 240°예요.<br><br>
+          모퉁이를 하나 돌 때마다 줄이 <b>그 변의 길이만큼 짧아지고</b>, 도는 각은
+          <b>180° − (그 꼭짓점의 내각)</b>이 됩니다. 줄이 남아 있는 동안 계속 붙어요.<br><br>
+          <b>양쪽으로 다 감긴다</b>는 걸 놓치기 쉽습니다. 줄을 길게 해 보면 반대쪽에도 부채꼴이 생기는 게 보입니다.<br><br>
+          <b>울타리 안쪽에 말뚝을 박고</b> 구멍으로 줄이 빠져나가면, 구멍까지 쓴 줄만큼 짧아진 줄로
+          그 구멍에서 다시 시작합니다. 구멍이 꼭짓점이면 바깥에서 <b>360° − (내각)</b> 만큼 돌 수 있어요.<br><br>
+          <b>담이 붙어 있으면</b> 이야기가 달라집니다. 담 너머로는 못 가니까 묶인 자리에서 도는 각이
+          <b>180° − (그 꼭짓점의 내각)</b> 으로 줄고, 감기는 쪽도 담 반대편 한 방향뿐입니다.</div>
+      </div>`;
+    },
+    init(sheet){
+      root=sheet; cv=root.querySelector('#thCv'); ctx=cv.getContext('2d');
+      const sync=()=>{
+        root.querySelector('#thShapes').innerHTML = Object.keys(SH).map(k=>
+          `<button data-ts="${k}" class="${k===key?'on':''}">${esc(SH[k].nm)}</button>`).join('');
+        root.querySelector('#thTies').innerHTML = P().map((_,i)=>
+          `<button data-tt="${i}" class="${(inside ? holes[i] : i===tie) ? 'on':''}">${i+1}번</button>`).join('');
+        root.querySelector('#thTieLbl').textContent = inside
+          ? '줄이 빠져나가는 구멍 — 눌러서 여러 개' : '어느 꼭짓점에 묶을까';
+        root.querySelector('#thInside').classList.toggle('on', inside);
+        root.querySelector('#thWallLbl').style.display = inside ? 'none' : '';
+        root.querySelector('#thWallRow').style.display = inside ? 'none' : '';
+        root.querySelector('#thPlay').classList.toggle('on', playing);
+        root.querySelector('#thWall').classList.toggle('on', wall);
+        root.querySelector('#thWallSide').style.display = wall ? '' : 'none';
+      };
+      root.addEventListener('click', e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.ts){ key=t.dataset.ts; tie=0; holes={0:1}; sync(); layout(); paint(); return; }
+        if(t.dataset.tt !== undefined){
+          const i=+t.dataset.tt;
+          if(inside){ if(holes[i]) delete holes[i]; else holes[i]=1;
+            if(!Object.keys(holes).length) holes[i]=1; }
+          else tie=i;
+          sync(); layout(); paint(); return;
+        }
+        if(t.id==='thInside'){ inside=!inside; if(inside) wall=false; sync(); layout(); paint(); return; }
+        if(t.id==='thPlay'){ playing=!playing; tAnim=0; last=0; sync(); paint(); return; }
+        if(t.id==='thWall'){ wall=!wall; sync(); layout(); paint(); return; }
+        if(t.id==='thWallSide'){ wallSide=-wallSide; sync(); layout(); paint(); return; }
+      });
+      root.querySelector('#thRange').addEventListener('input', e=>{
+        L=+e.target.value; layout(); paint();
+      });
+      const onResize=()=>{ layout(); paint(); };
+      window.addEventListener('resize', onResize);
+      (function loop(ts){
+        if(playing){
+          if(!last) last=ts;
+          tAnim=Math.min(1, tAnim + (ts-last)/2600); last=ts;
+          paint();
+          if(tAnim >= 1){ playing=false; sync(); }
+        }
+        raf=requestAnimationFrame(loop);
+      })(0);
+      sync();
+      requestAnimationFrame(()=>{ layout(); paint(); });
+      return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; };
+    }
+  };
+})();
+
 /* 「눈으로 보기」 탭에 늘어놓는 순서 */
-const TOOL_ORDER = ['cubeSection', 'rollPoly'];
+const TOOL_ORDER = ['cubeSection', 'rollPoly', 'tether'];
 
 function renderSee(){
   const list = TOOL_ORDER.filter(k=> TOOLS[k]).map(k=>{
