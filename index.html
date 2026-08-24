@@ -476,18 +476,8 @@ nav button.on .ic{transform:scale(1.16)}
   color:var(--muted);font-size:12.5px;background:transparent}
 .tmSent{font-size:12.5px;font-weight:700;color:var(--accent);min-height:18px}
 
-/* ── 오늘의 질문 ── */
-@keyframes odGlow{0%,100%{box-shadow:0 8px 22px rgba(124,58,237,.16)}50%{box-shadow:0 9px 28px rgba(236,72,153,.27)}}
-.opDaily{position:relative;border-radius:20px;padding:2.5px;background:var(--grBrand);margin:14px 0 18px;
-  animation:odGlow 3.4s ease-in-out infinite}
-.opDaily .op{margin-bottom:0;border:none;border-radius:18px}
-.opDaily .op::before{display:none}
-.odLab{position:absolute;top:0;right:16px;transform:translateY(-46%);background:var(--grBrand);color:#fff;
-  font-size:10.5px;font-weight:800;padding:4px 12px;border-radius:999px;letter-spacing:.02em;z-index:2;
-  box-shadow:0 2px 8px rgba(124,58,237,.35)}
-.odDay{position:absolute;top:0;left:16px;transform:translateY(-46%);background:var(--surface);color:var(--ink2);
-  border:1px solid var(--line);font-size:10px;font-weight:800;padding:3.5px 10px;border-radius:999px;z-index:2}
-.opDaily .opQ{font-size:18px}
+/* ── 어디서부터: 만져보기 버튼 ── */
+.opTool{margin:0 0 11px;background:var(--surface);border:1.5px solid var(--opC);color:var(--opC);font-weight:800}
 
 /* ── 하단 탭바 ── */
 #toTop{position:fixed;right:14px;z-index:25;bottom:calc(80px + env(safe-area-inset-bottom));
@@ -1941,7 +1931,7 @@ const OPENERS = [
    ans:'2개.',
    why:['2·5 짝을 몇 번 만들 수 있는지가 답이다','2는 넘치고 5가 부족하므로 5의 개수만 세면 된다','부족한 쪽이 답을 정한다는 생각은 고등까지 그대로 쓰인다']},
 
-  {lv:'초등', q:'겉면을 전부 칠한 정육면체를\n27조각으로 잘랐다.\n칠해진 면이 3·2·1·0개인 조각은 몇 개씩?',
+  {lv:'초등', tool:'paintCube', q:'겉면을 전부 칠한 정육면체를\n27조각으로 잘랐다.\n칠해진 면이 3·2·1·0개인 조각은 몇 개씩?',
    steps:['3면이 칠해진 조각이 어디 있는지 찾는다','꼭짓점·모서리·면·속 네 자리로 나눈다','각 자리에 조각이 몇 개인지 센다'],
    link:'초등 입체도형 × 중2 경우의 수',
    hint:'꼭짓점 · 모서리 · 면 가운데 · 속 — 네 자리로 나눠서 세어 보세요.',
@@ -3819,6 +3809,198 @@ TOOLS.cubeSection = (()=>{
 })();
 
 
+/* ═══════ 칠한 정육면체 — 겉을 칠하고 n×n×n 으로 잘라 흩어 본다 ═══════
+   꼭짓점 8개는 3면, 모서리 12(n−2)개는 2면, 면 가운데 6(n−2)²개는 1면,
+   속 (n−2)³개는 0면 — 다 더하면 n³. 어디서부터 「칠한 정육면체」 질문과 연결. */
+TOOLS.paintCube = (()=>{
+  let n=3, yaw=-0.62, pitch=0.55, ex=0, exT=0, spinning=false, hi=null;
+  let drag=null, cv, ctx, stage, root=null, W=0,H=0,DPR=1,CX=0,CY=0,SC=1, SCe=1, raf=0;
+  const CAMD=8.5, HS=1.3;
+
+  /* 색은 실색으로 굽는다 — 캔버스라 강제 어둡게에도 안전 */
+  const PAINT=['#ef5350','#d43c3c','#b23030'];   /* 칠한 면: 윗·앞·옆 음영 */
+  const RAW=['#f5ecd9','#e1d4b6','#c9b995'];     /* 안 칠한 속살: 나무색 */
+  const EDGE='#3c352a';
+
+  const rot=p=>{ const cy=Math.cos(yaw), sy=Math.sin(yaw);
+    const x=p[0]*cy-p[1]*sy, y=p[0]*sy+p[1]*cy, z=p[2];
+    const cp=Math.cos(pitch), sp=Math.sin(pitch);
+    return [x, y*cp - z*sp, y*sp + z*cp]; };
+  const proj=p=>{ const r=rot(p), k=CAMD/(CAMD+r[1]); return {x:CX+r[0]*k*SCe, y:CY-r[2]*k*SCe}; };
+
+  const FACES=[{a:0,s:1},{a:0,s:-1},{a:1,s:1},{a:1,s:-1},{a:2,s:1},{a:2,s:-1}];
+  function faceCorners(c,h,f){
+    const u=(f.a+1)%3, v=(f.a+2)%3, out=[];
+    [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(d=>{
+      const p=[c[0],c[1],c[2]];
+      p[f.a]+=f.s*h; p[u]+=d[0]*h; p[v]+=d[1]*h;
+      out.push(p);
+    });
+    return out;
+  }
+  const cnt=()=>{ const m=Math.max(0,n-2); return {3:8, 2:12*m, 1:6*m*m, 0:m*m*m}; };
+  const shade=f=> f.a===2?0 : f.a===1?1 : 2;
+
+  function cubelets(){
+    const h=HS/n, list=[];
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++){
+      const o=((i===0||i===n-1)?1:0)+((j===0||j===n-1)?1:0)+((k===0||k===n-1)?1:0);
+      const g=1+ex*0.85;
+      const c=[(i-(n-1)/2)*2*h*g, (j-(n-1)/2)*2*h*g, (k-(n-1)/2)*2*h*g];
+      const painted=f=>{
+        const t=f.a===0?i : f.a===1?j : k;
+        return f.s>0 ? t===n-1 : t===0;
+      };
+      list.push({c, h:h*0.985, o, painted});
+    }
+    return list;
+  }
+
+  function draw(){
+    if(!ctx) return;
+    ctx.clearRect(0,0,W,H);
+    SCe = SC/(1+ex*0.62);
+    const cam=[0,-CAMD,0];
+    const cs=cubelets();
+    cs.sort((A,B)=> rot(B.c)[1] - rot(A.c)[1]);
+    for(const q of cs){
+      ctx.globalAlpha = (hi!==null && q.o!==hi) ? 0.09 : 1;
+      for(const f of FACES){
+        const nr=[0,0,0]; nr[f.a]=f.s;
+        const fc=[q.c[0],q.c[1],q.c[2]]; fc[f.a]+=f.s*q.h;
+        const rn=rot(nr), rc=rot(fc);
+        if(rn[0]*(cam[0]-rc[0])+rn[1]*(cam[1]-rc[1])+rn[2]*(cam[2]-rc[2]) <= 0) continue;
+        const P=faceCorners(q.c,q.h,f).map(proj);
+        ctx.beginPath();
+        P.forEach((s,idx)=> idx?ctx.lineTo(s.x,s.y):ctx.moveTo(s.x,s.y));
+        ctx.closePath();
+        ctx.fillStyle = q.painted(f) ? PAINT[shade(f)] : RAW[shade(f)];
+        ctx.fill();
+        ctx.lineWidth=1.1; ctx.strokeStyle=EDGE; ctx.stroke();
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+  function resize(){
+    if(!stage) return;
+    const b=stage.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1, 2);
+    W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
+    cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    CX=W/2; CY=H/2; SC=Math.min(W,H)*0.235;
+    draw();
+  }
+  function paint(){
+    if(!root) return;
+    const c=cnt(), m=Math.max(0,n-2);
+    root.querySelector('#pcTot').textContent = n+'×'+n+'×'+n+' = '+(n*n*n)+'조각';
+    const M={
+      3:'꼭짓점 자리 — 세 면이 밖으로 나와 있어요. 아무리 크게 잘라도 꼭짓점은 늘 8개.',
+      2:'모서리 자리 — 꼭짓점 사이에 '+m+'개씩 × 모서리 12개 = '+c[2]+'개.',
+      1:'면 가운데 자리 — 한 면에 '+m+'×'+m+'개씩 × 면 6개 = '+c[1]+'개.',
+      0:'속 자리 — 겉에서 안 보이는 '+m+'×'+m+'×'+m+' = '+c[0]+'개. 칠이 하나도 없어요.'
+    };
+    root.querySelector('#pcMsg').textContent =
+      hi===null ? '자리별로 눌러 보고, 🧨 흩어서 칠해진 면을 세어 보세요.'
+      : (c[hi]===0 ? n+'×'+n+'×'+n+'에는 이 자리가 없어요 — 조각 전부가 꼭짓점이라 3면씩입니다.' : M[hi]);
+    root.querySelectorAll('#pcCat button').forEach(b=>{
+      const k=b.dataset.c;
+      if(k!=='all') b.textContent = k+'면 · '+c[k]+'개';
+      b.classList.toggle('on', hi===null ? k==='all' : k===String(hi));
+    });
+    root.querySelectorAll('#pcN button').forEach(b=> b.classList.toggle('on', +b.dataset.n===n));
+    root.querySelector('#pcEx').classList.toggle('on', exT>0);
+    root.querySelector('#pcSpin').classList.toggle('on', spinning);
+    root.querySelector('#pcNote').innerHTML =
+      '자리가 개수를 정합니다 — <b>꼭짓점 8개</b>는 3면, <b>모서리</b>는 2면씩 12×'+m+' = <b>'+c[2]+'개</b>, '+
+      '<b>면 가운데</b>는 1면씩 6×'+m+'² = <b>'+c[1]+'개</b>, <b>속</b>은 0면 '+m+'³ = <b>'+c[0]+'개</b>.<br>'+
+      '다 더하면 8 + '+c[2]+' + '+c[1]+' + '+c[0]+' = <b>'+(n*n*n)+'개</b> — 딱 '+n+'×'+n+'×'+n+' 입니다.<br><br>'+
+      '조각 수를 바꿔 보세요. <b>꼭짓점 8개만 그대로</b>이고, 모서리는 (n−2)배, 면 가운데는 (n−2)², 속은 (n−2)³으로 자랍니다.';
+  }
+
+  return {
+    title:'칠한 정육면체', sub:'잘라서 흩어 보면 자리가 보인다',
+    emoji:'🎨', tag:'초등 ~ 중2 · 입체도형',
+    blurb:'겉을 빨갛게 칠한 큐브를 27조각으로 잘라 공중에 흩어 봅니다. 3면·2면·1면·0면 조각이 어느 자리에서 몇 개 나오는지 — 눈으로 세면 외울 게 없어요.',
+    preset(k){ const v=parseInt(k,10); if(v>=2 && v<=5) n=v; },
+    html(){
+      return `<div class="tsCard">
+        <div class="tsStage" id="pcStage"><canvas id="pcCv"></canvas>
+          <div class="tsTip">끌면 돌아갑니다</div></div>
+        <div class="fgExpr" id="pcTot"></div>
+        <div class="tsSub fgFacts" id="pcMsg"></div>
+      </div>
+      <div class="tsCard">
+        <div class="tsLbl">몇 조각으로 자를까</div>
+        <div class="tsRow" id="pcN">
+          <button data-n="2">2×2×2</button><button data-n="3">3×3×3</button>
+          <button data-n="4">4×4×4</button><button data-n="5">5×5×5</button>
+        </div>
+        <div class="tsLbl">자리별로 보기 — 칠해진 면 수</div>
+        <div class="tsRow" id="pcCat">
+          <button data-c="3">3면</button><button data-c="2">2면</button>
+          <button data-c="1">1면</button><button data-c="0">0면</button>
+          <button data-c="all">전체</button>
+        </div>
+        <div class="tsLbl">보기 설정</div>
+        <div class="tsRow">
+          <button id="pcEx">🧨 흩어 보기</button><button id="pcSpin">돌리기</button>
+          <button id="pcRe">시점 처음으로</button>
+        </div>
+        <div class="tsNote" id="pcNote"></div>
+      </div>`;
+    },
+    init(sheet){
+      root=sheet;
+      stage=root.querySelector('#pcStage');
+      cv=root.querySelector('#pcCv'); ctx=cv.getContext('2d');
+
+      root.addEventListener('click', e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.n){ n=+t.dataset.n; paint(); draw(); return; }
+        if(t.dataset.c){
+          hi = t.dataset.c==='all' ? null : +t.dataset.c;
+          if(hi!==null && exT===0) exT=1;    /* 자리를 고르면 자동으로 흩어 보여준다 */
+          paint(); draw(); return;
+        }
+        if(t.id==='pcEx'){ exT = exT>0 ? 0 : 1; paint(); return; }
+        if(t.id==='pcSpin'){ spinning=!spinning; paint(); return; }
+        if(t.id==='pcRe'){ yaw=-0.62; pitch=0.55; spinning=false; paint(); draw(); return; }
+      });
+
+      const pos=ev=>{ const b=stage.getBoundingClientRect(); return {x:ev.clientX-b.left, y:ev.clientY-b.top}; };
+      const onDown=ev=>{ stage.setPointerCapture(ev.pointerId); const m=pos(ev);
+        spinning=false; paint(); drag={x:m.x, y:m.y}; ev.preventDefault(); };
+      const onMove=ev=>{ if(!drag) return; const m=pos(ev);
+        yaw += (m.x-drag.x)*0.011; pitch += (m.y-drag.y)*0.011;
+        pitch = Math.max(-1.5, Math.min(1.5, pitch));
+        drag.x=m.x; drag.y=m.y; draw(); ev.preventDefault(); };
+      stage.addEventListener('pointerdown', onDown);
+      stage.addEventListener('pointermove', onMove);
+      stage.addEventListener('pointerup', ()=>{ drag=null; });
+      stage.addEventListener('pointercancel', ()=>{ drag=null; });
+
+      const onResize=()=> resize();
+      window.addEventListener('resize', onResize);
+
+      (function loop(){
+        let need=false;
+        if(spinning && !drag){ yaw+=0.006; need=true; }
+        if(Math.abs(exT-ex) > 0.0006){ ex += (exT-ex)*0.13; need=true; }
+        else if(ex!==exT){ ex=exT; need=true; }
+        if(need) draw();
+        raf=requestAnimationFrame(loop);
+      })();
+
+      paint();
+      requestAnimationFrame(resize);
+      return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; };
+    }
+  };
+})();
+
+
 /* ═══════ 굴리기 — 다각형이 직선 위를 굴러갈 때 꼭짓점이 그리는 자취 ═══════
    한 번 구를 때마다 닿아 있는 꼭짓점을 축으로 돈다.
    표시한 점은 그 축에서 떨어진 거리를 반지름으로 하는 호를 그린다.
@@ -5351,7 +5533,7 @@ TOOLS.funcGraph = (()=>{
 
 
 /* 「눈으로 보기」 탭에 늘어놓는 순서 */
-const TOOL_ORDER = ['funcGraph', 'cubeSection', 'rollPoly', 'tether'];
+const TOOL_ORDER = ['funcGraph', 'cubeSection', 'paintCube', 'rollPoly', 'tether'];
 
 function renderSee(){
   const list = TOOL_ORDER.filter(k=> TOOLS[k]).map(k=>{
@@ -6128,19 +6310,7 @@ function renderOpen(){
   const lvChips = '<div class="chips">' + LVS.map(k=>
     `<button class="chip" data-ol="${esc(k)}" aria-pressed="${k===openLv}">${esc(k)}<i>${lvCount(k)}</i></button>`
   ).join('') + '</div>';
-  // 오늘의 질문은 지금 보고 있는 학년 안에서 뽑는다 — 학년마다 자기 풀을 하루 하나씩 돈다.
-  // 중등은 한 밴드지만 mg(이 학년부터 풀 수 있음)가 있어서, 이름 정한 중1·중2 학생은
-  // 자기 학년이 풀 수 있는 질문 중에서만 오늘의 질문을 받는다.
-  const mgOrd = { '중1':1, '중2':2, '중3':3 };
-  const myMs = (WHO && mgOrd[WHO.g]) || 0;
-  let pool = OPENERS.map((o,i)=>[o,i]).filter(([o])=> openLv==='전체' || o.lv===openLv);
-  let dkTag = openLv;
-  if(myMs && openLv==='중등'){
-    const fit = pool.filter(([o])=> (mgOrd[o.mg] || 1) <= myMs);
-    if(fit.length){ pool = fit; dkTag = openLv + '.' + WHO.g; }
-  }
-  const di = pool[hash32('open.' + dayKey() + '.' + dkTag) % pool.length][1];
-  const list = OPENERS.map((o,i)=>[o,i]).filter(([o, i])=> i !== di && (openLv==='전체' || o.lv===openLv));
+  const list = OPENERS.map((o,i)=>[o,i]).filter(([o])=> openLv==='전체' || o.lv===openLv);
   const build = ([o, i])=>{
     const st = opStage.get(i) || 0;      // 0 질문만 · 1 첫 걸음 · 2 한 걸음 더
     const done = !!thought[o.q];         // 「생각해봤어요」를 누르면 답이 열린다
@@ -6163,18 +6333,18 @@ function renderOpen(){
       : `<button class="opThink" data-think="${i}">💡 생각해봤어요<small>누르면 답이 열립니다</small></button>`;
     const lvc = o.lv==='초등' ? 'es' : o.lv==='중등' ? 'ms' : 'hs';
     const mgTag = o.lv==='중등' && o.mg && o.mg !== '중1' ? `<span class="opMg">${esc(o.mg)}부터</span>` : '';
+    const touch = o.tool
+      ? `<button class="toolBtn opTool" data-tool="${esc(o.tool)}"${o.toolFn ? ` data-toolfn="${esc(o.toolFn)}"` : ''}>✋ 만져보기 — 돌리고 흩어 보기</button>` : '';
     return `<div class="op ${lvc}" data-oi="${i}">
       <div class="opHead"><span class="opLv">${esc(o.lv)}</span>${mgTag}${done ? '<span class="opDone">💭 생각했어요</span>' : ''}</div>
       <div class="opQ">${mkln(o.q)}</div>
-      ${body}${more}${think}
+      ${touch}${body}${more}${think}
     </div>`;
   };
   const html = list.map(build).join('');
-  const dNow = new Date();
-  const daily = `<div class="opDaily"><span class="odDay">${dNow.getMonth()+1}월 ${dNow.getDate()}일</span><span class="odLab">✨ 오늘의 질문</span>${build([OPENERS[di], di])}</div>`;
   const nTh = OPENERS.filter(o=>thought[o.q]).length;
   const intro = `<div class="opIntro"><div class="oiTxt">답을 바로 보지 말고 <b>첫 걸음</b>부터 밟아 보세요. 답은 <b>「생각해봤어요」</b>를 눌러야 열려요.</div>${nTh ? `<div class="oiCnt">💭 ${nTh}문</div>` : ''}</div>`;
-  $('#main').innerHTML = lvChips + intro + daily + html;
+  $('#main').innerHTML = lvChips + intro + html;
 }
 
 function render(){
