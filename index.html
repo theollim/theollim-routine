@@ -132,19 +132,32 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .askNoEnd b{color:var(--ink)}
 @keyframes sk{0%{background-position:100% 0}100%{background-position:0 0}}
 
-/* ── 어디서부터 탭 ── */
-.op{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 15px 14px;margin-bottom:12px;
-  border-top:3px solid var(--opInk)}
-.opHead{display:flex;margin-bottom:8px}
-.opLv{font-size:9.5px;font-weight:800;letter-spacing:.03em;color:var(--opInk);
-  background:var(--opBg);border:1px solid var(--opLine);border-radius:999px;padding:2px 9px}
-.opQ{font-size:16px;font-weight:750;line-height:1.5;letter-spacing:-.01em;margin-bottom:12px;text-wrap:balance;word-break:keep-all}
-.opBlock{background:var(--sunk);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
-.opBlock b{display:block;font-size:10.5px;font-weight:800;color:var(--opInk);margin-bottom:7px;letter-spacing:.02em}
-.opBlock p{font-size:13px;line-height:1.55;color:var(--ink);word-break:keep-all}
-.opSteps{margin:0;padding-left:19px;font-size:13px;line-height:1.55}
-.opSteps li{margin-bottom:5px;word-break:keep-all}
-.opLink{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--muted);word-break:keep-all}
+/* ── 어디서부터 탭 — 학년 그라데이션 레일 + 계단 타임라인 ── */
+.op{--opGr:var(--grM2);--opC:var(--gM2);position:relative;overflow:hidden;background:var(--surface);
+  border:1px solid var(--line);border-radius:18px;padding:17px 16px 15px 19px;margin-bottom:13px}
+.op.es{--opGr:var(--grEs);--opC:var(--gEs)} .op.ms{--opGr:var(--grM2);--opC:var(--gM2)} .op.hs{--opGr:var(--grHs);--opC:var(--gHs)}
+.op::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4.5px;background:var(--opGr)}
+.op::after{content:"❞";position:absolute;right:10px;bottom:-14px;font-size:52px;line-height:1;
+  font-family:Georgia,serif;color:var(--opC);opacity:.13;pointer-events:none}
+.opHead{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.opLv{font-size:9.5px;font-weight:800;letter-spacing:.03em;color:#fff;background:var(--opGr);border-radius:999px;padding:3px 11px}
+.opMg{font-size:9.5px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2.5px 8px}
+.opDone{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--opC)}
+.opQ{font-size:17px;font-weight:800;line-height:1.48;letter-spacing:-.012em;margin-bottom:13px;text-wrap:balance;word-break:keep-all}
+.opBlock{background:var(--sunk);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.opBlock b{display:block;font-size:11px;font-weight:800;color:var(--opC);margin-bottom:8px;letter-spacing:.02em}
+.opBlock p{font-size:13px;line-height:1.6;color:var(--ink);word-break:keep-all}
+.opSteps{margin:0;padding:0;list-style:none;counter-reset:opS;font-size:13px;line-height:1.6}
+.opSteps li{position:relative;padding-left:28px;margin-bottom:9px;word-break:keep-all;counter-increment:opS}
+.opSteps li:last-child{margin-bottom:2px}
+.opSteps li::before{content:counter(opS);position:absolute;left:0;top:1px;width:19px;height:19px;border-radius:50%;
+  background:var(--opGr);color:#fff;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.opSteps li:not(:last-child)::after{content:"";position:absolute;left:8.5px;top:23px;bottom:-8px;width:2px;background:var(--line)}
+.opLink{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--muted);word-break:keep-all}
+.opIntro{display:flex;align-items:center;gap:9px;margin:2px 2px 12px}
+.oiTxt{flex:1 1 auto;font-size:11.5px;color:var(--muted);line-height:1.55;word-break:keep-all}
+.oiTxt b{color:var(--ink2)}
+.oiCnt{flex:0 0 auto;font-size:11px;font-weight:800;color:#fff;background:var(--grBrand);border-radius:999px;padding:5px 11px;white-space:nowrap}
 /* ── 만져보기 도구 (전체화면) ── */
 .toolBtn{width:100%;min-height:44px;margin-top:9px;border-radius:11px;background:var(--opBg);
   border:1px solid var(--opLine);color:var(--opInk);font-size:13px;font-weight:750}
@@ -223,28 +236,32 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .opFigLeg span{font-size:10.5px;font-weight:700;display:flex;align-items:center;gap:4px;color:var(--muted);white-space:nowrap}
 .opFigLeg span::before{content:"";flex:0 0 auto;width:13px;height:3px;border-radius:2px}
 .opFigLeg .h::before{background:var(--ink)}
-.opFigLeg .m::before{background:var(--opInk)}
+.opFigLeg .m::before{background:var(--opC,var(--opInk))}
 .opFigNow{flex:1 1 auto;min-width:0}
 .opFigT{font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-.01em;word-break:keep-all}
 .opFigC{font-size:11.5px;color:var(--muted);margin-top:3px}
-.opFigNote{font-size:12px;line-height:1.55;color:var(--opInk);font-weight:750;margin-top:7px;word-break:keep-all}
+.opFigNote{font-size:12px;line-height:1.55;color:var(--opC,var(--opInk));font-weight:750;margin-top:7px;word-break:keep-all}
 .opFigBtns{display:flex;gap:7px;margin-top:11px}
-.opFigBtns button{flex:1 1 0;min-height:42px;border-radius:11px;border:1px solid var(--opLine);
-  background:var(--opBg);color:var(--opInk);font-size:13px;font-weight:750}
+.opFigBtns button{flex:1 1 0;min-height:42px;border-radius:11px;border:1.5px solid var(--opC,var(--opLine));
+  background:var(--surface);color:var(--opC,var(--opInk));font-size:13px;font-weight:750}
 .opFigBtns button.ghost{flex:0 0 auto;padding:0 15px;background:var(--surface);border-color:var(--line);color:var(--ink2);font-weight:650}
 .opFigList{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
 .opFigList span{font-size:11px;padding:3px 8px;border-radius:999px;background:var(--surface);
   border:1px solid var(--line);color:var(--muted)}
-.opFigList span.on{background:var(--opBg);border-color:var(--opLine);color:var(--opInk);font-weight:750}
-.opBlock.hint{background:var(--opBg);border-color:var(--opLine)}
-.opBlock.ans .opAns{font-size:18px;font-weight:800;margin-bottom:7px}
-.opMore{width:100%;min-height:46px;border-radius:12px;background:var(--opBg);border:1px solid var(--opLine);
-  color:var(--opInk);font-size:13px;font-weight:700;margin-bottom:9px}
-.opThink{width:100%;min-height:44px;border-radius:11px;background:var(--sunk);border:1px solid var(--line);
-  color:var(--ink2);font-size:12.5px;font-weight:650}
+.opFigList span.on{background:var(--surface);border-color:var(--opC,var(--opLine));color:var(--opC,var(--opInk));font-weight:750}
+.opBlock.hint{background:var(--sunk);border-color:var(--line)}
+.opBlock.hint{background:color-mix(in srgb,var(--opC) 7%,var(--surface));border-color:color-mix(in srgb,var(--opC) 26%,var(--line))}
+.opBlock.ans{border-width:1.5px;border-color:var(--opC)}
+.opBlock.ans .opAns{font-size:19px;font-weight:900;color:var(--opC);margin-bottom:7px}
+.opMore{width:100%;min-height:47px;border-radius:13px;background:var(--surface);border:1.5px solid var(--opC);
+  color:var(--opC);font-size:13.5px;font-weight:800;margin-bottom:9px}
+.opThink{width:100%;min-height:48px;border-radius:13px;background:var(--surface);border:1.5px dashed var(--line);
+  color:var(--ink2);font-size:13px;font-weight:750}
 .opThink{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0}
 .opThink small{font-size:10.5px;font-weight:500;opacity:.7}
-.opThink.on{background:var(--opBg);border-color:var(--opInk);color:var(--opInk);font-weight:750}
+.opThink.on{background:var(--opGr);border:none;color:#fff;font-weight:800;box-shadow:0 4px 13px rgba(0,0,0,.14)}
+@keyframes opPop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.opBlock.pop{animation:opPop .3s cubic-bezier(.2,.8,.3,1)}
 
 /* ── 공지 탭 ── */
 .noticeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -460,14 +477,17 @@ nav button.on .ic{transform:scale(1.16)}
 .tmSent{font-size:12.5px;font-weight:700;color:var(--accent);min-height:18px}
 
 /* ── 오늘의 질문 ── */
-.opDaily{position:relative;border-radius:19px;padding:2.5px;background:var(--grBrand);margin:12px 0 16px;
-  box-shadow:0 8px 22px rgba(124,58,237,.18)}
-.opDaily .op{margin-bottom:0;border:none;border-radius:17px}
+@keyframes odGlow{0%,100%{box-shadow:0 8px 22px rgba(124,58,237,.16)}50%{box-shadow:0 9px 28px rgba(236,72,153,.27)}}
+.opDaily{position:relative;border-radius:20px;padding:2.5px;background:var(--grBrand);margin:14px 0 18px;
+  animation:odGlow 3.4s ease-in-out infinite}
+.opDaily .op{margin-bottom:0;border:none;border-radius:18px}
+.opDaily .op::before{display:none}
 .odLab{position:absolute;top:0;right:16px;transform:translateY(-46%);background:var(--grBrand);color:#fff;
   font-size:10.5px;font-weight:800;padding:4px 12px;border-radius:999px;letter-spacing:.02em;z-index:2;
   box-shadow:0 2px 8px rgba(124,58,237,.35)}
-.opQ{font-size:17.5px;font-weight:800}
-.opLv.es{color:var(--gEs)} .opLv.ms{color:var(--gM2)} .opLv.hs{color:var(--gHs)}
+.odDay{position:absolute;top:0;left:16px;transform:translateY(-46%);background:var(--surface);color:var(--ink2);
+  border:1px solid var(--line);font-size:10px;font-weight:800;padding:3.5px 10px;border-radius:999px;z-index:2}
+.opDaily .opQ{font-size:18px}
 
 /* ── 하단 탭바 ── */
 #toTop{position:fixed;right:14px;z-index:25;bottom:calc(80px + env(safe-area-inset-bottom));
@@ -1991,7 +2011,7 @@ const OPENERS = [
    ans:'6가지.',
    why:['약수는 (2+1)(1+1)(1+1) = 12개','가로·세로를 바꾼 것은 같은 것이니 절반','(1,60) (2,30) (3,20) (4,15) (5,12) (6,10)']},
 
-  {lv:'중등', q:'오른쪽으로 3칸, 위로 2칸 가는\n가장 짧은 길은 몇 가지인가?',
+  {lv:'중등', mg:'중2', q:'오른쪽으로 3칸, 위로 2칸 가는\n가장 짧은 길은 몇 가지인가?',
    steps:['실제로 몇 개 그려 본다','어느 순간에 오른쪽·위를 고르는지 센다','오·오·오·위·위를 줄 세우는 문제로 바꿔 본다'],
    link:'중2 경우의 수 × 좌표',
    hint:'오른쪽을 ○, 위를 △로 쓰면 어떤 길이든 ○○○△△ 를 줄 세운 것입니다.',
@@ -2005,21 +2025,21 @@ const OPENERS = [
    ans:'반드시 있다. (2월 29일을 빼고 셀 때)',
    why:['생일이 365가지뿐인데 366명이면 적어도 한 칸에 두 명이 들어간다','계산이 아니라 논리만으로 확실하게 끝난다 (비둘기집 원리)','2월 29일까지 세면 366가지가 되므로 367명이어야 한다 — 조건을 정확히 읽는 것이 수학이다']},
 
-  {lv:'중등', q:'세 변이 모두 자연수인 직각삼각형은\n3, 4, 5 말고 또 있을까?\n무한히 많을까?',
+  {lv:'중등', mg:'중2', q:'세 변이 모두 자연수인 직각삼각형은\n3, 4, 5 말고 또 있을까?\n무한히 많을까?',
    steps:['5, 12, 13을 확인해 본다','3,4,5를 2배·3배 해본다','배수가 아닌 새로운 것을 찾아본다'],
    link:'중2 피타고라스 × 중1 정수',
    hint:'5, 12, 13을 확인해 보세요. 그리고 3,4,5를 2배·3배 한 것도 되는지 보세요.',
    ans:'무한히 많다.',
    why:['배수(6,8,10 / 9,12,15 …)만으로도 이미 무한하다','배수가 아닌 것도 5,12,13 / 8,15,17 / 7,24,25 처럼 계속 나온다','정수만으로 딱 맞는 직각삼각형이 끝없이 있다는 것']},
 
-  {lv:'중등', q:'원의 둘레는 지름의 몇 배인가?\n그 수는 왜 소수로 끝나지 않을까?',
+  {lv:'중등', mg:'중2', q:'원의 둘레는 지름의 몇 배인가?\n그 수는 왜 소수로 끝나지 않을까?',
    steps:['정육각형을 원 안에 그려 본다','변을 늘려가면 어떻게 되는지 본다','유한소수가 되려면 분모가 어때야 했는지 떠올린다'],
    link:'초등 원주율 × 중2 유한소수의 조건 × 중3 무리수',
    hint:'유한소수가 되려면 기약분수의 분모에 2와 5 말고 다른 소인수가 없어야 했습니다. π를 분수로 쓸 수 있을까요?',
    ans:'π배(약 3.14배). 그리고 π는 분수로 쓸 수 없기 때문이다.',
    why:['분수로 쓸 수 있는 수(유리수)만 유한소수나 순환소수가 된다','π는 유리수가 아니라서 순환도 하지 않는다','정다각형의 변을 늘려가며 조여도 끝이 나오지 않는다']},
 
-  {lv:'중등', q:'반지름 10인 과녁 안에 반지름 5인 원이 있다.\n눈 감고 던져 안쪽에 맞을 확률은?',
+  {lv:'중등', mg:'중2', q:'반지름 10인 과녁 안에 반지름 5인 원이 있다.\n눈 감고 던져 안쪽에 맞을 확률은?',
    steps:['확률의 정의를 다시 읽는다 — 경우의 수를 셀 수 없다면?','두 넓이를 각각 구해 본다','넓이의 비가 왜 확률이 되는지 설명해 본다'],
    link:'중2 확률 × 초등 원의 넓이',
    hint:'확률은 경우의 수 ÷ 전체 경우의 수인데, 점은 셀 수가 없습니다. 대신 무엇의 비로 보면 될까요?',
@@ -2047,7 +2067,7 @@ const OPENERS = [
    ans:'2ⁿ − 1번.',
    why:['1개 1번, 2개 3번, 3개 7번, 10개 1023번','64개면 약 1844경 번 — 1초에 하나씩 옮겨도 5천억 년이 넘는다','큰 문제를 작은 문제로 줄이는 발상을 처음 만나는 자리']},
 
-  {lv:'중등', q:'A4를 반으로 접으면 A5가 되는데\n모양이 똑같다.\n가로세로 비가 얼마여야 그럴까?',
+  {lv:'중등', mg:'중2', q:'A4를 반으로 접으면 A5가 되는데\n모양이 똑같다.\n가로세로 비가 얼마여야 그럴까?',
    steps:['가로 1, 세로 x로 놓는다','반으로 접은 뒤의 가로세로를 쓴다','두 비가 같다고 놓고 푼다'],
    link:'중2 닮음 × 중3 제곱근',
    hint:'가로 1, 세로 x로 놓으세요. 반으로 접으면 가로 x/2, 세로 1이 됩니다. 두 비가 같다고 놓아 보세요.',
@@ -2075,7 +2095,7 @@ const OPENERS = [
    ans:'1001 = 7 × 11 × 13 이기 때문.',
    why:['abcabc = abc × 1001','1001이 세 소수의 곱이라 언제나 셋 다로 나누어진다','마술처럼 보이던 것이 인수분해 한 줄이었다']},
 
-  {lv:'중등', q:'아무렇게나 생긴 사각형의\n네 변의 중점을 차례로 이으면\n무엇이 나올까?',
+  {lv:'중등', mg:'중2', q:'아무렇게나 생긴 사각형의\n네 변의 중점을 차례로 이으면\n무엇이 나올까?',
    steps:['직접 몇 개 그려 본다','대각선 하나를 그어 삼각형 둘로 나눈다','중점연결정리를 떠올린다'],
    link:'중2 중점연결정리 × 중2 평행사변형',
    hint:'대각선 AC를 그어 보세요. 중점을 이은 두 선분이 각각 무엇과 평행한가요?',
@@ -2117,14 +2137,14 @@ const OPENERS = [
    ans:'한 바퀴 = 360°.',
    why:['꼭짓점에서 튼 각이 곧 외각이고, 다 합치면 제자리로 돌아온 회전량이다','볼록한 다각형이면 변이 100개든 3개든 한 바퀴는 한 바퀴다','공식을 외우지 않아도 되는 몇 안 되는 자리']},
 
-  {lv:'중등', q:'동전을 두 번 던져\n앞면이 적어도 한 번 나올 확률은?\n반반일까?',
+  {lv:'중등', mg:'중2', q:'동전을 두 번 던져\n앞면이 적어도 한 번 나올 확률은?\n반반일까?',
    steps:['나올 수 있는 경우를 전부 적는다','「적어도 한 번」의 반대가 무엇인지 정한다','세기 쉬운 쪽부터 센다'],
    link:'중2 확률 × 여사건',
    hint:'「적어도 한 번」의 반대는 무엇인가요? 세기 쉬운 쪽부터 세어 보세요.',
    ans:'3/4.',
    why:['반대(뒤뒤)가 1/4이므로 1 − 1/4','「적어도」가 나오면 여집합이라는 것이 여기서 처음 필요해진다','네 경우를 다 적어도 나오지만, 여집합이 훨씬 빠르다']},
 
-  {lv:'중등', q:'넓이가 2인 정사각형의 한 변은 얼마일까?\n자로 잴 수 있을까?',
+  {lv:'중등', mg:'중2', q:'넓이가 2인 정사각형의 한 변은 얼마일까?\n자로 잴 수 있을까?',
    steps:['1×1 정사각형 두 개를 대각선으로 갈라 붙여 본다','만들어진 정사각형의 한 변이 무엇인지 본다','피타고라스로 그 길이를 구한다'],
    link:'중3 제곱근 × 중2 피타고라스',
    hint:'1×1 정사각형의 대각선이 그 한 변입니다. 피타고라스로 길이를 구해 보세요.',
@@ -2145,7 +2165,7 @@ const OPENERS = [
    ans:'2, 4, 8, 6이 반복. 2¹⁰⁰ 의 일의 자리는 6.',
    why:['100 ÷ 4 = 나머지 0 → 마디의 마지막인 6','일의 자리는 앞의 일의 자리로만 정해진다','종류가 유한하면 반드시 순환한다 — 1/7 카드와 같은 이유']},
 
-  {lv:'중등', q:'√2 는 왜 분수로 쓸 수 없을까?',
+  {lv:'중등', mg:'중3', q:'√2 는 왜 분수로 쓸 수 없을까?',
    steps:['√2 = p/q 인 기약분수가 있다고 가정한다','양변을 제곱해 정리한다','p와 q가 각각 짝수인지 홀수인지 따져 본다'],
    link:'중3 무리수 × 중1 소인수분해',
    hint:'√2 = p/q (기약분수)라 하고 양변을 제곱해 보세요. p²가 짝수면 p는 어떤 수일까요?',
@@ -2194,28 +2214,28 @@ const OPENERS = [
    ans:'악수 15번 = 변 6 + 대각선 9.',
    why:['두 사람을 고르는 것과 두 꼭짓점을 잇는 것이 같은 일이다','한 사람이 5명과 악수하니 6 × 5 = 30, 한 번을 두 번 센 셈이라 ÷ 2 = 15','겉모습이 다른 두 문제가 같은 문제인 첫 경험']},
 
-  {lv:'중등', q:'피타고라스 정리를\n그림 한 장으로 증명할 수 있을까?',
+  {lv:'중등', mg:'중2', q:'피타고라스 정리를\n그림 한 장으로 증명할 수 있을까?',
    steps:['한 변이 (a+b)인 정사각형을 그린다','직각삼각형 4개를 바람개비처럼 돌려 붙인다','가운데에 생긴 도형의 넓이를 두 가지 방법으로 쓴다'],
    link:'중2 피타고라스 × 중3 곱셈공식',
    hint:'한 변이 (a+b)인 정사각형 안에 직각삼각형 4개를 바람개비처럼 돌려 붙여 보세요. 가운데에 무엇이 생기나요?',
    ans:'a² + b² = c².',
    why:['가운데 네 각은 180° − (직각삼각형의 두 예각의 합 90°) = 90° 라 정사각형이다','(a+b)² = c² + 4 × (ab/2) → a² + 2ab + b² = c² + 2ab → 2ab를 지우면 끝','같은 넓이를 두 번 세는 것이 증명이 된다']},
 
-  {lv:'중등', q:'닮음비가 2:3이면\n넓이비와 부피비는 얼마일까?\n왜 제곱과 세제곱일까?',
+  {lv:'중등', mg:'중2', q:'닮음비가 2:3이면\n넓이비와 부피비는 얼마일까?\n왜 제곱과 세제곱일까?',
    steps:['한 변이 2배인 정육면체를 원래 것으로 채워 본다','몇 개가 들어가는지 센다','길이·넓이·부피가 각각 몇 차원인지 생각한다'],
    link:'중2 닮음 × 중1 입체도형',
    hint:'한 변이 2배인 정사각형을 원래 정사각형으로 채워 보세요. 몇 개인가요? 정육면체로도 해보세요.',
    ans:'넓이비 4:9, 부피비 8:27. (2²:3², 2³:3³)',
    why:['정사각형은 4개(2²), 정육면체는 8개(2³)가 들어간다','길이는 1차원, 넓이는 2차원, 부피는 3차원 — 지수가 곧 차원의 수다','그래서 2:3이면 4:9, 8:27 이다']},
 
-  {lv:'중등', q:'세 변의 수직이등분선이\n왜 반드시 한 점에서 만날까?\n두 개가 만나는 건 당연한데.',
+  {lv:'중등', mg:'중2', q:'세 변의 수직이등분선이\n왜 반드시 한 점에서 만날까?\n두 개가 만나는 건 당연한데.',
    steps:['수직이등분선 위의 점이 어떤 성질을 갖는지 쓴다','두 수직이등분선의 교점이 몇 개 꼭짓점에서 거리가 같은지 본다','그 점이 셋째 수직이등분선 위에 있어야 하는 이유를 말한다'],
    link:'중2 외심·내심 × 논리',
    hint:'수직이등분선 위의 점은 두 꼭짓점에서 거리가 같습니다. 두 수직이등분선의 교점은 몇 개의 꼭짓점에서 거리가 같을까요?',
    ans:'셋 다 같기 때문.',
    why:['그러면 그 점은 나머지 한 쌍에 대해서도 거리가 같다','거리가 같은 점은 그 쌍의 수직이등분선 위에 있어야 한다','내심도 「두 변에서 같은 거리」로 똑같이 설명된다']},
 
-  {lv:'중등', q:'무게중심이 중선을 2:1로 나눈다.\n이 2:1은 어디서 나온 걸까?',
+  {lv:'중등', mg:'중2', q:'무게중심이 중선을 2:1로 나눈다.\n이 2:1은 어디서 나온 걸까?',
    steps:['두 변의 중점을 이어 본다','그 선분과 밑변으로 생기는 두 삼각형을 본다','닮음비를 구한다'],
    link:'중2 무게중심 × 중2 중점연결정리',
    hint:'두 중선을 긋고 교점을 G라 하세요. 두 중점을 이은 선분이 만드는 삼각형과, 밑변이 만드는 삼각형은 닮음입니다. 닮음비가 얼마인가요?',
@@ -6108,9 +6128,18 @@ function renderOpen(){
   const lvChips = '<div class="chips">' + LVS.map(k=>
     `<button class="chip" data-ol="${esc(k)}" aria-pressed="${k===openLv}">${esc(k)}<i>${lvCount(k)}</i></button>`
   ).join('') + '</div>';
-  // 오늘의 질문은 지금 보고 있는 학년 안에서 뽑는다 — 학년마다 자기 풀을 하루 하나씩 돈다
-  const pool = OPENERS.map((o,i)=>[o,i]).filter(([o])=> openLv==='전체' || o.lv===openLv);
-  const di = pool[hash32('open.' + dayKey() + '.' + openLv) % pool.length][1];
+  // 오늘의 질문은 지금 보고 있는 학년 안에서 뽑는다 — 학년마다 자기 풀을 하루 하나씩 돈다.
+  // 중등은 한 밴드지만 mg(이 학년부터 풀 수 있음)가 있어서, 이름 정한 중1·중2 학생은
+  // 자기 학년이 풀 수 있는 질문 중에서만 오늘의 질문을 받는다.
+  const mgOrd = { '중1':1, '중2':2, '중3':3 };
+  const myMs = (WHO && mgOrd[WHO.g]) || 0;
+  let pool = OPENERS.map((o,i)=>[o,i]).filter(([o])=> openLv==='전체' || o.lv===openLv);
+  let dkTag = openLv;
+  if(myMs && openLv==='중등'){
+    const fit = pool.filter(([o])=> (mgOrd[o.mg] || 1) <= myMs);
+    if(fit.length){ pool = fit; dkTag = openLv + '.' + WHO.g; }
+  }
+  const di = pool[hash32('open.' + dayKey() + '.' + dkTag) % pool.length][1];
   const list = OPENERS.map((o,i)=>[o,i]).filter(([o, i])=> i !== di && (openLv==='전체' || o.lv===openLv));
   const build = ([o, i])=>{
     const st = opStage.get(i) || 0;      // 0 질문만 · 1 첫 걸음 · 2 한 걸음 더
@@ -6118,29 +6147,34 @@ function renderOpen(){
     let body = '';
     if(st >= 1){
       body += `<div class="opBlock">
-        <b>첫 걸음</b>
+        <b>👣 첫 걸음</b>
         <ol class="opSteps">${o.steps.map(x=>`<li>${mk(x)}</li>`).join('')}</ol>
         ${opFigHtml(o, i)}
         <div class="opLink">잇는 곳 · ${esc(o.link)}</div>
       </div>`;
     }
-    if(st >= 2) body += `<div class="opBlock hint"><b>한 걸음 더</b><p>${mkln(o.hint)}</p></div>`;
-    if(done) body += `<div class="opBlock ans"><b>확인하기</b><p class="opAns">${mk(o.ans)}</p>
+    if(st >= 2) body += `<div class="opBlock hint"><b>🧗 한 걸음 더</b><p>${mkln(o.hint)}</p></div>`;
+    if(done) body += `<div class="opBlock ans"><b>🎯 확인하기</b><p class="opAns">${mk(o.ans)}</p>
         <ul class="propList">${o.why.map(x=>`<li>${mk(x)}</li>`).join('')}</ul></div>`;
     const more = st < 2
-      ? `<button class="opMore" data-op="${i}">${['첫 걸음 보기 ▾','한 걸음 더 보기 ▾'][st]}</button>` : '';
+      ? `<button class="opMore" data-op="${i}">${['👣 첫 걸음 보기 ▾','🧗 한 걸음 더 보기 ▾'][st]}</button>` : '';
     const think = done
       ? `<button class="opThink on" data-think="${i}">✅ 생각해봤어요</button>`
       : `<button class="opThink" data-think="${i}">💡 생각해봤어요<small>누르면 답이 열립니다</small></button>`;
-    return `<div class="op">
-      <div class="opHead"><span class="opLv ${o.lv==='초등' ? 'es' : o.lv==='중등' ? 'ms' : 'hs'}">${esc(o.lv)}</span></div>
+    const lvc = o.lv==='초등' ? 'es' : o.lv==='중등' ? 'ms' : 'hs';
+    const mgTag = o.lv==='중등' && o.mg && o.mg !== '중1' ? `<span class="opMg">${esc(o.mg)}부터</span>` : '';
+    return `<div class="op ${lvc}" data-oi="${i}">
+      <div class="opHead"><span class="opLv">${esc(o.lv)}</span>${mgTag}${done ? '<span class="opDone">💭 생각했어요</span>' : ''}</div>
       <div class="opQ">${mkln(o.q)}</div>
       ${body}${more}${think}
     </div>`;
   };
   const html = list.map(build).join('');
-  const daily = `<div class="opDaily"><span class="odLab">오늘의 질문</span>${build([OPENERS[di], di])}</div>`;
-  $('#main').innerHTML = lvChips + `<div class="hint">답을 바로 보지 마세요. <b>첫 걸음</b>을 밟아보고, 막히면 <b>한 걸음 더</b>를 여세요.<br>답은 <b>「생각해봤어요」</b>를 눌러야 열립니다. 맞고 틀리는 카드가 아니라 <b>오래 머무는</b> 카드예요.</div>${daily}${html}`;
+  const dNow = new Date();
+  const daily = `<div class="opDaily"><span class="odDay">${dNow.getMonth()+1}월 ${dNow.getDate()}일</span><span class="odLab">✨ 오늘의 질문</span>${build([OPENERS[di], di])}</div>`;
+  const nTh = OPENERS.filter(o=>thought[o.q]).length;
+  const intro = `<div class="opIntro"><div class="oiTxt">답을 바로 보지 말고 <b>첫 걸음</b>부터 밟아 보세요. 답은 <b>「생각해봤어요」</b>를 눌러야 열려요.</div>${nTh ? `<div class="oiCnt">💭 ${nTh}문</div>` : ''}</div>`;
+  $('#main').innerHTML = lvChips + intro + daily + html;
 }
 
 function render(){
@@ -6228,12 +6262,26 @@ document.addEventListener('click', (e)=>{
     renderOpen(); window.scrollTo(0, y); return;   /* 누른 자리에 그대로 머문다 */
   }
   const opMore = e.target.closest('[data-op]');
-  if(opMore){ const i=+opMore.dataset.op; opStage.set(i, Math.min(2,(opStage.get(i)||0)+1)); renderOpen(); return; }
+  if(opMore){
+    const i = +opMore.dataset.op;
+    const st = Math.min(2, (opStage.get(i)||0)+1);
+    opStage.set(i, st); renderOpen();
+    const bl = document.querySelectorAll(`.op[data-oi="${i}"] .opBlock`)[st-1];
+    if(bl) bl.classList.add('pop');
+    return;
+  }
   const opThink = e.target.closest('[data-think]');
   if(opThink){
-    const o = OPENERS[+opThink.dataset.think];
-    if(thought[o.q]) delete thought[o.q]; else thought[o.q] = 1;
-    saveThought(); renderOpen(); return;
+    const idx = +opThink.dataset.think;
+    const o = OPENERS[idx];
+    const was = !!thought[o.q];
+    if(was) delete thought[o.q]; else thought[o.q] = 1;
+    saveThought(); renderOpen();
+    if(!was){
+      const bs = document.querySelectorAll(`.op[data-oi="${idx}"] .opBlock`);
+      if(bs.length) bs[bs.length-1].classList.add('pop');
+    }
+    return;
   }
   const picBtn = e.target.closest('#cardPic');
   if(picBtn){
