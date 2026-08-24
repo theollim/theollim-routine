@@ -179,6 +179,7 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .tsRow button{min-height:40px;padding:0 13px;border-radius:10px;border:1px solid var(--line);
   background:var(--plane);color:var(--ink);font-size:13px;font-weight:650}
 .tsRow button.on{background:var(--opInk);border-color:var(--opInk);color:var(--surface);font-weight:750}
+.tsRow button:disabled{opacity:.38}
 .tsRow.v{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
 .tsRow.m{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
 .tsRow.m button{padding:0;min-width:0;font-size:12px;font-weight:700}
@@ -396,7 +397,7 @@ const NOTICES = [
 
 const CARDS = [
   /* ═══ 초등 (4~6학년) — 도형의 넓이·부피, 사각형의 성질 ═══ */
-  {g:'초등', u:'수와 연산 기초', f:'곱셈의 뜻', b:'4 × 3 은 4를 3번 더한 것\n4 + 4 + 4 = 12',
+  {g:'초등', u:'수와 연산 기초', f:'곱셈의 뜻', b:'같은 수를 여러 번 더한 것을\n간단히 나타낸 것이 곱셈\n4 + 4 + 4 = 4 × 3',
     when:'곱셈이 무엇인지 되돌아볼 때', caution:'4×3과 3×4는 답은 같지만 뜻이 다르다 — 4를 3번 더한 것과 3을 4번 더한 것', example:'4 × 3 = 4 + 4 + 4 = 12\n3 × 4 = 3 + 3 + 3 + 3 = 12'},
   {g:'초등', u:'수와 연산 기초', f:'2단과 5단 — 모든 단의 뿌리', b:'2단은 두 배\n5단은 다섯씩\n이 둘만 몸에 붙으면 나머지 단은 만들어 쓴다',
     when:'곱셈구구를 외우기 전에 기준을 잡을 때', caution:'5는 한 손의 손가락, 2는 두 배 — 그래서 이 둘이 기준이 된다', example:'5 × 7 = 35\n2 × 7 = 14'},
@@ -795,7 +796,7 @@ const CARDS = [
   {g:'중2', u:'일차함수', f:'연립방정식 + 좌표 + 넓이', pair:1, b:'주인공 — 넓이\n도구 — 연립방정식\n세 직선의 교점을 연립으로 구하면\n삼각형이 생긴다',
     when:'세 직선으로 둘러싸인 삼각형의 넓이를 구할 때', caution:'x축이나 y축도 직선 하나로 센다', example:'y = x, y = -x+4, y = 0\n꼭짓점 (0,0), (4,0), (2,2)\n넓이 = ½ × 4 × 2 = 4'},
 
-  {g:'중2', u:'삼각형의 성질', f:'이등변삼각형의 성질', def:'두 변의 길이가 같은 삼각형', shape:'isoTriangle', props:['두 밑각의 크기가 같다','꼭지각의 이등분선은 밑변을 수직으로 이등분한다','정삼각형은 세 각이 모두 60°인 이등변삼각형이다'],
+  {g:'중2', u:'삼각형의 성질', f:'이등변삼각형', def:'두 변의 길이가 같은 삼각형', shape:'isoTriangle', props:['두 밑각의 크기가 같다','꼭지각의 이등분선은 밑변을 수직으로 이등분한다','정삼각형은 세 각이 모두 60°인 이등변삼각형이다'],
     when:'두 변이 같은 삼각형에서 각이나 길이를 구할 때', caution:'꼭지각의 이등분선 = 밑변의 수직이등분선 = 중선 — 세 가지가 모두 같은 선분이다', example:'AB = AC 이고 ∠A = 40°\n밑각 ∠B = ∠C = (180-40) ÷ 2 = 70°'},
   {g:'중2', u:'삼각형의 성질', f:'이등변삼각형이 되는 조건', b:'두 내각의 크기가 같은 삼각형은\n이등변삼각형이다\n(∠B = ∠C 이면 AB = AC)', shape:'isoTriangle',
     when:'각의 크기만 보고 두 변의 길이가 같음을 보일 때', caution:'같은 각을 마주보는 두 변의 길이가 같다 — 각과 변이 마주보는 짝을 정확히 찾기', example:'∠B = ∠C = 50°, AC = 7\n→ AB = AC = 7'},
@@ -824,19 +825,19 @@ const CARDS = [
   {g:'중2', u:'삼각형의 성질', f:'외심·내심 + 방정식', pair:1, b:'주인공 — 방정식\n도구 — 외심·내심의 각\n각의 관계를 식으로 놓는다',
     when:'외심·내심의 각을 주고 ∠A를 물을 때', caution:'∠BOC = 2∠A, ∠BIC = 90° + ½∠A — 어느 쪽인지 먼저 정하고 식을 세운다', example:'∠BIC = 115°\n115 = 90 + ½∠A\n∠A = 50°'},
 
-  {g:'중2', u:'사각형의 성질', f:'평행사변형의 성질', def:'두 쌍의 대변이 각각 평행한 사각형', shape:'parallelogram', props:['두 쌍의 대변의 길이가 각각 같다','두 쌍의 대각의 크기가 각각 같다','두 대각선은 서로를 이등분한다','이웃하는 두 각의 크기의 합은 180°이다'],
+  {g:'중2', u:'사각형의 성질', f:'평행사변형', def:'두 쌍의 대변이 각각 평행한 사각형', shape:'parallelogram', props:['두 쌍의 대변의 길이가 각각 같다','두 쌍의 대각의 크기가 각각 같다','두 대각선은 서로를 이등분한다','이웃하는 두 각의 크기의 합은 180°이다'],
     when:'평행사변형에서 모르는 각이나 변의 길이를 구할 때', caution:'대각은 같고, 이웃한 각은 더해서 180° — 둘을 바꿔 쓰는 실수가 많다', example:'∠A = 70°\n→ ∠C = 70°, ∠B = ∠D = 110°'},
   {g:'중2', u:'사각형의 성질', f:'평행사변형이 되는 조건', def:'아래 중 하나만 만족해도 평행사변형이다', shape:'parallelogram', props:[
     '두 쌍의 대변이 각각 평행하다','두 쌍의 대변의 길이가 각각 같다','두 쌍의 대각의 크기가 각각 같다',
     '한 쌍의 대변이 평행하고 길이가 같다','두 대각선이 서로를 이등분한다'],
     when:'주어진 조건으로 평행사변형임을 보일 때', caution:'한 쌍의 대변이 평행하고 길이가 같다 — 평행만이나 길이만으로는 안 된다', example:'AB ∥ DC 이고 AB = DC\n→ 한 쌍의 대변이 평행하고 길이가 같음 → 평행사변형'},
-  {g:'중2', u:'사각형의 성질', f:'직사각형의 성질', def:'네 각이 모두 직각인 사각형 — 평행사변형의 성질 + 아래', shape:'rect', props:['두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다','평행사변형에서 한 내각이 직각이거나 두 대각선의 길이가 같으면 직사각형이 된다'],
+  {g:'중2', u:'사각형의 성질', f:'직사각형', def:'네 각이 모두 직각인 사각형 — 평행사변형의 성질 + 아래', shape:'rect', props:['두 대각선의 길이가 같다','두 대각선은 서로를 이등분한다','평행사변형에서 한 내각이 직각이거나 두 대각선의 길이가 같으면 직사각형이 된다'],
     when:'직사각형의 대각선 길이를 이용할 때', caution:'대각선이 서로를 이등분하고 길이도 같으므로 교점에서 네 꼭짓점까지 거리가 모두 같다', example:'대각선 AC = 10\n→ BD = 10, 교점에서 각 꼭짓점까지 5'},
-  {g:'중2', u:'사각형의 성질', f:'마름모의 성질', def:'네 변의 길이가 모두 같은 사각형 — 평행사변형의 성질 + 아래', shape:'rhombus', props:['두 대각선은 서로 다른 것을 수직이등분한다','평행사변형에서 이웃하는 두 변의 길이가 같거나 두 대각선이 수직이면 마름모가 된다'],
+  {g:'중2', u:'사각형의 성질', f:'마름모', def:'네 변의 길이가 모두 같은 사각형 — 평행사변형의 성질 + 아래', shape:'rhombus', props:['두 대각선은 서로 다른 것을 수직이등분한다','평행사변형에서 이웃하는 두 변의 길이가 같거나 두 대각선이 수직이면 마름모가 된다'],
     when:'마름모의 넓이나 대각선 길이를 구할 때', caution:'대각선이 수직이므로 넓이 = ½ × (대각선) × (다른 대각선)', example:'두 대각선이 6, 8\n넓이 = ½ × 6 × 8 = 24'},
-  {g:'중2', u:'사각형의 성질', f:'정사각형의 성질', def:'네 변의 길이가 모두 같고 네 각이 모두 직각인 사각형', shape:'square', props:['직사각형이면서 동시에 마름모이다','두 대각선의 길이가 같다','두 대각선은 서로를 수직이등분한다'],
+  {g:'중2', u:'사각형의 성질', f:'정사각형', def:'네 변의 길이가 모두 같고 네 각이 모두 직각인 사각형', shape:'square', props:['직사각형이면서 동시에 마름모이다','두 대각선의 길이가 같다','두 대각선은 서로를 수직이등분한다'],
     when:'정사각형의 대각선을 이용할 때', caution:'직사각형의 성질(길이가 같다) + 마름모의 성질(수직이등분)을 모두 갖는다', example:'대각선 AC = 8\n→ BD = 8, 서로 수직, 교점까지 각각 4'},
-  {g:'중2', u:'사각형의 성질', f:'등변사다리꼴의 성질', def:'밑변의 양 끝 각의 크기가 같은 사다리꼴', shape:'trapezoid', props:['평행하지 않은 한 쌍의 대변의 길이가 같다','두 대각선의 길이가 같다'],
+  {g:'중2', u:'사각형의 성질', f:'등변사다리꼴', def:'밑변의 양 끝 각의 크기가 같은 사다리꼴', shape:'trapezoid', props:['평행하지 않은 한 쌍의 대변의 길이가 같다','두 대각선의 길이가 같다'],
     when:'등변사다리꼴에서 각이나 대각선을 구할 때', caution:'AD ∥ BC 이면 ∠A + ∠B = 180° 를 함께 쓴다', example:'∠B = 65°\n→ ∠C = 65°, ∠A = ∠D = 115°'},
   {g:'중2', u:'사각형의 성질', f:'여러 가지 사각형 사이의 관계', def:'사다리꼴 → 평행사변형 → 직사각형·마름모 → 정사각형 순으로 조건이 하나씩 더해진다', props:['평행사변형 + 한 내각이 직각 (또는 대각선의 길이가 같음) → 직사각형','평행사변형 + 이웃하는 두 변의 길이가 같음 (또는 대각선이 수직) → 마름모','직사각형 + 이웃하는 두 변의 길이가 같음 → 정사각형','마름모 + 한 내각이 직각 → 정사각형'],
     when:'주어진 대각선·변·각 조건으로 어떤 사각형인지 판정할 때', caution:'대각선만으로 판정: 이등분 → 평행사변형 / + 길이 같음 → 직사각형 / + 수직 → 마름모 / 둘 다 → 정사각형', example:'대각선이 서로를 수직이등분하고 길이도 같다\n→ 정사각형'},
@@ -4253,6 +4254,7 @@ TOOLS.tether = (()=>{
   let inside=false, holes={0:1};               /* 말뚝이 울타리 안쪽 · 줄이 빠져나가는 구멍들 */
   let W=0,H=0,DPR=1,SC=1,OX=0,OY=0, playing=false, tAnim=1, last=0;
   let stage=99;                                /* 몇 번째 구간까지 펼쳤나 (99 = 전부) */
+  let auto=false;                              /* 「처음부터 다시」로 저절로 이어 펼치는 중인가 */
 
   const P = ()=> SH[key].mk();
   function inner(V, i){
@@ -4454,7 +4456,7 @@ TOOLS.tether = (()=>{
     const tp=inside ? centerOf(V) : V[tie];
     ctx.fillStyle=RED; ctx.beginPath(); ctx.arc(X(tp[0]),Y(tp[1]),6,0,6.2832); ctx.fill();
     ctx.lineWidth=2; ctx.strokeStyle=SUR; ctx.stroke();
-    readout(secs);
+    readout(secs.filter(s=> s.ring < stg), secs.length === 0);   /* 펼친 구간까지만 세어 준다 */
   }
 
   function frac(x){                              /* 넓이를 π 꼴로 — π/4, 49π/4 처럼 */
@@ -4469,12 +4471,14 @@ TOOLS.tether = (()=>{
     }
     return (+c.toFixed(3)) + 'π';
   }
-  function readout(secs){
+  function readout(secs, none){
     if(!root) return;
     if(!secs.length){
       root.querySelector('#thBig').innerHTML = '0 <small style="font-size:14px">m²</small>';
       root.querySelector('#thExpr').innerHTML = '';
-      root.querySelector('#thSum').textContent = '줄이 짧아서 구멍 밖으로 나갈 수 없어요. 줄을 늘려보세요.';
+      root.querySelector('#thSum').textContent = none
+        ? '줄이 짧아서 구멍 밖으로 나갈 수 없어요. 줄을 늘려보세요.'
+        : '「▸ 한 구간」을 눌러 한 구간씩 펼쳐 보세요.';
       root.querySelector('#thLen').textContent = L + ' m';
       return;
     }
@@ -4516,6 +4520,8 @@ TOOLS.tether = (()=>{
           <button id="thBack" style="flex:1 1 0">◂ 뒤로</button>
           <button id="thStep" style="flex:1 1 0">▸ 한 구간</button>
           <button id="thAll" style="flex:1 1 0">≫ 전체</button></div>
+        <div class="tsRow" style="margin-top:6px">
+          <button id="thReplay" style="flex:1 1 0">↺ 처음부터 다시</button></div>
         <div class="tsLbl">담·건물 모양</div>
         <div class="tsRow" id="thShapes"></div>
         <div class="tsLbl">묶는 자리</div>
@@ -4549,7 +4555,9 @@ TOOLS.tether = (()=>{
         root.querySelector('#thWallLbl').style.display = inside ? 'none' : '';
         root.querySelector('#thWallRow').style.display = inside ? 'none' : '';
         const mx=maxRing()+1, cur=Math.min(stage, mx);
-        root.querySelector('#thStep').textContent = cur >= mx ? '↻ 처음부터' : '▸ 한 구간';
+        root.querySelector('#thStep').disabled = cur >= mx;      /* 끝까지 왔으면 더 갈 곳이 없다 */
+        root.querySelector('#thBack').disabled = cur <= 0;
+        root.querySelector('#thAll').disabled  = cur >= mx;
         root.querySelector('#thStepLbl').textContent = '구간 ' + cur + ' / ' + mx;
         root.querySelector('#thWall').classList.toggle('on', wall);
         root.querySelector('#thWallSide').style.display = wall ? '' : 'none';
@@ -4566,11 +4574,14 @@ TOOLS.tether = (()=>{
         }
         if(t.id==='thInside'){ inside=!inside; if(inside) wall=false; stage=99; tAnim=1; playing=false; sync(); layout(); paint(); return; }
         if(t.id==='thStep'){ const mx=maxRing()+1;
-          if(stage >= mx){ stage=1; } else { stage=Math.min(mx, stage+1); }
-          tAnim=0; playing=true; last=0; sync(); paint(); return; }
+          if(stage >= mx) return;
+          stage=Math.min(mx, stage+1);
+          tAnim=0; playing=true; auto=false; last=0; sync(); paint(); return; }
         if(t.id==='thBack'){ stage=Math.max(0, Math.min(stage, maxRing()+1) - 1);
-          tAnim=1; playing=false; sync(); paint(); return; }
-        if(t.id==='thAll'){ stage=99; tAnim=1; playing=false; sync(); paint(); return; }
+          tAnim=1; playing=false; auto=false; sync(); paint(); return; }
+        if(t.id==='thAll'){ stage=99; tAnim=1; playing=false; auto=false; sync(); paint(); return; }
+        /* 처음부터 다시 — 싹 지우고 한 구간씩 저절로 펼쳐 준다 */
+        if(t.id==='thReplay'){ stage=1; tAnim=0; playing=true; auto=true; last=0; sync(); paint(); return; }
         if(t.id==='thWall'){ wall=!wall; stage=99; tAnim=1; playing=false; sync(); layout(); paint(); return; }
         if(t.id==='thWallSide'){ wallSide=-wallSide; sync(); layout(); paint(); return; }
       });
@@ -4584,7 +4595,11 @@ TOOLS.tether = (()=>{
           if(!last) last=ts;
           tAnim=Math.min(1, tAnim + (ts-last)/900); last=ts;   /* 한 구간이 자라는 시간 */
           paint();
-          if(tAnim >= 1){ playing=false; sync(); }
+          if(tAnim >= 1){
+            const mx=maxRing()+1;
+            if(auto && stage < mx){ stage++; tAnim=0; last=ts; sync(); }   /* 다음 구간으로 이어서 */
+            else { playing=false; auto=false; sync(); }
+          }
         }
         raf=requestAnimationFrame(loop);
       })(0);
@@ -4653,6 +4668,26 @@ function saveProgress(){ try{ localStorage.setItem('deolrim.links.progress', JSO
       if(progress[nk] === undefined) progress[nk] = progress[k];
       delete progress[k]; moved = true;
     }
+  });
+  if(moved) saveProgress();
+})();
+/* 이름을 바꾼 카드들 — 예전 이름으로 남은 기록을 새 이름으로 옮긴다.
+   정의가 따로 적혀 있는 카드는 「~의 성질」이 아니라 도형 이름이 제목이다 */
+(function(){
+  const RENAMED = {
+    '중2::이등변삼각형의 성질' : '중2::이등변삼각형',
+    '중2::평행사변형의 성질'   : '중2::평행사변형',
+    '중2::직사각형의 성질'     : '중2::직사각형',
+    '중2::마름모의 성질'       : '중2::마름모',
+    '중2::정사각형의 성질'     : '중2::정사각형',
+    '중2::등변사다리꼴의 성질' : '중2::등변사다리꼴'
+  };
+  let moved = false;
+  Object.keys(RENAMED).forEach(old=>{
+    if(progress[old] === undefined) return;
+    const nk = RENAMED[old];
+    if(progress[nk] === undefined) progress[nk] = progress[old];
+    delete progress[old]; moved = true;
   });
   if(moved) saveProgress();
 })();
