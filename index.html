@@ -227,6 +227,25 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .fgPv input{width:62px;border:none;background:none;font:inherit;color:inherit;text-align:center;outline:none;padding:0}
 .fgPr{margin-left:auto;font-size:11px;color:var(--muted);text-align:right;word-break:keep-all}
 .fgP input[type=range]{display:block;width:100%;height:32px;margin:1px 0 0;accent-color:var(--pc,var(--opInk))}
+/* ── 도구 공통: 힌트·답 접기 ── */
+.tsFold{width:100%;min-height:44px;border-radius:11px;border:1.5px dashed var(--line);background:var(--surface);
+  color:var(--ink2);font-size:13px;font-weight:750;margin-top:9px}
+.tsFold.on{border-style:solid;border-color:var(--opInk);color:var(--opInk)}
+.tsHintBody{font-size:12.5px;line-height:1.65;color:var(--ink2);margin-top:9px;padding:10px 12px;
+  background:var(--sunk);border:1px solid var(--line);border-radius:11px;word-break:keep-all}
+
+/* ── 수 카드 도구 ── */
+.ncRow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ncCard{width:48px;height:62px;border-radius:10px;border:1.5px solid var(--line);font-size:23px;font-weight:900;color:#3b3428}
+.ncCard.c0{background:#cfe3f7}.ncCard.c1{background:#fbe3a9}.ncCard.c2{background:#e3d5f5}.ncCard.c3{background:#f7cfd4}.ncCard.c4{background:#cdeedd}
+.ncCard:disabled{opacity:.25}
+.ncSlot{width:48px;height:62px;border-radius:10px;border:2px dashed var(--line);background:var(--sunk);
+  font-size:23px;font-weight:900;color:var(--ink)}
+.ncSlot.full{border-style:solid;border-color:var(--opInk);background:var(--surface)}
+.ncX{font-size:20px;font-weight:800;color:var(--muted);margin:0 2px}
+.ncOut{margin-top:12px;font-size:16.5px;font-weight:750;line-height:1.5;word-break:keep-all}
+.ncOut b{font-size:19px}
+
 /* ── 눌러 보는 그림 ── */
 .opFig{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
 .opFigTop{display:flex;align-items:center;gap:13px}
@@ -627,6 +646,319 @@ const CARDS = [
   {g:'초등', u:'사각형의 성질', f:'사다리꼴', def:'한 쌍의 마주보는 변이 서로 평행한 사각형', shape:'trapezoid', props:[]},
 
   /* ═══ 중1 — 수와 연산, 문자와 식, 좌표평면, 기본도형·평면도형·입체도형, 통계 ═══ */
+  /* ═══ 초2·초3 — 2026-08-24 추가 (24개 단원 57장) ═══ */
+  {g:'초등', u:'초2-1 세 자리 수', f:'백의 자리 읽기',
+    b:'100이 3개, 10이 5개, 1이 7개면\n357 — 삼백오십칠',
+    when:'세 자리 수를 읽고 쓸 때 — 각 자리에 몇이 있는지 본다',
+    caution:'0인 자리는 읽지 않는다 — 405는 「사백오」, 사백영오가 아니다',
+    example:'100이 4개, 1이 5개 → 405 (사백오)'},
+  {g:'초등', u:'초2-1 세 자리 수', f:'자릿값',
+    b:'같은 숫자라도 자리에 따라 값이 다르다\n333 — 앞의 3은 300,\n가운데 3은 30, 끝의 3은 3',
+    when:'"이 숫자가 실제로 얼마를 나타내나"를 물을 때',
+    caution:'숫자 7과 그 값 70을 구분한다 — 572의 7은 70',
+    example:'572에서 7이 나타내는 값 → 70'},
+  {g:'초등', u:'초2-1 세 자리 수', f:'세 자리 수의 크기 비교',
+    b:'백의 자리부터 차례로 비교\n백이 같으면 십, 십도 같으면 일의 자리',
+    when:'두 수 중 어느 것이 큰지 고를 때',
+    caution:'자리 수가 다르면 자리 수가 많은 쪽이 크다 — 99 < 100',
+    example:'527 > 519 — 백이 같으니 십의 자리 2 > 1'},
+  {g:'초등', u:'초2-1 세 자리 수', f:'뛰어 세기',
+    b:'100씩: 245 → 345 → 445\n10씩: 245 → 255 → 265\n1씩: 245 → 246 → 247',
+    when:'일정하게 커지는 수의 규칙을 찾을 때',
+    caution:'어느 자리가 변하는지 보면 몇씩 뛰는지 안다',
+    example:'380에서 100씩 3번 → 480, 580, 680'},
+
+  {g:'초등', u:'초2-1 여러 가지 도형', f:'삼각형·사각형의 약속',
+    b:'삼각형: 곧은 선 3개로 둘러싸인 도형\n사각형: 곧은 선 4개로 둘러싸인 도형',
+    when:'도형 이름을 판단할 때 — 변의 수부터 센다',
+    caution:'선이 굽었거나 끊긴 곳이 있으면 삼각형·사각형이 아니다',
+    example:'변 3개 · 꼭짓점 3개 → 삼각형'},
+  {g:'초등', u:'초2-1 여러 가지 도형', f:'원의 생김새',
+    b:'어느 쪽에서 보아도 똑같이 둥근 도형\n변도 꼭짓점도 없다',
+    when:'동전·시계처럼 둥근 모양을 부를 때',
+    caution:'길쭉한 타원은 원이 아니다 — 어느 방향이나 똑같이 둥글어야 원',
+    example:'변 0개, 꼭짓점 0개 → 원'},
+  {g:'초등', u:'초2-1 여러 가지 도형', f:'변과 꼭짓점의 수',
+    b:'삼각형 3·3, 사각형 4·4, 오각형 5·5\n(변의 수 = 꼭짓점의 수)',
+    when:'"몇각형인가"를 판단할 때',
+    caution:'이름의 숫자 = 변의 수 = 꼭짓점의 수 — 항상 같다',
+    example:'육각형 → 변 6개, 꼭짓점 6개'},
+
+  {g:'초등', u:'초2-1 덧셈과 뺄셈', f:'받아올림',
+    b:'일의 자리끼리 더해 10이 넘으면\n십의 자리로 1을 올린다',
+    when:'두 자리 수 덧셈에서 일의 자리 합이 10 이상일 때',
+    caution:'올린 1을 십의 자리 계산에서 빠뜨리지 않는다',
+    example:'38 + 25 → 8+5=13, 3 쓰고 1 올림 → 3+2+1=6 → 63'},
+  {g:'초등', u:'초2-1 덧셈과 뺄셈', f:'받아내림',
+    b:'일의 자리끼리 뺄 수 없으면\n십의 자리에서 10을 빌려 온다',
+    when:'뺄셈에서 일의 자리가 모자랄 때',
+    caution:'빌려준 십의 자리는 1 작아진 것으로 계산한다',
+    example:'52 − 17 → 12−7=5, (5−1)−1=3 → 35'},
+  {g:'초등', u:'초2-1 덧셈과 뺄셈', f:'덧셈식 하나 = 뺄셈식 둘',
+    b:'17 + 25 = 42 이면\n42 − 17 = 25, 42 − 25 = 17',
+    when:'덧셈과 뺄셈의 관계를 물을 때, 검산할 때',
+    caution:'큰 수(합)에서 빼야 한다 — 42가 앞에 온다',
+    example:'34 + 18 = 52 → 52 − 34 = 18'},
+  {g:'초등', u:'초2-1 덧셈과 뺄셈', f:'□ 구하기',
+    b:'□ + 9 = 16 → □ = 16 − 9 = 7\n□ − 9 = 16 → □ = 16 + 9 = 25',
+    when:'모르는 수(□)가 있는 식을 풀 때',
+    caution:'□−9와 9−□는 다르다 — □가 어디 있는지 먼저 본다',
+    example:'□ + 14 = 30 → □ = 30 − 14 = 16'},
+
+  {g:'초등', u:'초2-1 길이 재기', f:'1cm',
+    b:'자의 큰 눈금 한 칸의 길이\n센티미터 — 길이의 기본 단위',
+    when:'길이를 수로 말할 때',
+    caution:'재는 물건의 한끝을 자의 눈금 0에 맞춘다',
+    example:'큰 눈금 7칸 → 7cm'},
+  {g:'초등', u:'초2-1 길이 재기', f:'어림하고 재기',
+    b:'먼저 「약 몇 cm」라고 어림한 뒤\n자로 재어 확인한다',
+    when:'자 없이 길이를 말해야 할 때',
+    caution:'어림에는 「약」을 붙인다',
+    example:'손가락 폭이 약 1cm → 연필이 손가락 12개쯤 → 약 12cm'},
+
+  {g:'초등', u:'초2-1 분류하기', f:'분류의 기준',
+    b:'누가 나눠도 결과가 같은\n분명한 기준으로 나눈다 — 색·모양·크기',
+    when:'물건을 무리 지어 정리할 때',
+    caution:'「예쁜 것」「좋은 것」처럼 사람마다 다른 기준은 안 된다',
+    example:'단추를 구멍 수(2개·4개)로 분류 — 누가 해도 같다'},
+
+  {g:'초등', u:'초2-1 곱셈', f:'몇 배',
+    b:'3의 4배 = 3씩 4묶음\n= 3 + 3 + 3 + 3 = 3 × 4 = 12',
+    when:'「몇의 몇 배」를 식으로 나타낼 때',
+    caution:'3의 4배(3×4)와 4의 3배(4×3)는 값은 같아도 뜻이 다르다',
+    example:'5의 3배 → 5 × 3 = 15'},
+  {g:'초등', u:'초2-1 곱셈', f:'묶어 세기 → 곱셈식',
+    b:'2씩 6묶음 → 2 × 6 = 12\n하나씩 세지 않고 묶음으로 센다',
+    when:'같은 개수의 묶음이 여러 개일 때',
+    caution:'「몇씩 × 몇 묶음」 순서로 쓴다',
+    example:'4씩 5묶음 → 4 × 5 = 20'},
+
+  /* ═══ 초2-2 ═══ */
+  {g:'초등', u:'초2-2 네 자리 수', f:'천의 자리',
+    b:'1000이 2, 100이 4, 10이 0, 1이 8\n→ 2408 — 이천사백팔',
+    when:'네 자리 수를 읽고 쓸 때',
+    caution:'0인 자리는 읽지 않는다 — 2408은 「이천사백팔」',
+    example:'1000이 3개, 10이 6개 → 3060 (삼천육십)'},
+  {g:'초등', u:'초2-2 네 자리 수', f:'네 자리 수 뛰어 세기',
+    b:'1000씩: 3500 → 4500 → 5500\n100씩: 3500 → 3600 → 3700',
+    when:'커지는 규칙을 찾을 때, 돈 세기',
+    caution:'9에서 다음으로 넘어가면 윗자리가 1 커진다 — 3900 → 4000',
+    example:'3500에서 1000씩 2번 → 4500, 5500'},
+  {g:'초등', u:'초2-2 네 자리 수', f:'네 자리 수 크기 비교',
+    b:'천 → 백 → 십 → 일의 자리 순서로 비교',
+    when:'두 수의 크기를 비교할 때',
+    caution:'높은 자리에서 갈리면 아래 자리는 볼 필요 없다',
+    example:'6072 < 6210 — 천이 같고 백의 자리 0 < 2'},
+
+  {g:'초등', u:'초2-2 곱셈구구', f:'곱셈구구의 규칙',
+    b:'몇 단은 몇씩 커진다\n7단: 7 · 14 · 21 · 28 · 35 · 42 · 49 · 56 · 63',
+    when:'구구단을 외우고 확인할 때',
+    caution:'막히면 앞의 답에 그 단의 수를 더한다 — 7×6 = 35+7 = 42',
+    example:'6단: 6 · 12 · 18 · 24 · 30 · 36 · 42 · 48 · 54'},
+  {g:'초등', u:'초2-2 곱셈구구', f:'1의 단과 0의 곱',
+    b:'어떤 수 × 1 = 그 수\n어떤 수 × 0 = 0',
+    when:'1이나 0이 낀 곱셈',
+    caution:'0에는 무엇을 곱해도 0 — 0 × 9 = 0',
+    example:'8 × 1 = 8, 8 × 0 = 0'},
+  {g:'초등', u:'초2-2 곱셈구구', f:'곱의 순서 바꾸기',
+    b:'3 × 7 = 7 × 3 = 21\n곱은 순서를 바꿔도 같다',
+    when:'어려운 단을 쉬운 단으로 바꿔 계산할 때',
+    caution:'값은 같지만 뜻은 다르다 — 3씩 7묶음 vs 7씩 3묶음',
+    example:'9 × 2가 헷갈리면 2 × 9 = 18'},
+
+  {g:'초등', u:'초2-2 길이 재기', f:'1m = 100cm',
+    b:'1미터는 100센티미터\n130cm = 1m 30cm',
+    when:'긴 길이를 m와 cm로 나타낼 때',
+    caution:'1m 5cm는 105cm — 150cm가 아니다',
+    example:'2m 45cm = 245cm'},
+  {g:'초등', u:'초2-2 길이 재기', f:'길이의 합과 차',
+    b:'m는 m끼리, cm는 cm끼리\n더하고 뺀다',
+    when:'두 길이를 합치거나 비교할 때',
+    caution:'cm끼리의 합이 100을 넘으면 1m로 올린다',
+    example:'1m 40cm + 1m 30cm = 2m 70cm'},
+
+  {g:'초등', u:'초2-2 시각과 시간', f:'몇 분 읽기',
+    b:'긴바늘이 가리키는 숫자 × 5분\n숫자 3 → 15분, 숫자 6 → 30분',
+    when:'시계의 분을 읽을 때',
+    caution:'짧은바늘이 시, 긴바늘이 분 — 바늘을 바꿔 읽지 않는다',
+    example:'짧은바늘 4 근처 + 긴바늘 9 → 4시 45분'},
+  {g:'초등', u:'초2-2 시각과 시간', f:'1시간 = 60분',
+    b:'60분이 1시간\n80분 = 1시간 20분',
+    when:'분을 시간으로 바꿀 때',
+    caution:'100분 = 1시간 40분 — 1시간은 100분이 아니라 60분',
+    example:'90분 = 1시간 30분'},
+  {g:'초등', u:'초2-2 시각과 시간', f:'하루 · 1주일 · 1년',
+    b:'하루 = 24시간\n1주일 = 7일, 1년 = 12개월',
+    when:'날짜와 시간 계산',
+    caution:'오전 12시간 + 오후 12시간 = 하루 24시간',
+    example:'2주일 = 14일'},
+
+  {g:'초등', u:'초2-2 표와 그래프', f:'표와 그래프의 좋은 점',
+    b:'표 — 자료별 수와 전체 합계가 한눈에\n그래프 — 가장 많은 것·적은 것이 한눈에',
+    when:'조사한 자료를 정리해 보여줄 때',
+    caution:'그래프는 아래에서 위로, 한 칸에 하나씩 빈틈없이 그린다',
+    example:'좋아하는 과일 조사 → 표로 세고, ○그래프로 비교'},
+
+  {g:'초등', u:'초2-2 규칙 찾기', f:'덧셈표·곱셈표의 규칙',
+    b:'덧셈표: 오른쪽·아래로 1씩 커진다\n곱셈표: 몇 단 줄은 몇씩 커진다',
+    when:'표나 무늬에서 규칙을 찾을 때',
+    caution:'곱셈표는 초록 대각선을 기준으로 접으면 똑같다(3×7=7×3)',
+    example:'곱셈표 4단 줄: 4 · 8 · 12 · 16 — 4씩 커짐'},
+
+  /* ═══ 초3-1 ═══ */
+  {g:'초등', u:'초3-1 덧셈과 뺄셈', f:'세 자리 수 덧셈',
+    b:'일 → 십 → 백 순서로 더하고\n10이 넘으면 윗자리로 올린다',
+    when:'세 자리 수끼리 더할 때',
+    caution:'올림이 두 번 이어질 수 있다 — 올린 1을 끝까지 챙긴다',
+    example:'268 + 175 → 8+5=13, 6+7+1=14, 2+1+1=4 → 443'},
+  {g:'초등', u:'초3-1 덧셈과 뺄셈', f:'세 자리 수 뺄셈',
+    b:'뺄 수 없으면 윗자리에서 10을 빌린다\n십의 자리가 0이면 백에서 먼저 빌린다',
+    when:'세 자리 수끼리 뺄 때',
+    caution:'0에서 빌릴 수 없으니 한 자리 더 위에서 차례로 빌린다',
+    example:'503 − 167 = 336 (검산: 336+167=503)'},
+
+  {g:'초등', u:'초3-1 평면도형', f:'각과 직각',
+    b:'각: 한 점에서 그은 두 반직선이 이루는 도형\n직각: 종이를 반듯하게 두 번 접었을 때 생기는 각',
+    when:'도형의 뾰족한 정도를 말할 때',
+    caution:'각의 크기는 변의 길이와 상관없다 — 벌어진 정도만 본다',
+    example:'삼각자의 반듯한 모서리 → 직각'},
+  {g:'초등', u:'초3-1 평면도형', f:'직사각형과 정사각형',
+    b:'직사각형: 네 각이 모두 직각\n정사각형: 네 각이 직각 + 네 변 길이가 모두 같다',
+    when:'사각형을 분류할 때',
+    caution:'정사각형은 직사각형이기도 하다 — 거꾸로는 안 된다',
+    example:'네 각 직각인데 가로≠세로 → 직사각형(정사각형 아님)'},
+
+  {g:'초등', u:'초3-1 나눗셈', f:'나눗셈의 뜻',
+    b:'12 ÷ 3 = 4\n① 12를 3묶음으로 똑같이 나누면 한 묶음에 4\n② 12에서 3씩 4번 덜어낼 수 있다',
+    when:'똑같이 나누거나 몇 번 덜어내는 상황',
+    caution:'나누어지는 수 ÷ 나누는 수 — 순서를 바꾸면 안 된다',
+    example:'사탕 15개를 5명에게 → 15 ÷ 5 = 3개씩'},
+  {g:'초등', u:'초3-1 나눗셈', f:'곱셈과 나눗셈의 관계',
+    b:'3 × 4 = 12 이면\n12 ÷ 3 = 4, 12 ÷ 4 = 3',
+    when:'나눗셈의 몫을 곱셈으로 찾을 때',
+    caution:'곱셈식 하나에서 나눗셈식 두 개가 나온다',
+    example:'42 ÷ 7 → 7 × 6 = 42 → 몫 6'},
+  {g:'초등', u:'초3-1 나눗셈', f:'몫은 구구단에서 찾는다',
+    b:'나누는 수의 단을 외워서\n나누어지는 수가 나오는 곱을 찾는다',
+    when:'나눗셈의 몫을 빨리 구할 때',
+    caution:'구구단이 흔들리면 나눗셈이 흔들린다 — 단부터 점검',
+    example:'54 ÷ 6 → 6 × 9 = 54 → 몫 9'},
+
+  {g:'초등', u:'초3-1 곱셈', f:'(두 자리) × (한 자리)',
+    b:'십의 자리와 일의 자리를 나눠 곱하고 더한다\n24 × 3 = 20×3 + 4×3 = 60 + 12 = 72',
+    when:'두 자리 수에 한 자리 수를 곱할 때',
+    caution:'십의 자리 곱은 실제로 몇십이다 — 6이 아니라 60',
+    example:'32 × 3 = 90 + 6 = 96'},
+  {g:'초등', u:'초3-1 곱셈', f:'올림이 있는 곱셈',
+    b:'일의 자리 곱에서 올림이 생기면\n십의 자리 곱에 더한다',
+    when:'곱이 커져서 자리를 넘어갈 때',
+    caution:'올림 수를 작게 메모해 두고 잊지 않는다',
+    example:'37 × 4 → 7×4=28(2 올림), 30×4=120, 120+28=148'},
+
+  {g:'초등', u:'초3-1 길이와 시간', f:'mm와 km',
+    b:'1cm = 10mm\n1km = 1000m',
+    when:'짧은 길이(mm)·먼 거리(km)를 나타낼 때',
+    caution:'단위를 붙여 쓰지 않으면 틀린 답 — 4cm 5mm처럼 함께 쓴다',
+    example:'45mm = 4cm 5mm · 3km 200m = 3200m'},
+  {g:'초등', u:'초3-1 길이와 시간', f:'1분 = 60초',
+    b:'60초가 1분\n2분 30초 = 150초',
+    when:'초 단위 시간을 계산할 때',
+    caution:'시간 계산은 60씩 묶는다 — 10이나 100이 아니다',
+    example:'100초 = 1분 40초'},
+  {g:'초등', u:'초3-1 길이와 시간', f:'시간의 덧셈과 뺄셈',
+    b:'시는 시끼리, 분은 분끼리\n분이 60을 넘으면 1시간으로 올린다',
+    when:'걸린 시간을 더하고 뺄 때',
+    caution:'받아올림이 60 기준 — 100 기준으로 계산하면 틀린다',
+    example:'1시간 40분 + 50분 = 1시간 90분 = 2시간 30분'},
+
+  {g:'초등', u:'초3-1 분수와 소수', f:'분수의 뜻',
+    b:'전체를 똑같이 나눈 것 중의 몇\n전체를 4로 나눈 것 중 3 → 3/4',
+    when:'전체의 부분을 수로 나타낼 때',
+    caution:'「똑같이」 나눠야 분수 — 크기가 다르게 나누면 안 된다',
+    example:'피자 8조각 중 3조각 → 3/8'},
+  {g:'초등', u:'초3-1 분수와 소수', f:'단위분수의 크기',
+    b:'1/2 > 1/3 > 1/4 > 1/5\n나누는 수(분모)가 클수록 한 조각은 작다',
+    when:'단위분수끼리 크기를 비교할 때',
+    caution:'분모가 크다고 큰 분수가 아니다 — 거꾸로다',
+    example:'1/6 < 1/4 — 6조각으로 나눈 한 조각이 더 작다'},
+  {g:'초등', u:'초3-1 분수와 소수', f:'소수 한 자리',
+    b:'0.1 = 1/10\n0.7은 0.1이 7개',
+    when:'1보다 작은 수를 점으로 나타낼 때',
+    caution:'3.4는 0.1이 34개 — 소수점 앞도 0.1로 센다',
+    example:'0.1이 26개 → 2.6'},
+
+  /* ═══ 초3-2 ═══ */
+  {g:'초등', u:'초3-2 곱셈', f:'(세 자리) × (한 자리)',
+    b:'일 → 십 → 백 순서로 곱하고\n올림을 윗자리에 더한다',
+    when:'세 자리 수에 한 자리 수를 곱할 때',
+    caution:'자리마다 올림이 생길 수 있다 — 차례대로 처리',
+    example:'213 × 3 = 639'},
+  {g:'초등', u:'초3-2 곱셈', f:'(두 자리) × (두 자리)',
+    b:'몇십과 몇으로 나눠 두 번 곱하고 더한다\n24 × 35 = 24×30 + 24×5',
+    when:'두 자리끼리 곱할 때',
+    caution:'24×30의 답은 720 — 72로 쓰면 자리가 틀린다',
+    example:'24 × 35 = 720 + 120 = 840'},
+
+  {g:'초등', u:'초3-2 나눗셈', f:'나머지',
+    b:'17 ÷ 5 = 몫 3, 나머지 2\n나머지는 나누는 수보다 항상 작다',
+    when:'똑같이 나누고 남는 것이 있을 때',
+    caution:'나머지 ≥ 나누는 수면 몫을 잘못 구한 것 — 몫을 1 키운다',
+    example:'23 ÷ 4 = 몫 5, 나머지 3 (3 < 4 확인)'},
+  {g:'초등', u:'초3-2 나눗셈', f:'나눗셈 검산',
+    b:'나누는 수 × 몫 + 나머지\n= 나누어지는 수',
+    when:'나눗셈 답이 맞는지 확인할 때',
+    caution:'검산까지가 나눗셈이다 — 시험에서 꼭 한 번 확인',
+    example:'17 ÷ 5 = 3···2 → 5 × 3 + 2 = 17 ✓'},
+  {g:'초등', u:'초3-2 나눗셈', f:'(두 자리) ÷ (한 자리)',
+    b:'십의 자리부터 나누고\n남은 것을 일의 자리와 합쳐 또 나눈다',
+    when:'몫이 두 자리가 되는 나눗셈',
+    caution:'십의 자리에서 남은 수를 버리지 않는다',
+    example:'72 ÷ 3 = 24 (검산: 3 × 24 = 72)'},
+
+  {g:'초등', u:'초3-2 원', f:'중심 · 반지름 · 지름',
+    b:'중심: 원의 한가운데 점\n반지름: 중심에서 원 위의 점까지\n지름: 중심을 지나 원 위 두 점을 잇는 선',
+    when:'원의 부분 이름을 말할 때',
+    caution:'반지름·지름은 한 원에서 무수히 많고 길이가 모두 같다',
+    example:'컴퍼스를 벌린 길이 = 반지름'},
+  {g:'초등', u:'초3-2 원', f:'지름 = 반지름 × 2',
+    b:'지름은 반지름의 2배\n지름은 원 안에 그은 가장 긴 선',
+    when:'반지름↔지름을 바꿔 말할 때',
+    caution:'문제가 반지름을 줬는지 지름을 줬는지부터 확인',
+    example:'반지름 6cm → 지름 12cm'},
+
+  {g:'초등', u:'초3-2 분수', f:'진분수 · 가분수 · 대분수',
+    b:'진분수: 분자 < 분모 (3/4)\n가분수: 분자 ≥ 분모 (7/4)\n대분수: 자연수 + 진분수 (1과 3/4)',
+    when:'분수의 종류를 구분할 때',
+    caution:'4/4처럼 분자=분모도 가분수(=1)다',
+    example:'5/3 → 가분수, 2와 1/3 → 대분수'},
+  {g:'초등', u:'초3-2 분수', f:'가분수 ↔ 대분수',
+    b:'7/4 = 4/4 + 3/4 = 1과 3/4\n분모만큼이 1이 된다',
+    when:'가분수를 대분수로, 대분수를 가분수로 바꿀 때',
+    caution:'바꿔도 크기는 그대로 — 모양만 달라진다',
+    example:'2와 1/3 = 6/3 + 1/3 = 7/3'},
+  {g:'초등', u:'초3-2 분수', f:'전체의 분수만큼',
+    b:'12의 2/3\n→ 12를 3으로 나눈 것(4)의 2배 = 8',
+    when:'「~의 몇 분의 몇」을 구할 때',
+    caution:'분모로 나누고 분자를 곱한다 — 순서를 지키면 안 틀린다',
+    example:'20의 3/4 → 20÷4=5, 5×3=15'},
+
+  {g:'초등', u:'초3-2 들이와 무게', f:'1L = 1000mL',
+    b:'1리터는 1000밀리리터\n1L 300mL = 1300mL',
+    when:'들이(물의 양)를 계산할 때',
+    caution:'1L 30mL는 1030mL — 자리를 0으로 채운다',
+    example:'2L 500mL = 2500mL'},
+  {g:'초등', u:'초3-2 들이와 무게', f:'1kg = 1000g',
+    b:'1킬로그램은 1000그램\n1t(톤) = 1000kg',
+    when:'무게를 계산할 때',
+    caution:'2kg 50g = 2050g — 250g으로 쓰면 틀린다',
+    example:'3kg 700g + 1kg 500g = 5kg 200g'},
+
+  {g:'초등', u:'초3-2 그림그래프', f:'그림그래프',
+    b:'큰 그림과 작은 그림으로 수를 나타낸 그래프\n큰 그림이 10, 작은 그림이 1처럼 단위가 있다',
+    when:'자료의 수를 그림으로 한눈에 보여줄 때',
+    caution:'그림의 단위부터 확인 — 큰 그림이 10인지 100인지',
+    example:'큰 그림 2개 + 작은 그림 3개 (큰=10) → 23'},
+
   {g:'중1', u:'소인수분해와 약수·배수', f:'약수와 배수', def:'약수: 어떤 수를 나누어떨어지게 하는 수 / 배수: 어떤 수를 몇 배 한 수', props:['1은 모든 수의 약수, 모든 수는 자기 자신의 배수']},
   {g:'중1', u:'소인수분해와 약수·배수', f:'소수와 합성수', def:'소수: 1보다 큰 자연수 중 약수가 1과 자기 자신뿐인 수 / 합성수: 약수가 3개 이상인 수', props:['1은 소수도 합성수도 아니다','2는 유일한 짝수 소수이다','20 이하의 소수: 2, 3, 5, 7, 11, 13, 17, 19']},
   {g:'중1', u:'소인수분해와 약수·배수', f:'소인수분해', b:'수를 소수들만의 곱으로 나타내기\n예) 12 = 2² × 3',
@@ -1980,7 +2312,7 @@ const OPENERS = [
    ans:'230m. (터널 길이 + 버스 길이)',
    why:['앞이 입구에 닿을 때부터 뒤가 출구를 나올 때까지가 「완전히 통과」다','그동안 버스 앞이 움직인 거리는 200 + 30','「완전히」라는 한 단어가 30m를 더하게 만든다 — 그림을 두 장 그리면 보인다']},
 
-  {lv:'초등', q:'길이 100m인 길 한쪽에\n10m 간격으로 나무를 심는다.\n양끝에도 심으면 몇 그루일까?',
+  {lv:'초등', tool:'treeGap', q:'길이 100m인 길 한쪽에\n10m 간격으로 나무를 심는다.\n양끝에도 심으면 몇 그루일까?',
    steps:['20m 길에 10m 간격으로 줄여서 그려 본다','간격이 몇 개, 나무가 몇 그루인지 센다','둘의 차이를 말로 써 본다'],
    link:'초등 나눗셈 × 규칙 찾기',
    hint:'20m에 10m 간격이면 간격은 2개입니다. 나무는 몇 그루인가요?',
@@ -3814,6 +4146,7 @@ TOOLS.cubeSection = (()=>{
    속 (n−2)³개는 0면 — 다 더하면 n³. 어디서부터 「칠한 정육면체」 질문과 연결. */
 TOOLS.paintCube = (()=>{
   let n=3, yaw=-0.62, pitch=0.55, ex=0, exT=0, spinning=false, hi=null;
+  let hintOn=false, ansOn=false;   /* 답은 마지막에 */
   let drag=null, cv, ctx, stage, root=null, W=0,H=0,DPR=1,CX=0,CY=0,SC=1, SCe=1, raf=0;
   const CAMD=8.5, HS=1.3;
 
@@ -3895,28 +4228,37 @@ TOOLS.paintCube = (()=>{
     if(!root) return;
     const c=cnt(), m=Math.max(0,n-2);
     root.querySelector('#pcTot').textContent = n+'×'+n+'×'+n+' = '+(n*n*n)+'조각';
-    const M={
-      3:'꼭짓점 자리 — 세 면이 밖으로 나와 있어요. 아무리 크게 잘라도 꼭짓점은 늘 8개.',
-      2:'모서리 자리 — 꼭짓점 사이에 '+m+'개씩 × 모서리 12개 = '+c[2]+'개.',
-      1:'면 가운데 자리 — 한 면에 '+m+'×'+m+'개씩 × 면 6개 = '+c[1]+'개.',
-      0:'속 자리 — 겉에서 안 보이는 '+m+'×'+m+'×'+m+' = '+c[0]+'개. 칠이 하나도 없어요.'
+    const Q={
+      3:'빨간 면이 3개인 조각만 남겼어요 — 몇 개인지, 어느 자리인지 세어 보세요.',
+      2:'빨간 면이 2개인 조각만 남겼어요 — 돌려 가며 세어 보세요.',
+      1:'빨간 면이 1개인 조각만 남겼어요 — 어느 자리에 있나요?',
+      0:'칠이 하나도 없는 조각만 남겼어요 — 어디에 숨어 있었을까요?'
     };
     root.querySelector('#pcMsg').textContent =
-      hi===null ? '자리별로 눌러 보고, 🧨 흩어서 칠해진 면을 세어 보세요.'
-      : (c[hi]===0 ? n+'×'+n+'×'+n+'에는 이 자리가 없어요 — 조각 전부가 꼭짓점이라 3면씩입니다.' : M[hi]);
+      hi===null ? '자리별 버튼을 눌러 조각을 남기고, 🧨 흩어서 직접 세어 보세요. 답은 맨 아래에서 확인.'
+      : Q[hi];
     root.querySelectorAll('#pcCat button').forEach(b=>{
       const k=b.dataset.c;
-      if(k!=='all') b.textContent = k+'면 · '+c[k]+'개';
+      if(k!=='all') b.textContent = k+'면';
       b.classList.toggle('on', hi===null ? k==='all' : k===String(hi));
     });
     root.querySelectorAll('#pcN button').forEach(b=> b.classList.toggle('on', +b.dataset.n===n));
     root.querySelector('#pcEx').classList.toggle('on', exT>0);
     root.querySelector('#pcSpin').classList.toggle('on', spinning);
-    root.querySelector('#pcNote').innerHTML =
-      '자리가 개수를 정합니다 — <b>꼭짓점 8개</b>는 3면, <b>모서리</b>는 2면씩 12×'+m+' = <b>'+c[2]+'개</b>, '+
-      '<b>면 가운데</b>는 1면씩 6×'+m+'² = <b>'+c[1]+'개</b>, <b>속</b>은 0면 '+m+'³ = <b>'+c[0]+'개</b>.<br>'+
-      '다 더하면 8 + '+c[2]+' + '+c[1]+' + '+c[0]+' = <b>'+(n*n*n)+'개</b> — 딱 '+n+'×'+n+'×'+n+' 입니다.<br><br>'+
-      '조각 수를 바꿔 보세요. <b>꼭짓점 8개만 그대로</b>이고, 모서리는 (n−2)배, 면 가운데는 (n−2)², 속은 (n−2)³으로 자랍니다.';
+    root.querySelector('#pcHint').innerHTML =
+      '조각의 <b>자리</b>를 보세요 — 꼭짓점, 모서리, 면 가운데, 속. 같은 자리 조각은 칠해진 면 수가 같아요. 자리마다 몇 개씩 있는지가 곧 답이에요.';
+    root.querySelector('#pcAns').innerHTML =
+      '<b>3면 '+c[3]+'개 · 2면 '+c[2]+'개 · 1면 '+c[1]+'개 · 0면 '+c[0]+'개.</b><br>'+
+      '자리가 개수를 정합니다 — <b>꼭짓점 8개</b>는 3면, <b>모서리</b>는 2면씩 12×'+m+' = '+c[2]+'개, '+
+      '<b>면 가운데</b>는 1면씩 6×'+m+'² = '+c[1]+'개, <b>속</b>은 0면 '+m+'³ = '+c[0]+'개.<br>'+
+      '다 더하면 8 + '+c[2]+' + '+c[1]+' + '+c[0]+' = <b>'+(n*n*n)+'개</b> — 딱 '+n+'×'+n+'×'+n+'.<br><br>'+
+      '조각 수를 바꿔도 열어 둔 채 보세요 — <b>꼭짓점 8개만 그대로</b>, 모서리는 (n−2)배, 면은 (n−2)², 속은 (n−2)³으로 자랍니다.';
+    const hb=root.querySelector('#pcHintB'), ab=root.querySelector('#pcAnsB');
+    hb.classList.toggle('on', hintOn); ab.classList.toggle('on', ansOn);
+    hb.textContent = hintOn ? '💡 힌트 접기 ▴' : '💡 힌트 보기 ▾';
+    ab.textContent = ansOn ? '🎯 답 접기 ▴' : '🎯 답 확인 ▾';
+    root.querySelector('#pcHint').hidden = !hintOn;
+    root.querySelector('#pcAns').hidden = !ansOn;
   }
 
   return {
@@ -3930,6 +4272,10 @@ TOOLS.paintCube = (()=>{
           <div class="tsTip">끌면 돌아갑니다</div></div>
         <div class="fgExpr" id="pcTot"></div>
         <div class="tsSub fgFacts" id="pcMsg"></div>
+        <button class="tsFold" id="pcHintB"></button>
+        <div class="tsHintBody" id="pcHint" hidden></div>
+        <button class="tsFold" id="pcAnsB"></button>
+        <div class="tsNote" id="pcAns" hidden style="margin-top:9px"></div>
       </div>
       <div class="tsCard">
         <div class="tsLbl">몇 조각으로 자를까</div>
@@ -3948,7 +4294,6 @@ TOOLS.paintCube = (()=>{
           <button id="pcEx">🧨 흩어 보기</button><button id="pcSpin">돌리기</button>
           <button id="pcRe">시점 처음으로</button>
         </div>
-        <div class="tsNote" id="pcNote"></div>
       </div>`;
     },
     init(sheet){
@@ -3958,7 +4303,7 @@ TOOLS.paintCube = (()=>{
 
       root.addEventListener('click', e=>{
         const t=e.target.closest('button'); if(!t) return;
-        if(t.dataset.n){ n=+t.dataset.n; paint(); draw(); return; }
+        if(t.dataset.n){ n=+t.dataset.n; hintOn=ansOn=false; paint(); draw(); return; }
         if(t.dataset.c){
           hi = t.dataset.c==='all' ? null : +t.dataset.c;
           if(hi!==null && exT===0) exT=1;    /* 자리를 고르면 자동으로 흩어 보여준다 */
@@ -3967,6 +4312,8 @@ TOOLS.paintCube = (()=>{
         if(t.id==='pcEx'){ exT = exT>0 ? 0 : 1; paint(); return; }
         if(t.id==='pcSpin'){ spinning=!spinning; paint(); return; }
         if(t.id==='pcRe'){ yaw=-0.62; pitch=0.55; spinning=false; paint(); draw(); return; }
+        if(t.id==='pcHintB'){ hintOn=!hintOn; paint(); return; }
+        if(t.id==='pcAnsB'){ ansOn=!ansOn; paint(); return; }
       });
 
       const pos=ev=>{ const b=stage.getBoundingClientRect(); return {x:ev.clientX-b.left, y:ev.clientY-b.top}; };
@@ -3996,6 +4343,368 @@ TOOLS.paintCube = (()=>{
       paint();
       requestAnimationFrame(resize);
       return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; };
+    }
+  };
+})();
+
+
+/* ═══════ 나무 심기 · 테이프 잇기 — 「하나 차이」가 눈에 보인다 ═══════
+   나무: 간격 k개 → 양끝 심으면 k+1그루, 한쪽 끝만 k그루, 원형 k그루.
+   테이프: n장 붙이면 겹침은 n−1곳 → 전체 = 길이×n − 겹침×(n−1).
+   같은 구조의 문제라는 것을 한 도구에서 오가며 본다. */
+TOOLS.treeGap = (()=>{
+  let scene='tree';                 /* tree | tape */
+  let mode='both';                  /* both | one | circle */
+  let by='tree';                    /* tree: 나무 수로 | len: 길이·간격으로 */
+  let hintOn=false, ansOn=false;    /* 답은 마지막에 — 접어 두고 열어 본다 */
+  let tn=7;                         /* 고른 나무 수 (2~12) */
+  let len=100, gap=10;              /* 나무: m */
+  let cnt=27;                       /* 테이프 장수 (길이 318cm · 겹침 22cm 고정) */
+  const TL=318, TO=22;
+  let cv, ctx, stage, root=null, W=0,H=0,DPR=1, raf=0, seen=0, tPrev=0;
+
+  /* 캔버스에 바탕까지 그린다 — 강제 어둡게에도 안전한 종이색 */
+  const BG='#fbf7ee', INK='#3b3428', MUT='#8d8271', RED='#d43c3c', GRN='#2e7d32';
+  const TAPE1='#f2d9a8', TAPE2='#e9c98b', TAPEL='#b98d4f';
+
+  const treeN = k => mode==='both' ? k+1 : k;
+  /* 지금 화면의 간격 수 — 나무 수로 고르면 나무에서, 길이로 고르면 나눗셈에서 */
+  const gapsNow = ()=> by==='len' ? len/gap : (mode==='both' ? tn-1 : tn);
+
+  function resize(){
+    if(!stage) return;
+    const b=stage.getBoundingClientRect();
+    DPR=Math.min(window.devicePixelRatio||1, 2);
+    W=Math.max(1,Math.round(b.width)); H=Math.max(1,Math.round(b.height));
+    cv.width=W*DPR; cv.height=H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    draw();
+  }
+  function font(px,w){ ctx.font=(w||700)+' '+px+'px -apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif'; }
+
+  function drawTree(){
+    const k=gapsNow(), n=treeN(k);
+    const show=Math.min(seen, n);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    if(mode!=='circle'){
+      const x0=26, x1=W-26, y=H*0.56;
+      ctx.strokeStyle=TAPEL; ctx.lineWidth=5; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+      const step=(x1-x0)/k;
+      const fs=Math.max(15, Math.min(30, step*0.72));
+      /* 간격 번호(빨강) — 아래쪽 */
+      ctx.strokeStyle=RED; ctx.lineWidth=2;
+      for(let i=0;i<k;i++){
+        const a=x0+i*step, b=x0+(i+1)*step, ym=y+22;
+        ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(b-4,ym); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(a+4,ym-6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(b-4,ym); ctx.lineTo(b-4,ym-6); ctx.stroke();
+        if(k<=12){ ctx.fillStyle=RED; font(11.5,800); ctx.fillText(String(i+1), (a+b)/2, ym+13); }
+      }
+      /* 나무 — 하나씩 자라난다 */
+      for(let i=0;i<n;i++){
+        const x = x0 + (mode==='one' ? i : i) * step;
+        if(i>=show) continue;
+        font(fs); ctx.fillText('🌳', x, y-fs*0.62);
+        if(n<=13){ ctx.fillStyle=GRN; font(11,800); ctx.fillText(String(i+1), x, y-fs*1.28); }
+      }
+      /* 한쪽 끝만: 안 심은 끝을 점선 동그라미로 */
+      if(mode==='one'){
+        ctx.setLineDash([4,4]); ctx.strokeStyle=MUT; ctx.lineWidth=1.6;
+        ctx.beginPath(); ctx.arc(x1, y-13, 10, 0, 6.2832); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle=MUT; font(10,700); ctx.fillText('안 심음', x1, y-36);
+      }
+      if(by==='len'){ ctx.fillStyle=MUT; font(11,700);
+        ctx.fillText(len+'m', (x0+x1)/2, H-12); }
+    } else {
+      const cx=W/2, cy=H*0.52, R=Math.min(W,H)*0.30;
+      ctx.strokeStyle='#7fb2d6'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.arc(cx,cy,R*0.82,0,6.2832); ctx.stroke();
+      ctx.fillStyle='#dbedf7'; ctx.beginPath(); ctx.arc(cx,cy,R*0.82,0,6.2832); ctx.fill();
+      ctx.fillStyle=MUT; font(11,700); ctx.fillText(by==='len' ? '둘레 '+len+'m 연못' : '연못', cx, cy);
+      const fs=Math.max(15, Math.min(26, (6.28*R)/k*0.6));
+      ctx.strokeStyle=RED; ctx.lineWidth=2;
+      for(let i=0;i<k;i++){
+        const a0=-Math.PI/2 + (i+0.12)*2*Math.PI/k, a1=-Math.PI/2 + (i+0.88)*2*Math.PI/k;
+        ctx.beginPath(); ctx.arc(cx,cy,R+16,a0,a1); ctx.stroke();
+        if(k<=12){ const am=(a0+a1)/2; ctx.fillStyle=RED; font(11.5,800);
+          ctx.fillText(String(i+1), cx+Math.cos(am)*(R+30), cy+Math.sin(am)*(R+30)); }
+      }
+      for(let i=0;i<k;i++){
+        if(i>=show) continue;
+        const a=-Math.PI/2 + i*2*Math.PI/k;
+        font(fs); ctx.fillText('🌳', cx+Math.cos(a)*R, cy+Math.sin(a)*R);
+      }
+    }
+  }
+  function drawTape(){
+    const ov=cnt-1, total=TL*cnt - TO*ov;
+    const show=Math.min(seen, cnt);
+    const x0=18, x1=W-18, y=H*0.5, h=Math.max(22, Math.min(40, W/cnt*0.5));
+    const unit=(x1-x0)/(TL*cnt - TO*ov);
+    const stepW=TL*unit, ovW=TO*unit;
+    for(let i=0;i<cnt;i++){
+      if(i>=show) continue;
+      const x=x0 + i*(stepW-ovW);
+      ctx.fillStyle = i%2 ? TAPE2 : TAPE1;
+      ctx.strokeStyle=TAPEL; ctx.lineWidth=1.2;
+      ctx.beginPath(); ctx.roundRect(x, y-h/2, stepW, h, 4); ctx.fill(); ctx.stroke();
+    }
+    /* 겹침 — 빨간 띠 */
+    for(let i=0;i<ov;i++){
+      if(i+1>=show) continue;
+      const x=x0 + (i+1)*(stepW-ovW);
+      ctx.fillStyle='rgba(212,60,60,.55)';
+      ctx.fillRect(x, y-h/2, ovW, h);
+    }
+    ctx.textAlign='center';
+    ctx.fillStyle=INK; font(11.5,800);
+    ctx.fillText('한 장 '+TL+'cm', Math.max(x0+stepW/2, 58), y-h/2-10);
+    if(ov>0 && show>1){
+      const xo=x0+(stepW-ovW)+ovW/2;
+      ctx.fillStyle=RED; font(11,800);
+      ctx.fillText('겹침 '+TO+'cm', Math.max(xo, 60), y+h/2+15);
+    }
+    ctx.fillStyle=MUT; font(11,700);
+    ctx.fillText('전체 '+total+'cm', W/2, H-12);
+  }
+  function draw(){
+    if(!ctx) return;
+    ctx.fillStyle=BG; ctx.fillRect(0,0,W,H);
+    if(scene==='tree') drawTree(); else drawTape();
+  }
+  function paint(){
+    if(!root) return;
+    const ex=root.querySelector('#tgExpr'), ms=root.querySelector('#tgMsg');
+    const hint=root.querySelector('#tgHint'), ans=root.querySelector('#tgAns');
+    if(scene==='tree'){
+      const k=gapsNow(), n=treeN(k);
+      ex.innerHTML = by==='tree'
+        ? '나무 <b>'+n+'그루</b>를 심으면 — 간격은 몇 개일까?'
+        : len+'m 길에 '+gap+'m 간격 — 나무는 몇 그루일까?';
+      ms.textContent = '그림에서 직접 세어 본 다음, 답을 열어 확인하세요.';
+      hint.innerHTML = mode==='both' ? '맨 앞에 나무 한 그루가 먼저 서고, 그다음부터는 <b>간격마다 한 그루씩</b>이에요. 그럼 나무와 간격, 어느 쪽이 하나 많을까요?'
+        : mode==='one' ? '비워 둔 끝을 보세요 — 마지막 간격에도 나무는 <b>앞쪽 한 그루뿐</b>이에요.'
+        : '연못을 한 바퀴 돌면 <b>시작 나무를 다시 만나요</b>. 끝 나무가 따로 없죠.';
+      ans.innerHTML = (by==='tree'
+        ? '나무 <b>'+n+'그루</b> ↔ 간격 <b>'+k+'개</b>' + (mode==='both' ? ' — <b>나무가 딱 1개 많다</b>.' : ' — <b>똑같다</b>.')
+        : len+' ÷ '+gap+' = <b>간격 '+k+'개</b> → 나무 ' + (mode==='both' ? k+' + 1 = <b>'+n+'그루</b>.' : '<b>'+n+'그루</b>.')) + '<br>' +
+        (mode==='both' ? '맨 앞 1그루 + 간격마다 1그루 — 그래서 간격보다 하나 많아요.'
+         : mode==='one' ? '한쪽 끝을 비우면 「간격마다 1그루」만 남아 간격 수와 같아져요.'
+         : '끝이 이어진 원에서는 시작 나무가 곧 끝 나무 — +1이 사라져요.') +
+        '<br><br>이 상태로 나무 수·길이를 바꿔 보세요 — <b>관계는 변하지 않아요</b>. 숫자가 커지면 그림 대신 이 관계를 쓰는 게 공식입니다.<br>📏 테이프 잇기도 같은 문제예요 — 테이프가 나무, 겹침이 간격.';
+    } else {
+      const ov=cnt-1, total=TL*cnt-TO*ov;
+      ex.innerHTML = TL+'cm 테이프 <b>'+cnt+'장</b>, '+TO+'cm씩 겹치면 — 겹침은 몇 곳? 전체 길이는?';
+      ms.textContent = '빨간 띠(겹침)를 세어 본 다음, 답을 열어 확인하세요.';
+      hint.innerHTML = '<b>첫 장은 겹칠 상대가 없어요.</b> 두 번째 장부터 한 장 붙을 때마다 겹침이 하나씩 생겨요.';
+      ans.innerHTML = '겹침은 <b>'+ov+'곳</b> — 장수보다 하나 적다 (나무 심기의 +1과 같은 「하나 차이」).<br>' +
+        '전체 길이 = '+TL+'×'+cnt+' − '+TO+'×'+ov+' = '+(TL*cnt)+' − '+(TO*ov)+' = <b>'+total+'cm</b>.<br><br>' +
+        '장수를 2장부터 밀어 보세요 — 겹침이 1, 2, 3… 늘 한 발 늦게 따라옵니다.';
+    }
+    root.querySelector('#tgHintB').classList.toggle('on', hintOn);
+    root.querySelector('#tgAnsB').classList.toggle('on', ansOn);
+    root.querySelector('#tgHintB').textContent = hintOn ? '💡 힌트 접기 ▴' : '💡 힌트 보기 ▾';
+    root.querySelector('#tgAnsB').textContent = ansOn ? '🎯 답 접기 ▴' : '🎯 답 확인 ▾';
+    hint.hidden = !hintOn; ans.hidden = !ansOn;
+    root.querySelectorAll('[data-sc]').forEach(b=> b.classList.toggle('on', b.dataset.sc===scene));
+    root.querySelectorAll('[data-by]').forEach(b=> b.classList.toggle('on', b.dataset.by===by));
+    root.querySelector('#tgTnCtl').style.display = by==='tree' ? '' : 'none';
+    root.querySelector('#tgLenCtl').style.display = by==='len' ? '' : 'none';
+    const ts=root.querySelector('#tgTn');
+    if(ts){ ts.value=tn; root.querySelector('#tgTnV').textContent='나무 '+tn+'그루'; }
+    root.querySelectorAll('[data-md]').forEach(b=> b.classList.toggle('on', b.dataset.md===mode));
+    root.querySelectorAll('[data-len]').forEach(b=> b.classList.toggle('on', +b.dataset.len===len));
+    root.querySelectorAll('[data-gap]').forEach(b=> b.classList.toggle('on', +b.dataset.gap===gap));
+    root.querySelector('#tgTreeCtl').style.display = scene==='tree' ? '' : 'none';
+    root.querySelector('#tgTapeCtl').style.display = scene==='tape' ? '' : 'none';
+    const sl=root.querySelector('#tgCnt'); if(sl){ sl.value=cnt; root.querySelector('#tgCntV').textContent=cnt+'장'; }
+  }
+  function replant(){ seen=0; tPrev=0; }
+
+  return {
+    title:'나무 심기 · 테이프 잇기', sub:'왜 하나 차이가 날까',
+    emoji:'🌳', tag:'초등 · 문제 해결',
+    blurb:'100m 길에 10m 간격이면 몇 그루? 테이프 27장을 겹쳐 붙이면 겹침은 몇 곳? — 헷갈리는 「+1, −1」을 한 그루씩 심어 보며 눈으로 확인해요.',
+    preset(k){ if(k==='tape') scene='tape'; if(k==='len'){ scene='tree'; by='len'; } },
+    html(){
+      return `<div class="tsCard">
+        <div class="tsStage" id="tgStage" style="aspect-ratio:16/10;min-height:210px"><canvas id="tgCv"></canvas></div>
+        <div class="fgExpr" id="tgExpr" style="font-size:17px"></div>
+        <div class="tsSub fgFacts" id="tgMsg"></div>
+        <button class="tsFold" id="tgHintB"></button>
+        <div class="tsHintBody" id="tgHint" hidden></div>
+        <button class="tsFold" id="tgAnsB"></button>
+        <div class="tsNote" id="tgAns" hidden style="margin-top:9px"></div>
+      </div>
+      <div class="tsCard">
+        <div class="tsLbl">무엇으로 볼까</div>
+        <div class="tsRow"><button data-sc="tree">🌳 나무 심기</button><button data-sc="tape">📏 테이프 잇기</button></div>
+        <div id="tgTreeCtl">
+          <div class="tsLbl">어떻게 심을까</div>
+          <div class="tsRow"><button data-md="both">양끝에 심기</button><button data-md="one">한쪽 끝만</button><button data-md="circle">둥근 연못 둘레</button></div>
+          <div class="tsLbl">무엇을 고를까</div>
+          <div class="tsRow"><button data-by="tree">나무 수 고르기</button><button data-by="len">길이·간격으로</button></div>
+          <div id="tgTnCtl">
+            <div class="tsLbl"><span id="tgTnV"></span> — 밀면서 간격 수를 지켜보세요</div>
+            <input type="range" id="tgTn" min="2" max="12" step="1" value="7" style="width:100%;height:34px;accent-color:var(--accent)">
+          </div>
+          <div id="tgLenCtl">
+            <div class="tsLbl">길이</div>
+            <div class="tsRow"><button data-len="20">20m</button><button data-len="40">40m</button><button data-len="60">60m</button><button data-len="100">100m</button></div>
+            <div class="tsLbl">나무 간격</div>
+            <div class="tsRow"><button data-gap="4">4m</button><button data-gap="5">5m</button><button data-gap="10">10m</button><button data-gap="20">20m</button></div>
+          </div>
+        </div>
+        <div id="tgTapeCtl">
+          <div class="tsLbl">테이프 장수 — <span id="tgCntV"></span> (한 장 318cm · 겹침 22cm)</div>
+          <input type="range" id="tgCnt" min="2" max="27" step="1" value="27" style="width:100%;height:34px;accent-color:var(--crit)">
+        </div>
+      </div>`;
+    },
+    init(sheet){
+      root=sheet;
+      stage=root.querySelector('#tgStage');
+      cv=root.querySelector('#tgCv'); ctx=cv.getContext('2d');
+      root.addEventListener('click', e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.sc){ scene=t.dataset.sc; hintOn=ansOn=false; replant(); paint(); return; }
+        if(t.dataset.md){ mode=t.dataset.md; hintOn=ansOn=false; replant(); paint(); return; }
+        if(t.dataset.by){ by=t.dataset.by; hintOn=ansOn=false; replant(); paint(); return; }
+        if(t.id==='tgHintB'){ hintOn=!hintOn; paint(); return; }
+        if(t.id==='tgAnsB'){ ansOn=!ansOn; paint(); return; }
+        if(t.dataset.len){ len=+t.dataset.len; replant(); paint(); return; }
+        if(t.dataset.gap){ gap=+t.dataset.gap; replant(); paint(); return; }
+      });
+      root.querySelector('#tgCnt').addEventListener('input', e=>{
+        cnt=+e.target.value; replant(); paint();
+      });
+      root.querySelector('#tgTn').addEventListener('input', e=>{
+        tn=+e.target.value; paint();      /* 줄어들면 즉시, 늘면 한 그루씩 자란다 */
+      });
+      const onResize=()=> resize();
+      window.addEventListener('resize', onResize);
+      (function loop(ts){
+        const target = scene==='tree' ? treeN(gapsNow()) : cnt;
+        if(seen > target){ seen = target; draw(); }
+        if(seen < target){
+          if(!tPrev || ts-tPrev > (scene==='tree'?110:45)){ seen++; tPrev=ts; draw(); }
+        }
+        raf=requestAnimationFrame(loop);
+      })(0);
+      paint();
+      requestAnimationFrame(resize);
+      return ()=>{ cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); root=null; ctx=null; };
+    }
+  };
+})();
+
+
+/* ═══════ 수 카드 — 가장 큰 수 · 가장 작은 수 만들기 ═══════
+   카드 5장으로 가장 큰 세 자리 수 × 가장 작은 두 자리 수.
+   큰 숫자는 높은 자리로, 작은 수는 작은 숫자부터 — 자리값 감각을 손으로 익힌다. */
+TOOLS.numCards = (()=>{
+  let digits=[5,4,7,2,9];           /* 문제집 그대로 */
+  let slots=[null,null,null,null,null];   /* 0-2: 세 자리, 3-4: 두 자리 */
+  let root=null, revealed=false;
+
+  const used = ()=> slots.filter(v=>v!==null);
+  const answer = ()=>{
+    const d=[...digits].sort((a,b)=>b-a);
+    const big=d.slice(0,3), small=d.slice(3).sort((a,b)=>a-b);
+    return { big, small, b:+big.join(''), s:+small.join('') };
+  };
+  const bestSplit = ()=>{
+    let best={p:-1};
+    const perm=(arr,cur)=>{
+      if(!arr.length){
+        const b=+cur.slice(0,3).join(''), s=+cur.slice(3).join('');
+        const p=b*s; if(p>best.p) best={p, b, s};
+        return;
+      }
+      for(let i=0;i<arr.length;i++) perm(arr.slice(0,i).concat(arr.slice(i+1)), cur.concat(arr[i]));
+    };
+    perm(digits, []);
+    return best;
+  };
+  function paint(){
+    if(!root) return;
+    const best = bestSplit();
+    const cardBtns = digits.map((d,i)=>{
+      const taken = slots.indexOf(i) > -1;
+      return `<button class="ncCard c${i%5}" data-card="${i}" ${taken?'disabled':''}>${d}</button>`;
+    }).join('');
+    root.querySelector('#ncCards').innerHTML = cardBtns;
+    root.querySelector('#ncSlots').innerHTML =
+      slots.map((v,i)=>`<button class="ncSlot ${v!==null?'full':''}" data-slot="${i}">${v!==null?digits[v]:''}</button>`
+      ).map((h,i)=> (i===3 ? '<span class="ncX">×</span>'+h : h)).join('');
+    const full = used().length===5;
+    const a=answer();
+    const out=root.querySelector('#ncOut');
+    if(full){
+      const b3=+slots.slice(0,3).map(i=>digits[i]).join('');
+      const s2=+slots.slice(3).map(i=>digits[i]).join('');
+      const ok = b3===a.b && s2===a.s;
+      out.innerHTML = b3+' × '+s2+' = <b>'+(b3*s2).toLocaleString('ko-KR')+'</b>' +
+        (ok ? ' <span style="color:var(--accent)">✓ 가장 큰 세 자리 × 가장 작은 두 자리!</span>'
+            : revealed ? '' : ' <span style="color:var(--muted)">— 더 크게(왼쪽) · 더 작게(오른쪽) 만들 수 있을까?</span>');
+    } else {
+      out.innerHTML = '<span style="color:var(--muted)">카드를 눌러 자리에 놓아 보세요 — 앞 세 칸은 <b>가장 크게</b>, 뒤 두 칸은 <b>가장 작게</b></span>';
+    }
+    const done5 = full || revealed;
+    root.querySelector('#ncNote').innerHTML =
+      '<b>왜 큰 숫자가 앞으로 갈까?</b> 백의 자리 1은 십의 자리 10과 같아요 — 같은 숫자라도 앞자리에 설수록 값이 커집니다. ' +
+      '그래서 가장 큰 수는 큰 숫자부터 앞에, 가장 작은 수는 작은 숫자부터 앞에.' +
+      (done5
+        ? '<br>지금 카드로는 <b>'+a.big.join('')+' × '+a.small.join('')+' = '+(a.b*a.s).toLocaleString('ko-KR')+'</b>.<br><br>' +
+          '한 걸음 더 — 문제를 바꿔 「곱이 가장 커지게 나눠라」라고 하면 답이 달라집니다. 이 카드로는 <b>'+best.b+' × '+best.s+'</b>가 최대 (직접 놓아 확인해 보세요).'
+        : '<br><span style="color:var(--muted)">답은 다섯 칸을 다 채우면 여기에 열립니다.</span>');
+  }
+  function place(ci){
+    const at=slots.indexOf(null);
+    if(at<0) return;
+    slots[at]=ci; revealed=false; paint();
+  }
+  return {
+    title:'수 카드 배치', sub:'가장 큰 수 · 가장 작은 수 만들기',
+    emoji:'🃏', tag:'초등 · 자리값',
+    blurb:'수 카드 5장으로 가장 큰 세 자리 수와 가장 작은 두 자리 수를 만들어 곱해 봅니다. 카드를 직접 놓아 보면 「큰 숫자는 앞자리」가 손에 익어요.',
+    html(){
+      return `<div class="tsCard">
+        <div class="tsLbl">수 카드 — 한 번씩만 쓸 수 있어요</div>
+        <div class="ncRow" id="ncCards"></div>
+        <div class="tsLbl" style="margin-top:14px">가장 큰 세 자리 수 × 가장 작은 두 자리 수</div>
+        <div class="ncRow" id="ncSlots"></div>
+        <div class="ncOut" id="ncOut"></div>
+        <div class="tsRow" style="margin-top:12px">
+          <button id="ncClear">비우기</button><button id="ncNew">카드 바꾸기</button><button id="ncAns">🎯 답 확인 — 정답 배치</button>
+        </div>
+      </div>
+      <div class="tsCard"><div class="tsNote" id="ncNote"></div></div>`;
+    },
+    init(sheet){
+      root=sheet;
+      root.addEventListener('click', e=>{
+        const t=e.target.closest('button'); if(!t) return;
+        if(t.dataset.card !== undefined){ place(+t.dataset.card); return; }
+        if(t.dataset.slot !== undefined){ const i=+t.dataset.slot;
+          if(slots[i]!==null){ slots[i]=null; revealed=false; paint(); } return; }
+        if(t.id==='ncAns'){
+          const a=answer();
+          const idxOf=(d,skip)=> digits.findIndex((v,i)=> v===d && !skip.has(i));
+          const sk=new Set(); const order=[...a.big, ...a.small];
+          slots = order.map(d=>{ const i=idxOf(d,sk); sk.add(i); return i; });
+          revealed=true; paint(); return;
+        }
+        if(t.id==='ncClear'){ slots=[null,null,null,null,null]; revealed=false; paint(); return; }
+        if(t.id==='ncNew'){
+          const pool=[1,2,3,4,5,6,7,8,9], pick=[];
+          while(pick.length<5){ const i=Math.floor(Math.random()*pool.length); pick.push(pool.splice(i,1)[0]); }
+          digits=pick; slots=[null,null,null,null,null]; revealed=false; paint(); return;
+        }
+      });
+      paint();
+      return ()=>{ root=null; };
     }
   };
 })();
@@ -5533,7 +6242,7 @@ TOOLS.funcGraph = (()=>{
 
 
 /* 「눈으로 보기」 탭에 늘어놓는 순서 */
-const TOOL_ORDER = ['funcGraph', 'cubeSection', 'paintCube', 'rollPoly', 'tether'];
+const TOOL_ORDER = ['funcGraph', 'cubeSection', 'paintCube', 'treeGap', 'numCards', 'rollPoly', 'tether'];
 
 function renderSee(){
   const list = TOOL_ORDER.filter(k=> TOOLS[k]).map(k=>{
