@@ -443,6 +443,22 @@ nav button.on .ic{transform:scale(1.16)}
 .tmBar span{display:block;height:100%;background:var(--grBrand);border-radius:999px;transition:width .3s}
 .tmBackIn{margin:auto 0;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;padding:2px 0 4px}
 
+/* ── 내 이름 정하기 · 전송 표시 ── */
+#whoSheet{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center}
+#whoSheet[hidden]{display:none}
+.whoCard{background:var(--surface);border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:82vh;
+  overflow-y:auto;padding:20px 16px calc(20px + env(safe-area-inset-bottom))}
+.whoT{font-size:18px;font-weight:900;margin-bottom:4px}
+.whoS{font-size:12px;color:var(--muted);margin-bottom:6px;line-height:1.55;word-break:keep-all}
+.whoG{font-size:10.5px;font-weight:800;color:var(--muted);margin:13px 0 6px}
+.whoRow{display:flex;flex-wrap:wrap;gap:7px}
+.whoRow button{min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--line);
+  background:var(--plane);font-size:14px;font-weight:700;color:var(--ink)}
+.whoRow button.on{background:var(--grBrand);color:#fff;border-color:transparent}
+.whoSkip{margin-top:15px;width:100%;min-height:42px;border-radius:11px;border:1px dashed var(--line);
+  color:var(--muted);font-size:12.5px;background:transparent}
+.tmSent{font-size:12.5px;font-weight:700;color:var(--accent);min-height:18px}
+
 /* ── 오늘의 질문 ── */
 .opDaily{position:relative;border-radius:19px;padding:2.5px;background:var(--grBrand);margin:12px 0 16px;
   box-shadow:0 8px 22px rgba(124,58,237,.18)}
@@ -478,6 +494,7 @@ nav button .ic{font-size:19px}
 <main id="main"></main>
 <div id="toolSheet" class="toolSheet" hidden></div>
 <div id="tdMode" hidden></div>
+<div id="whoSheet" hidden></div>
 <button id="toTop" aria-label="맨 위로">↑</button>
 <nav>
   <div class="in">
@@ -5241,13 +5258,13 @@ TOOLS.funcGraph = (()=>{
         '<div class="tsSub fgFacts" id="fgFacts"></div>' +
       '</div>' +
       '<div class="tsCard">' +
-        '<div class="tsLbl">어떤 함수를 그려 볼까</div><div id="fgKinds"></div>' +
-      '</div>' +
-      '<div class="tsCard">' +
         '<div class="tsLbl">계수 움직이기 — 숫자를 누르면 직접 입력</div>' +
         '<div id="fgParams"></div>' +
         '<div class="tsRow" id="fgToggles" style="margin-top:4px"></div>' +
         '<div class="tsNote" id="fgNote"></div>' +
+      '</div>' +
+      '<div class="tsCard">' +
+        '<div class="tsLbl">어떤 함수를 그려 볼까</div><div id="fgKinds"></div>' +
       '</div>';
     },
     init(sheet){
@@ -5639,6 +5656,100 @@ function paintStreak(){
   el.hidden = n <= 0; el.textContent = '🔥 ' + n;
 }
 
+/* ═══ 학습 기록 자동 전송 ═══
+   학생이 이름을 한 번 고르면(폰에 저장), 오늘 5장·단원 몰아보기를 끝낼 때마다
+   /api/study-log 로 기록을 보낸다. 실패하면 큐에 쌓았다가 다음에 다시 보낸다. */
+const ROSTER = {
+  '초등': ['강태율','김시온','김주희','박재성','박주원','윤희담','윤희재','이소정','조주하'],
+  '중1': ['고은별','김가온','김예은','백서율','이현서','장하리','전예령','진수혁'],
+  '중2': ['김가은','김영우','박서현','정가빈','조수혁','최수율'],
+  '중3': ['김하은','백서린','현지민'],
+  '고등': ['김하늘','문다민','안혜연','정아인'],
+};
+let WHO = null;
+try{ WHO = JSON.parse(localStorage.getItem('deolrim.links.who') || 'null'); }catch(e){}
+let DID = '';
+try{
+  DID = localStorage.getItem('deolrim.links.did') || '';
+  if(!DID){ DID = Math.random().toString(36).slice(2, 8); localStorage.setItem('deolrim.links.did', DID); }
+}catch(e){ DID = 'x'; }
+const isoDay = ()=>{ const d = new Date(); const p = n=>String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()); };
+
+let whoCb = null;
+function whoAsk(cb){
+  whoCb = cb || null;
+  const el = document.getElementById('whoSheet');
+  el.innerHTML = `<div class="whoCard">
+    <div class="whoT">내 이름 정하기</div>
+    <div class="whoS">한 번만 고르면 이 폰에 저장돼요. 오늘 5장이나 단원 몰아보기를 끝낼 때마다 원장님께 기록이 자동으로 전송됩니다.</div>
+    ${Object.keys(ROSTER).map(g=>`<div class="whoG">${esc(g)}</div><div class="whoRow">${ROSTER[g].map(n=>
+      `<button data-who="${esc(g)}__${esc(n)}" class="${WHO && WHO.name===n && WHO.g===g ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>`).join('')}
+    <button class="whoSkip" id="whoSkip">나중에 할게요</button>
+  </div>`;
+  el.hidden = false;
+}
+document.getElementById('whoSheet').addEventListener('click', (e)=>{
+  const el = document.getElementById('whoSheet');
+  const w = e.target.closest('[data-who]');
+  if(w){
+    const i = w.dataset.who.indexOf('__');
+    WHO = { g: w.dataset.who.slice(0, i), name: w.dataset.who.slice(i + 2) };
+    try{ localStorage.setItem('deolrim.links.who', JSON.stringify(WHO)); }catch(e2){}
+    el.hidden = true;
+    const cb = whoCb; whoCb = null;
+    if(cb) cb(true);
+    return;
+  }
+  if(e.target.closest('#whoSkip') || e.target === el){
+    el.hidden = true;
+    const cb = whoCb; whoCb = null;
+    if(cb) cb(false);
+  }
+});
+
+function pushPending(ev){
+  try{
+    const q = JSON.parse(localStorage.getItem('deolrim.links.logq') || '[]');
+    q.push(ev);
+    localStorage.setItem('deolrim.links.logq', JSON.stringify(q.slice(-30)));
+  }catch(e){}
+}
+function flushPending(){
+  let q = [];
+  try{ q = JSON.parse(localStorage.getItem('deolrim.links.logq') || '[]'); }catch(e){}
+  if(!q.length) return;
+  fetch('/api/study-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(q[0]) })
+    .then(r=>r.json()).then(j=>{
+      if(j && j.ok){
+        q.shift();
+        try{ localStorage.setItem('deolrim.links.logq', JSON.stringify(q)); }catch(e){}
+        if(q.length) flushPending();
+      }
+    }).catch(()=>{});
+}
+function markSent(ok){
+  const el = document.getElementById('tmSent');
+  if(el) el.textContent = ok ? '📮 원장님께 전송됐어요' : '📮 저장해 뒀다가 다음에 보낼게요';
+}
+function sendLog(kind, label, picks){
+  if(!WHO) return;
+  const know = picks.filter(c=>progress[cardKey(c)]==='know').length;
+  const unsure = picks.filter(c=>progress[cardKey(c)]==='unsure').length;
+  const cards = picks.map(c=>{
+    const m = progress[cardKey(c)];
+    return c.f + (m==='know' ? ' ✅' : m==='unsure' ? ' 🤔' : ' —');
+  }).join(', ').slice(0, 1900);
+  const ev = { name: WHO.name, g: WHO.g, kind, label, know, unsure,
+    streak: streakNow(getStreak()), cards, date: isoDay(), did: DID };
+  fetch('/api/study-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(ev) })
+    .then(r=>r.json()).then(j=>{
+      if(j && j.ok) markSent(true);
+      else { pushPending(ev); markSent(false); }
+    })
+    .catch(()=>{ pushPending(ev); markSent(false); });
+}
+
 /* ═══ 몰입 모드 — 오늘 5장을 한 장씩, 전체 화면으로 ═══ */
 let tdQ = [], tdPicks = [], tdFlip = false, tdBusy = false;
 const TMGR = { es:'--grEs', m1:'--grM1', m2:'--grM2', m3:'--grM3', hs:'--grHs' };
@@ -5768,9 +5879,14 @@ function paintTdFin(){
       <canvas id="tmConfetti"></canvas>
       <div style="font-size:52px">🎉</div>
       ${mid}
+      <div class="tmSent" id="tmSent">${WHO ? '📮 보내는 중…' : ''}</div>
       <button class="done" id="tmClose2">닫기</button>
     </div>`;
   tmConfetti();
+  const doSend = ()=> sendLog(tmCtx.streak ? 'today' : 'unit',
+    tmCtx.streak ? '오늘 5장' : tmCtx.label, tdPicks);
+  if(WHO) doSend();
+  else whoAsk((picked)=>{ if(picked) doSend(); });
 }
 function tmConfetti(){
   const cvf = document.getElementById('tmConfetti');
@@ -5923,6 +6039,7 @@ function renderCard(){
       <button id="cardOnlyUnsure" aria-pressed="${onlyUnsure}">헷갈린 것만</button>
       <button id="cardAdv" aria-pressed="${showAdv}">심화 ${showAdv?'켜짐':'꺼짐'}</button>
       <button id="cardPic" aria-pressed="${shapeFirst}">그림 먼저</button>
+      <button id="whoBtn">내 이름${WHO ? ' · ' + esc(WHO.name) : ' 정하기'}</button>
     </div>` : ''}
     <div class="unitList">${unitsHtml || '<div class="hint">해당하는 카드가 없어요.</div>'}</div>`;
   fitForms();
@@ -6047,6 +6164,7 @@ try{
   const savedTheme = localStorage.getItem('deolrim.links.theme');
   if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
   paintStreak();
+  flushPending();
 }catch(e){}
 
 document.addEventListener('click', (e)=>{
@@ -6124,6 +6242,7 @@ document.addEventListener('click', (e)=>{
     try{ localStorage.setItem('deolrim.links.adv', showAdv ? '1' : '0'); }catch(e){}
     renderCard(); return;
   }
+  if(e.target.closest('#whoBtn')){ whoAsk(()=>{ if(TAB === 'card') renderCard(); }); return; }
   const uplay = e.target.closest('[data-uplay]');
   if(uplay){ openUnitTm(uplay.dataset.uplay, unitCards.get(uplay.dataset.uplay)); return; }
   const utoggle = e.target.closest('[data-utoggle]');
