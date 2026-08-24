@@ -418,7 +418,7 @@ nav button.on .ic{transform:scale(1.16)}
 .tmShape{width:100%;max-height:150px;display:flex;justify-content:center;margin-bottom:12px;color:#2f2b24;color-scheme:only light;
   --ink:#17150f;--ink2:#514d44;--sunk:#ffffff;--surface:#ffffff;--muted:#8b8579;--line:rgba(23,21,15,.11)}
 .tmShape text.halo{fill:none;stroke:#ffffff;stroke-width:2.2px;stroke-linejoin:round;stroke-linecap:round}
-.tmShape svg{height:132px;width:auto;max-width:100%}
+.tmShape svg,.tmShape img{height:132px;width:auto;max-width:100%;display:block}
 .tmFront .tmShape{background:rgba(255,255,255,.96);border-radius:18px;padding:14px 16px;width:auto;max-width:88%}
 .tmJudge{display:flex;gap:10px;padding-top:12px}
 .tmJudge button{flex:1;min-height:56px;border-radius:16px;font-size:15px;font-weight:900;border:none;color:#fff;
@@ -5669,6 +5669,22 @@ function closeTdMode(){
   if(TAB === 'card') renderCard();
   paintStreak();
 }
+/* 도형을 이미지로 굽는다 — 흰 바탕과 진한 선을 그림 안에 새겨 넣어
+   브라우저의 「웹사이트 강제 어둡게」가 뒤집을 수 없게 한다 (이미지는 반전 대상이 아니다) */
+const tmShapeCache = new Map();
+function tmShapeSrc(key){
+  if(tmShapeCache.has(key)) return tmShapeCache.get(key);
+  let s = SHAPES[key];
+  s = s.replace(/(<svg[^>]*>)/, '$1<rect x="-999" y="-999" width="9999" height="9999" fill="#ffffff"/>');
+  s = s.replace(/class="halo"/g, 'class="halo" stroke="#ffffff"');
+  s = s.replace(/currentColor/g, '#2f2b24')
+       .replace(/var\(--ink2\)/g, '#514d44')
+       .replace(/var\(--ink\)/g, '#17150f')
+       .replace(/var\(--opInk\)/g, '#7c3aed');
+  const out = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+  tmShapeCache.set(key, out);
+  return out;
+}
 function tmDotsHtml(){
   const done2 = tdPicks.filter(c=>progress[cardKey(c)]).length;
   if(tdPicks.length > 14)
@@ -5681,7 +5697,7 @@ function paintTd(){
   const c = tdQ[0];
   const done = tdPicks.filter(x=>progress[cardKey(x)]).length;
   const gr = 'var(' + (TMGR[TIER[c.g]] || '--grBrand') + ')';
-  const shape = c.shape && SHAPES[c.shape] ? `<div class="tmShape">${SHAPES[c.shape]}</div>` : '';
+  const shape = c.shape && SHAPES[c.shape] ? `<div class="tmShape"><img alt="" src="${tmShapeSrc(c.shape)}"></div>` : '';
   const back = c.def
     ? `<div class="form" style="font-size:17px">${mk(c.def)}</div>${c.props && c.props.length ? `<ul class="propList" style="margin-top:8px">${c.props.map(p=>`<li>${mk(p)}</li>`).join('')}</ul>` : ''}`
     : `<div class="form" id="tmForm">${mkln(c.b)}</div>`;
