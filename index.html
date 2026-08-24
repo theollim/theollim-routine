@@ -161,8 +161,15 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 /* ── 만져보기 도구 (전체화면) ── */
 .toolBtn{width:100%;min-height:44px;margin-top:9px;border-radius:11px;background:var(--opBg);
   border:1px solid var(--opLine);color:var(--opInk);font-size:13px;font-weight:750}
-.seeCard{width:100%;text-align:left;display:flex;align-items:center;gap:13px;margin-bottom:9px;
-  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px;min-height:64px}
+.seeSec{font-size:11px;font-weight:800;letter-spacing:.04em;margin:18px 2px 9px;display:flex;align-items:center;gap:9px}
+.seeSec::after{content:"";flex:1 1 auto;height:1px;background:var(--line)}
+.seeSec.es{color:var(--gEs)} .seeSec.ms{color:var(--gM2)} .seeSec.hs{color:var(--gHs)}
+.hint + .seeSec{margin-top:10px}
+.seeCard{position:relative;overflow:hidden;width:100%;text-align:left;display:flex;align-items:center;gap:13px;margin-bottom:9px;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px 13px 17px;min-height:64px}
+.seeCard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sGr,var(--grM2))}
+.seeCard.es{--sGr:var(--grEs)} .seeCard.ms{--sGr:var(--grM2)} .seeCard.hs{--sGr:var(--grHs)}
+.seeCard.es .seeTag{color:var(--gEs)} .seeCard.ms .seeTag{color:var(--gM2)} .seeCard.hs .seeTag{color:var(--gHs)}
 .seeIco{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--opBg);border:1px solid var(--opLine);
   display:flex;align-items:center;justify-content:center;font-size:22px}
 .seeTxt{flex:1 1 auto;min-width:0}
@@ -4235,7 +4242,7 @@ TOOLS.paintCube = (()=>{
       0:'칠이 하나도 없는 조각만 남겼어요 — 어디에 숨어 있었을까요?'
     };
     root.querySelector('#pcMsg').textContent =
-      hi===null ? '자리별 버튼을 눌러 조각을 남기고, 🧨 흩어서 직접 세어 보세요. 답은 맨 아래에서 확인.'
+      hi===null ? '조각의 자리와 칠해진 면 수는 어떤 관계일까? — 자리별로 남겨서 직접 세어 보세요.'
       : Q[hi];
     root.querySelectorAll('#pcCat button').forEach(b=>{
       const k=b.dataset.c;
@@ -4480,27 +4487,32 @@ TOOLS.treeGap = (()=>{
     if(scene==='tree'){
       const k=gapsNow(), n=treeN(k);
       ex.innerHTML = by==='tree'
-        ? '나무 <b>'+n+'그루</b>를 심으면 — 간격은 몇 개일까?'
+        ? '나무 수와 간격 수는 <b>어떤 관계</b>일까?'
         : len+'m 길에 '+gap+'m 간격 — 나무는 몇 그루일까?';
-      ms.textContent = '그림에서 직접 세어 본 다음, 답을 열어 확인하세요.';
+      ms.textContent = by==='tree'
+        ? '나무 수를 밀어 바꿔 가며 간격 수를 세어 보세요 — 몇 그루로 바꿔도 통하는 규칙을 찾는 거예요.'
+        : '먼저 간격이 몇 개인지 구하고, 나무 수와 간격 수의 관계를 떠올려 보세요.';
       hint.innerHTML = mode==='both' ? '맨 앞에 나무 한 그루가 먼저 서고, 그다음부터는 <b>간격마다 한 그루씩</b>이에요. 그럼 나무와 간격, 어느 쪽이 하나 많을까요?'
         : mode==='one' ? '비워 둔 끝을 보세요 — 마지막 간격에도 나무는 <b>앞쪽 한 그루뿐</b>이에요.'
         : '연못을 한 바퀴 돌면 <b>시작 나무를 다시 만나요</b>. 끝 나무가 따로 없죠.';
-      ans.innerHTML = (by==='tree'
-        ? '나무 <b>'+n+'그루</b> ↔ 간격 <b>'+k+'개</b>' + (mode==='both' ? ' — <b>나무가 딱 1개 많다</b>.' : ' — <b>똑같다</b>.')
-        : len+' ÷ '+gap+' = <b>간격 '+k+'개</b> → 나무 ' + (mode==='both' ? k+' + 1 = <b>'+n+'그루</b>.' : '<b>'+n+'그루</b>.')) + '<br>' +
+      const rel = mode==='both' ? '<b>나무 수 = 간격 수 + 1</b>'
+        : mode==='one' ? '<b>나무 수 = 간격 수</b> (한쪽 끝을 비웠으니)'
+        : '<b>나무 수 = 간격 수</b> (끝이 이어진 원이니)';
+      ans.innerHTML = rel + ' — 지금은 나무 '+n+'그루 ↔ 간격 '+k+'개.' +
+        (by==='len' ? '<br>'+len+' ÷ '+gap+' = 간격 '+k+'개 → 나무 <b>'+n+'그루</b>.' : '') + '<br>' +
         (mode==='both' ? '맨 앞 1그루 + 간격마다 1그루 — 그래서 간격보다 하나 많아요.'
-         : mode==='one' ? '한쪽 끝을 비우면 「간격마다 1그루」만 남아 간격 수와 같아져요.'
-         : '끝이 이어진 원에서는 시작 나무가 곧 끝 나무 — +1이 사라져요.') +
-        '<br><br>이 상태로 나무 수·길이를 바꿔 보세요 — <b>관계는 변하지 않아요</b>. 숫자가 커지면 그림 대신 이 관계를 쓰는 게 공식입니다.<br>📏 테이프 잇기도 같은 문제예요 — 테이프가 나무, 겹침이 간격.';
+         : mode==='one' ? '한쪽 끝을 비우면 「간격마다 1그루」만 남아요.'
+         : '시작 나무가 곧 끝 나무라 +1이 사라져요.') +
+        '<br><br>나무 수·길이를 바꿔 보세요 — 숫자는 변해도 <b>관계는 변하지 않아요</b>. 그 관계가 곧 공식입니다.<br>📏 <b>테이프 잇기도 같은 유형</b>이에요 — 이번엔 「겹침 수 = 장수 − 1」. 직접 확인해 보세요.';
     } else {
       const ov=cnt-1, total=TL*cnt-TO*ov;
-      ex.innerHTML = TL+'cm 테이프 <b>'+cnt+'장</b>, '+TO+'cm씩 겹치면 — 겹침은 몇 곳? 전체 길이는?';
-      ms.textContent = '빨간 띠(겹침)를 세어 본 다음, 답을 열어 확인하세요.';
+      ex.innerHTML = '테이프 장수와 겹침 수는 <b>어떤 관계</b>일까?';
+      ms.textContent = '장수를 밀어 바꿔 가며 빨간 겹침을 세어 보세요 — 몇 장이든 통하는 규칙을 찾는 거예요.';
       hint.innerHTML = '<b>첫 장은 겹칠 상대가 없어요.</b> 두 번째 장부터 한 장 붙을 때마다 겹침이 하나씩 생겨요.';
-      ans.innerHTML = '겹침은 <b>'+ov+'곳</b> — 장수보다 하나 적다 (나무 심기의 +1과 같은 「하나 차이」).<br>' +
+      ans.innerHTML = '<b>겹침 수 = 장수 − 1</b> — 지금은 '+cnt+'장 ↔ 겹침 '+ov+'곳.<br>' +
+        '첫 장은 겹칠 상대가 없으니, 둘째 장부터 한 장마다 겹침이 하나씩.<br>' +
         '전체 길이 = '+TL+'×'+cnt+' − '+TO+'×'+ov+' = '+(TL*cnt)+' − '+(TO*ov)+' = <b>'+total+'cm</b>.<br><br>' +
-        '장수를 2장부터 밀어 보세요 — 겹침이 1, 2, 3… 늘 한 발 늦게 따라옵니다.';
+        '🌳 <b>나무 심기와 같은 유형</b>이에요 — 거기선 「나무 수 = 간격 수 + 1」. 하나 많거나 하나 적거나, 늘 「하나 차이」.';
     }
     root.querySelector('#tgHintB').classList.toggle('on', hintOn);
     root.querySelector('#tgAnsB').classList.toggle('on', ansOn);
@@ -6244,16 +6256,30 @@ TOOLS.funcGraph = (()=>{
 /* 「눈으로 보기」 탭에 늘어놓는 순서 */
 const TOOL_ORDER = ['funcGraph', 'cubeSection', 'paintCube', 'treeGap', 'numCards', 'rollPoly', 'tether'];
 
+/* 눈으로 보기 — 초·중·고 구획. {k, fn?, tag?, blurb?} : fn은 여는 프리셋, tag·blurb는 그 구획용 문구 */
+const SEE_SECTIONS = [
+  { c:'es', name:'초등', tools:[
+    { k:'paintCube' }, { k:'treeGap' }, { k:'numCards' } ] },
+  { c:'ms', name:'중등', tools:[
+    { k:'funcGraph' }, { k:'cubeSection' }, { k:'rollPoly' }, { k:'tether' } ] },
+  { c:'hs', name:'고등', tools:[
+    { k:'funcGraph', fn:'sin', tag:'대수 · 삼각함수와 지수·로그',
+      blurb:'사인·코사인·탄젠트부터 지수·로그까지 — 계수를 밀면 주기와 점근선이 따라 움직입니다. 단위원이 파도를 그려 내는 것도 여기서.' } ] },
+];
 function renderSee(){
-  const list = TOOL_ORDER.filter(k=> TOOLS[k]).map(k=>{
-    const T = TOOLS[k];
-    return `<button class="seeCard" data-tool="${esc(k)}">
+  const card = (s, t)=>{
+    const T = TOOLS[t.k]; if(!T) return '';
+    return `<button class="seeCard ${s.c}" data-tool="${esc(t.k)}"${t.fn ? ` data-toolfn="${esc(t.fn)}"` : ''}>
       <span class="seeIco">${T.emoji || '✋'}</span>
-      <span class="seeTxt"><span class="seeTag">${esc(T.tag || '')}</span>
+      <span class="seeTxt"><span class="seeTag">${esc(t.tag || T.tag || '')}</span>
         <span class="seeNm" style="display:block">${esc(T.title)}</span>
-        <span class="seeSub" style="display:block">${esc(T.blurb || T.sub)}</span></span>
+        <span class="seeSub" style="display:block">${esc(t.blurb || T.blurb || T.sub)}</span></span>
       <span class="seeGo">열기 ›</span>
     </button>`;
+  };
+  const list = SEE_SECTIONS.map(s=>{
+    const cards = s.tools.map(t=> card(s, t)).join('');
+    return cards ? `<div class="seeSec ${s.c}">${esc(s.name)}</div>${cards}` : '';
   }).join('');
   $('#main').innerHTML = `<div class="hint">머릿속으로 안 그려지는 것은 <b>움직여 보면</b> 그려집니다.<br>손으로 끌어보고, 굴려보고, 잘라보세요.</div>${list}`;
 }
