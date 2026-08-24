@@ -4370,6 +4370,8 @@ TOOLS.treeGap = (()=>{
   let mode='both';                  /* both | one | circle */
   let by='tree';                    /* tree: 나무 수로 | len: 길이·간격으로 */
   let hintOn=false, ansOn=false;    /* 답은 마지막에 — 접어 두고 열어 본다 */
+  let gMark={}, gN=0, tMark={}, tN=0, oMark={}, oN=0;   /* 눌러서 센 자국 (탭 순서 번호) */
+  let posG=[], posT=[], posO=[];                        /* 탭 판정용 화면 좌표 */
   let tn=7;                         /* 고른 나무 수 (2~12) */
   let len=100, gap=10;              /* 나무: m */
   let cnt=27;                       /* 테이프 장수 (길이 318cm · 겹침 22cm 고정) */
@@ -4405,21 +4407,25 @@ TOOLS.treeGap = (()=>{
       ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
       const step=(x1-x0)/k;
       const fs=Math.max(15, Math.min(30, step*0.72));
-      /* 간격 번호(빨강) — 아래쪽 */
+      /* 간격 괄호 — 번호는 눌러서 셀 때만 찍힌다 */
+      posG=[]; posT=[];
       ctx.strokeStyle=RED; ctx.lineWidth=2;
       for(let i=0;i<k;i++){
         const a=x0+i*step, b=x0+(i+1)*step, ym=y+22;
         ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(b-4,ym); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(a+4,ym-6); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(b-4,ym); ctx.lineTo(b-4,ym-6); ctx.stroke();
-        if(k<=12){ ctx.fillStyle=RED; font(11.5,800); ctx.fillText(String(i+1), (a+b)/2, ym+13); }
+        posG[i]={x:(a+b)/2, y:ym};
+        if(gMark[i]){ ctx.fillStyle=RED; font(12.5,800); ctx.fillText(String(gMark[i]), (a+b)/2, ym+14); }
       }
-      /* 나무 — 하나씩 자라난다 */
+      /* 나무 — 하나씩 자라난다. 번호: 나무 수 고르기 모드만 자동, 길이 모드는 눌러서 */
       for(let i=0;i<n;i++){
-        const x = x0 + (mode==='one' ? i : i) * step;
+        const x = x0 + i * step;
+        posT[i]={x, y:y-fs*0.62};
         if(i>=show) continue;
         font(fs); ctx.fillText('🌳', x, y-fs*0.62);
-        if(n<=13){ ctx.fillStyle=GRN; font(11,800); ctx.fillText(String(i+1), x, y-fs*1.28); }
+        if(by==='tree' && n<=13){ ctx.fillStyle=GRN; font(11,800); ctx.fillText(String(i+1), x, y-fs*1.28); }
+        else if(tMark[i]!==undefined && tMark[i]){ ctx.fillStyle=GRN; font(12,800); ctx.fillText(String(tMark[i]), x, y-fs*1.30); }
       }
       /* 한쪽 끝만: 안 심은 끝을 점선 동그라미로 */
       if(mode==='one'){
@@ -4436,17 +4442,21 @@ TOOLS.treeGap = (()=>{
       ctx.fillStyle='#dbedf7'; ctx.beginPath(); ctx.arc(cx,cy,R*0.82,0,6.2832); ctx.fill();
       ctx.fillStyle=MUT; font(11,700); ctx.fillText(by==='len' ? '둘레 '+len+'m 연못' : '연못', cx, cy);
       const fs=Math.max(15, Math.min(26, (6.28*R)/k*0.6));
+      posG=[]; posT=[];
       ctx.strokeStyle=RED; ctx.lineWidth=2;
       for(let i=0;i<k;i++){
         const a0=-Math.PI/2 + (i+0.12)*2*Math.PI/k, a1=-Math.PI/2 + (i+0.88)*2*Math.PI/k;
         ctx.beginPath(); ctx.arc(cx,cy,R+16,a0,a1); ctx.stroke();
-        if(k<=12){ const am=(a0+a1)/2; ctx.fillStyle=RED; font(11.5,800);
-          ctx.fillText(String(i+1), cx+Math.cos(am)*(R+30), cy+Math.sin(am)*(R+30)); }
+        const am=(a0+a1)/2, gx=cx+Math.cos(am)*(R+30), gy=cy+Math.sin(am)*(R+30);
+        posG[i]={x:gx, y:gy};
+        if(gMark[i]){ ctx.fillStyle=RED; font(12.5,800); ctx.fillText(String(gMark[i]), gx, gy); }
       }
       for(let i=0;i<k;i++){
+        const a=-Math.PI/2 + i*2*Math.PI/k, tx=cx+Math.cos(a)*R, ty=cy+Math.sin(a)*R;
+        posT[i]={x:tx, y:ty};
         if(i>=show) continue;
-        const a=-Math.PI/2 + i*2*Math.PI/k;
-        font(fs); ctx.fillText('🌳', cx+Math.cos(a)*R, cy+Math.sin(a)*R);
+        font(fs); ctx.fillText('🌳', tx, ty);
+        if(by==='len' && tMark[i]){ ctx.fillStyle=GRN; font(12,800); ctx.fillText(String(tMark[i]), tx, ty-fs*0.95); }
       }
     }
   }
@@ -4463,21 +4473,20 @@ TOOLS.treeGap = (()=>{
       ctx.strokeStyle=TAPEL; ctx.lineWidth=1.2;
       ctx.beginPath(); ctx.roundRect(x, y-h/2, stepW, h, 4); ctx.fill(); ctx.stroke();
     }
-    /* 겹침 — 빨간 띠 */
+    /* 겹침 — 빨간 띠. 번호는 눌러서 셀 때만 */
+    posO=[];
     for(let i=0;i<ov;i++){
       if(i+1>=show) continue;
       const x=x0 + (i+1)*(stepW-ovW);
       ctx.fillStyle='rgba(212,60,60,.55)';
       ctx.fillRect(x, y-h/2, ovW, h);
+      posO[i]={x:x+ovW/2, y:y};
+      if(oMark[i]){ ctx.textAlign='center'; ctx.fillStyle=RED; font(12,800);
+        ctx.fillText(String(oMark[i]), x+ovW/2, y+h/2+15); }
     }
     ctx.textAlign='center';
     ctx.fillStyle=INK; font(11.5,800);
     ctx.fillText('한 장 '+TL+'cm', Math.max(x0+stepW/2, 58), y-h/2-10);
-    if(ov>0 && show>1){
-      const xo=x0+(stepW-ovW)+ovW/2;
-      ctx.fillStyle=RED; font(11,800);
-      ctx.fillText('겹침 '+TO+'cm', Math.max(xo, 60), y+h/2+15);
-    }
     ctx.fillStyle=MUT; font(11,700);
     ctx.fillText('전체 '+total+'cm', W/2, H-12);
   }
@@ -4495,9 +4504,12 @@ TOOLS.treeGap = (()=>{
       ex.innerHTML = by==='tree'
         ? '나무 수와 간격 수는 <b>어떤 관계</b>일까?'
         : len+'m 길에 '+gap+'m 간격 — 나무는 몇 그루일까?';
-      ms.textContent = by==='tree'
-        ? '나무 수를 밀어 바꿔 가며 간격 수를 세어 보세요 — 몇 그루로 바꿔도 통하는 규칙을 찾는 거예요.'
-        : '먼저 간격이 몇 개인지 구하고, 나무 수와 간격 수의 관계를 떠올려 보세요.';
+      const done = gN>=k && (by==='tree' || tN>=n);
+      ms.textContent = done
+        ? (by==='tree' ? '간격 '+k+'개 — 다 세었어요! 나무 '+n+'그루와 비교해 보고, 나무 수를 바꿔 또 세어 보세요.'
+                       : '나무 '+n+'그루 · 간격 '+k+'개 — 다 세었어요! 관계가 보이면 답을 확인하세요.')
+        : (by==='tree' ? '빨간 간격을 하나씩 눌러 세어 보세요 — 지금 '+gN+'개'
+                       : '나무와 간격을 눌러 세어 보세요 — 나무 '+tN+' · 간격 '+gN);
       hint.innerHTML = mode==='both' ? '맨 앞에 나무 한 그루가 먼저 서고, 그다음부터는 <b>간격마다 한 그루씩</b>이에요. 그럼 나무와 간격, 어느 쪽이 하나 많을까요?'
         : mode==='one' ? '비워 둔 끝을 보세요 — 마지막 간격에도 나무는 <b>앞쪽 한 그루뿐</b>이에요.'
         : '연못을 한 바퀴 돌면 <b>시작 나무를 다시 만나요</b>. 끝 나무가 따로 없죠.';
@@ -4513,7 +4525,9 @@ TOOLS.treeGap = (()=>{
     } else {
       const ov=cnt-1, total=TL*cnt-TO*ov;
       ex.innerHTML = '테이프 장수와 겹침 수는 <b>어떤 관계</b>일까?';
-      ms.textContent = '장수를 밀어 바꿔 가며 빨간 겹침을 세어 보세요 — 몇 장이든 통하는 규칙을 찾는 거예요.';
+      ms.textContent = oN>=ov
+        ? '겹침 '+ov+'곳 — 다 세었어요! 장수 '+cnt+'장과 비교해 보고, 장수를 바꿔 또 세어 보세요.'
+        : '빨간 겹침을 하나씩 눌러 세어 보세요 — 지금 '+oN+'곳';
       hint.innerHTML = '<b>첫 장은 겹칠 상대가 없어요.</b> 두 번째 장부터 한 장 붙을 때마다 겹침이 하나씩 생겨요.';
       ans.innerHTML = '<b>겹침 수 = 장수 − 1</b> — 지금은 '+cnt+'장 ↔ 겹침 '+ov+'곳.<br>' +
         '첫 장은 겹칠 상대가 없으니, 둘째 장부터 한 장마다 겹침이 하나씩.<br>' +
@@ -4538,7 +4552,7 @@ TOOLS.treeGap = (()=>{
     root.querySelector('#tgTapeCtl').style.display = scene==='tape' ? '' : 'none';
     const sl=root.querySelector('#tgCnt'); if(sl){ sl.value=cnt; root.querySelector('#tgCntV').textContent=cnt+'장'; }
   }
-  function replant(){ seen=0; tPrev=0; }
+  function replant(){ seen=0; tPrev=0; gMark={}; gN=0; tMark={}; tN=0; oMark={}; oN=0; }
 
   return {
     title:'나무 심기 · 테이프 잇기', sub:'왜 하나 차이가 날까',
@@ -4547,7 +4561,8 @@ TOOLS.treeGap = (()=>{
     preset(k){ if(k==='tape') scene='tape'; if(k==='len'){ scene='tree'; by='len'; } },
     html(){
       return `<div class="tsCard">
-        <div class="tsStage" id="tgStage" style="aspect-ratio:16/10;min-height:210px"><canvas id="tgCv"></canvas></div>
+        <div class="tsStage" id="tgStage" style="aspect-ratio:16/10;min-height:210px"><canvas id="tgCv"></canvas>
+          <div class="tsTip">눌러서 하나씩 세어 보세요</div></div>
         <div class="fgExpr" id="tgExpr" style="font-size:17px"></div>
         <div class="tsSub fgFacts" id="tgMsg"></div>
         <button class="tsFold" id="tgHintB"></button>
@@ -4598,7 +4613,28 @@ TOOLS.treeGap = (()=>{
         cnt=+e.target.value; replant(); paint();
       });
       root.querySelector('#tgTn').addEventListener('input', e=>{
-        tn=+e.target.value; paint();      /* 줄어들면 즉시, 늘면 한 그루씩 자란다 */
+        tn=+e.target.value;
+        gMark={}; gN=0; tMark={}; tN=0;   /* 새 판이니 처음부터 다시 센다 */
+        paint(); draw();
+      });
+      stage.addEventListener('pointerdown', ev=>{
+        const b=stage.getBoundingClientRect();
+        const x=ev.clientX-b.left, yy=ev.clientY-b.top;
+        const near=(arr, mark)=>{
+          let bi=-1, bd=30;
+          arr.forEach((p,i)=>{ if(!p || mark[i]) return;
+            const d=Math.hypot(x-p.x, yy-p.y); if(d<bd){ bd=d; bi=i; } });
+          return bi;
+        };
+        if(scene==='tree'){
+          let i=near(posG, gMark);
+          if(i>-1){ gMark[i]=++gN; draw(); paint(); return; }
+          if(by==='len'){ i=near(posT, tMark);
+            if(i>-1){ tMark[i]=++tN; draw(); paint(); return; } }
+        } else {
+          const i=near(posO, oMark);
+          if(i>-1){ oMark[i]=++oN; draw(); paint(); return; }
+        }
       });
       const onResize=()=> resize();
       window.addEventListener('resize', onResize);
@@ -6605,6 +6641,7 @@ function paintStreak(){
 /* 이름은 학생이 직접 쓴다 — 원생 명단을 앱(공개 저장소)에 싣지 않는다 */
 let WHO = null;
 try{ WHO = JSON.parse(localStorage.getItem('deolrim.links.who') || 'null'); }catch(e){}
+if(!(WHO && WHO.g && WHO.name)) WHO = null;   /* 빈 값·깨진 저장도 이름 없음으로 — 새로고침 때 무조건 게이트 */
 const lvOfG = g => g === '초등' ? '초등' : g === '고등' ? '고등' : '중등';
 if(WHO) openLv = lvOfG(WHO.g);   // 이름을 정한 학생은 어디서부터가 자기 학년으로 열린다
 let DID = '';
@@ -6615,9 +6652,10 @@ try{
 const isoDay = ()=>{ const d = new Date(); const p = n=>String(n).padStart(2, '0');
   return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()); };
 
-let whoCb = null;
-function whoAsk(cb){
+let whoCb = null, whoMust = false;
+function whoAsk(cb, must){
   whoCb = cb || null;
+  whoMust = !!must;
   const el = document.getElementById('whoSheet');
   const GS = ['초등','중1','중2','중3','고등'];
   el.innerHTML = `<div class="whoCard">
@@ -6629,7 +6667,7 @@ function whoAsk(cb){
     <input class="whoInp" id="whoName" type="text" maxlength="10" placeholder="홍길동" autocomplete="off" value="${WHO ? esc(WHO.name) : ''}">
     <div class="whoW" id="whoWarn"></div>
     <button class="whoSave" id="whoSave">저장</button>
-    <button class="whoSkip" id="whoSkip">나중에 할게요</button>
+    ${whoMust ? '' : '<button class="whoSkip" id="whoSkip">닫기</button>'}
   </div>`;
   el.hidden = false;
   const inp = el.querySelector('#whoName');
@@ -6660,7 +6698,7 @@ document.getElementById('whoSheet').addEventListener('click', (e)=>{
     if(cb) cb(true);
     return;
   }
-  if(e.target.closest('#whoSkip') || e.target === el){
+  if(e.target.closest('#whoSkip') || (e.target === el && !whoMust)){
     el.hidden = true;
     const cb = whoCb; whoCb = null;
     if(cb) cb(false);
@@ -6845,7 +6883,7 @@ function paintTdFin(){
   const doSend = ()=> sendLog(tmCtx.streak ? 'today' : 'unit',
     tmCtx.streak ? '오늘 5장' : tmCtx.label, tdPicks);
   if(WHO) doSend();
-  else whoAsk((picked)=>{ if(picked) doSend(); });
+  else whoAsk((picked)=>{ if(picked) doSend(); }, true);
 }
 function tmConfetti(){
   const cvf = document.getElementById('tmConfetti');
@@ -7128,6 +7166,7 @@ try{
   if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
   paintStreak();
   flushPending();
+  if(!WHO) whoAsk(null, true);   /* 이름은 필수 — 저장해야 앱을 쓸 수 있다 */
 }catch(e){}
 
 document.addEventListener('click', (e)=>{
