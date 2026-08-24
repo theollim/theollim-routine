@@ -498,7 +498,13 @@ nav button.on .ic{transform:scale(1.16)}
 .whoRow button{min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--line);
   background:var(--plane);font-size:14px;font-weight:700;color:var(--ink)}
 .whoRow button.on{background:var(--grBrand);color:#fff;border-color:transparent}
-.whoSkip{margin-top:15px;width:100%;min-height:42px;border-radius:11px;border:1px dashed var(--line);
+.whoInp{width:100%;min-height:47px;border-radius:12px;border:1.5px solid var(--line);background:var(--plane);
+  padding:0 14px;font-size:16px;font-weight:700;color:var(--ink);outline:none;box-sizing:border-box}
+.whoInp:focus{border-color:var(--opInk)}
+.whoW{min-height:17px;font-size:11.5px;font-weight:700;color:var(--crit);margin-top:5px}
+.whoSave{width:100%;min-height:47px;border-radius:12px;border:none;background:var(--grBrand);color:#fff;
+  font-size:14.5px;font-weight:800}
+.whoSkip{margin-top:9px;width:100%;min-height:42px;border-radius:11px;border:1px dashed var(--line);
   color:var(--muted);font-size:12.5px;background:transparent}
 .tmSent{font-size:12.5px;font-weight:700;color:var(--accent);min-height:18px}
 
@@ -6596,13 +6602,7 @@ function paintStreak(){
 /* ═══ 학습 기록 자동 전송 ═══
    학생이 이름을 한 번 고르면(폰에 저장), 오늘 5장·단원 몰아보기를 끝낼 때마다
    /api/study-log 로 기록을 보낸다. 실패하면 큐에 쌓았다가 다음에 다시 보낸다. */
-const ROSTER = {
-  '초등': ['강태율','김시온','김주희','박재성','박주원','윤희담','윤희재','이소정','조주하'],
-  '중1': ['고은별','김가온','김예은','백서율','이현서','장하리','전예령','진수혁'],
-  '중2': ['김가은','김영우','박서현','정가빈','조수혁','최수율'],
-  '중3': ['김하은','백서린','현지민'],
-  '고등': ['김하늘','문다민','안혜연','정아인'],
-};
+/* 이름은 학생이 직접 쓴다 — 원생 명단을 앱(공개 저장소)에 싣지 않는다 */
 let WHO = null;
 try{ WHO = JSON.parse(localStorage.getItem('deolrim.links.who') || 'null'); }catch(e){}
 const lvOfG = g => g === '초등' ? '초등' : g === '고등' ? '고등' : '중등';
@@ -6619,21 +6619,40 @@ let whoCb = null;
 function whoAsk(cb){
   whoCb = cb || null;
   const el = document.getElementById('whoSheet');
+  const GS = ['초등','중1','중2','중3','고등'];
   el.innerHTML = `<div class="whoCard">
-    <div class="whoT">내 이름 정하기</div>
-    <div class="whoS">한 번만 고르면 이 폰에 저장돼요. 오늘 5장이나 단원 몰아보기를 끝낼 때마다 원장님께 기록이 자동으로 전송됩니다.</div>
-    ${Object.keys(ROSTER).map(g=>`<div class="whoG">${esc(g)}</div><div class="whoRow">${ROSTER[g].map(n=>
-      `<button data-who="${esc(g)}__${esc(n)}" class="${WHO && WHO.name===n && WHO.g===g ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>`).join('')}
+    <div class="whoT">내 이름 쓰기</div>
+    <div class="whoS">한 번만 쓰면 이 폰에 저장돼요. 오늘 5장이나 단원 몰아보기를 끝낼 때마다 원장님께 기록이 자동으로 전송됩니다.</div>
+    <div class="whoG">학년</div>
+    <div class="whoRow">${GS.map(g=>`<button data-wg="${esc(g)}" class="${WHO && WHO.g===g ? 'on' : ''}">${esc(g)}</button>`).join('')}</div>
+    <div class="whoG">이름</div>
+    <input class="whoInp" id="whoName" type="text" maxlength="10" placeholder="홍길동" autocomplete="off" value="${WHO ? esc(WHO.name) : ''}">
+    <div class="whoW" id="whoWarn"></div>
+    <button class="whoSave" id="whoSave">저장</button>
     <button class="whoSkip" id="whoSkip">나중에 할게요</button>
   </div>`;
   el.hidden = false;
+  const inp = el.querySelector('#whoName');
+  inp.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){ e.preventDefault(); el.querySelector('#whoSave').click(); }
+  });
+  inp.addEventListener('input', ()=>{ const w = el.querySelector('#whoWarn'); if(w) w.textContent = ''; });
 }
 document.getElementById('whoSheet').addEventListener('click', (e)=>{
   const el = document.getElementById('whoSheet');
-  const w = e.target.closest('[data-who]');
-  if(w){
-    const i = w.dataset.who.indexOf('__');
-    WHO = { g: w.dataset.who.slice(0, i), name: w.dataset.who.slice(i + 2) };
+  const wg = e.target.closest('[data-wg]');
+  if(wg){
+    el.querySelectorAll('[data-wg]').forEach(b=> b.classList.toggle('on', b === wg));
+    const warn = el.querySelector('#whoWarn'); if(warn) warn.textContent = '';
+    return;
+  }
+  if(e.target.closest('#whoSave')){
+    const g = el.querySelector('[data-wg].on');
+    const name = (el.querySelector('#whoName').value || '').trim();
+    const warn = el.querySelector('#whoWarn');
+    if(!g){ warn.textContent = '학년을 골라 주세요.'; return; }
+    if(!name){ warn.textContent = '이름을 써 주세요.'; return; }
+    WHO = { g: g.dataset.wg, name: name.slice(0, 10) };
     try{ localStorage.setItem('deolrim.links.who', JSON.stringify(WHO)); }catch(e2){}
     openLv = lvOfG(WHO.g);
     el.hidden = true;
