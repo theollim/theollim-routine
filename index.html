@@ -435,6 +435,12 @@ nav button.on .ic{transform:scale(1.16)}
   background:var(--ink);color:var(--surface);font-size:15px;font-weight:800}
 #tmConfetti{position:absolute;inset:0;pointer-events:none}
 
+.uPlay{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--grBrand);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:10px;box-shadow:0 2px 6px rgba(124,58,237,.3)}
+.tmBar{width:132px;height:7px;border-radius:999px;background:var(--sunk);overflow:hidden;align-self:center}
+.tmBar span{display:block;height:100%;background:var(--grBrand);border-radius:999px;transition:width .3s}
+.tmBackIn{margin:auto 0;width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;padding:2px 0 4px}
+
 /* ── 오늘의 질문 ── */
 .opDaily{position:relative;border-radius:19px;padding:2.5px;background:var(--grBrand);margin:12px 0 16px;
   box-shadow:0 8px 22px rgba(124,58,237,.18)}
@@ -5350,6 +5356,7 @@ try{ showAdv = localStorage.getItem('deolrim.links.adv') !== '0'; }catch(e){}
 const flipped = new Set();     // 가린 카드 인덱스 (전체보기 상태에서 개별로 가린 것)
 const detailOpen = new Set();  // 「자세히」가 펼쳐진 카드 인덱스
 const openUnits = new Set();   // 펼쳐진 단원 키(grade__unit)
+const unitCards = new Map();   // 단원 몰아보기용 — 마지막 렌더의 단원별 카드
 
 let progress = {};   // {'grade::formula name': 'know'|'unsure'}
 try{ progress = JSON.parse(localStorage.getItem('deolrim.links.progress') || '{}'); }catch(e){ progress = {}; }
@@ -5633,15 +5640,24 @@ function paintStreak(){
 /* ═══ 몰입 모드 — 오늘 5장을 한 장씩, 전체 화면으로 ═══ */
 let tdQ = [], tdPicks = [], tdFlip = false, tdBusy = false;
 const TMGR = { es:'--grEs', m1:'--grM1', m2:'--grM2', m3:'--grM3', hs:'--grHs' };
+let tmCtx = { streak: true, label: '오늘 5장' };
+function openTm(picks, queue, ctx){
+  tdPicks = picks; tdQ = queue; tmCtx = ctx;
+  tdFlip = false; tdBusy = false;
+  document.getElementById('tdMode').hidden = false;
+  document.body.style.overflow = 'hidden';
+  paintTd();
+}
 function openTdMode(){
   const picks = pickToday();
   if(!picks.length) return;
   let q = picks.filter(c=>!progress[cardKey(c)]);
   if(!q.length) q = picks.slice();               /* 다 했으면 다시 보기 */
-  tdPicks = picks; tdQ = q; tdFlip = false; tdBusy = false;
-  document.getElementById('tdMode').hidden = false;
-  document.body.style.overflow = 'hidden';
-  paintTd();
+  openTm(picks, q, { streak: true, label: '오늘 5장' });
+}
+function openUnitTm(key, cards){
+  if(!cards || !cards.length) return;
+  openTm(cards, cards.slice(), { streak: false, label: key.split('__')[1] });
 }
 function closeTdMode(){
   const el = document.getElementById('tdMode');
@@ -5651,7 +5667,12 @@ function closeTdMode(){
   if(TAB === 'card') renderCard();
   paintStreak();
 }
-const tmDotsHtml = ()=> tdPicks.map(c=>`<i class="${progress[cardKey(c)] ? 'on' : ''}"></i>`).join('');
+function tmDotsHtml(){
+  const done2 = tdPicks.filter(c=>progress[cardKey(c)]).length;
+  if(tdPicks.length > 14)
+    return `<div class="tmBar"><span style="width:${Math.round(done2/tdPicks.length*100)}%"></span></div>`;
+  return tdPicks.map(c=>`<i class="${progress[cardKey(c)] ? 'on' : ''}"></i>`).join('');
+}
 function paintTd(){
   if(!tdQ.length){ paintTdFin(); return; }
   const el = document.getElementById('tdMode');
@@ -5662,7 +5683,8 @@ function paintTd(){
   const back = c.def
     ? `<div class="form" style="font-size:17px">${mk(c.def)}</div>${c.props && c.props.length ? `<ul class="propList" style="margin-top:8px">${c.props.map(p=>`<li>${mk(p)}</li>`).join('')}</ul>` : ''}`
     : `<div class="form" id="tmForm">${mkln(c.b)}</div>`;
-  const when = c.when ? `<div class="tmWhen"><b>언제 쓰나</b>${mkln(c.when)}</div>` : '';
+  const drow = (lb, v)=> v ? `<div class="tmWhen"><b>${lb}</b>${mkln(v)}</div>` : '';
+  const det = drow('언제 쓰나', c.when) + drow('조건 · 주의', c.caution) + drow('예시', c.example);
   el.innerHTML = `
     <div class="tmTop">
       <button class="tmClose" id="tmClose">✕</button>
@@ -5675,8 +5697,7 @@ function paintTd(){
           <div class="tmF tmFront"><span class="tmTag">${esc(c.g)} · ${esc(c.u)}</span>
             ${shape}<div class="q">${esc(c.f)}</div>
             <div class="tmHint">눌러서 뒤집기 · 위로 쓸면 다음 장</div></div>
-          <div class="tmF tmBack"><span class="tmTag" style="background:${gr}">${esc(c.g)}</span>
-            ${back}${when}</div>
+          <div class="tmF tmBack"><div class="tmBackIn">${back}${det}</div></div>
         </div>
       </div>
     </div>
@@ -5709,16 +5730,26 @@ function fitTm(){
 }
 function paintTdFin(){
   const el = document.getElementById('tdMode');
-  const s = bumpStreak();
+  const know2 = tdPicks.filter(c=>progress[cardKey(c)]==='know').length;
+  const uns2 = tdPicks.filter(c=>progress[cardKey(c)]==='unsure').length;
+  let mid;
+  if(tmCtx.streak){
+    const s = bumpStreak();
+    mid = `<div class="big">오늘 5장 끝!</div>
+      <div class="fire">🔥 ${s.n}일 연속 학습</div>
+      <div class="sub">내일 새 다섯 장이 기다립니다.<br>헷갈렸던 카드는 먼저 다시 나와요.</div>`;
+  } else {
+    mid = `<div class="big">「${esc(tmCtx.label)}」 한 바퀴 끝!</div>
+      <div class="fire" style="background:linear-gradient(135deg,#16a34a,#4ade80)">✅ 알아요 ${know2} · 🤔 헷갈려요 ${uns2}</div>
+      <div class="sub">헷갈린 카드는 「오늘 5장」이 먼저 다시 데려옵니다.</div>`;
+  }
   el.innerHTML = `
     <div class="tmTop"><button class="tmClose" id="tmClose">✕</button>
       <div class="tmDots">${tmDotsHtml()}</div><div class="tmCount">${tdPicks.length}/${tdPicks.length}</div></div>
     <div class="tmFin">
       <canvas id="tmConfetti"></canvas>
       <div style="font-size:52px">🎉</div>
-      <div class="big">오늘 5장 끝!</div>
-      <div class="fire">🔥 ${s.n}일 연속 학습</div>
-      <div class="sub">내일 새 다섯 장이 기다립니다.<br>헷갈렸던 카드는 먼저 다시 나와요.</div>
+      ${mid}
       <button class="done" id="tmClose2">닫기</button>
     </div>`;
   tmConfetti();
@@ -5843,12 +5874,14 @@ function renderCard(){
     let cards = shuffleOn ? shuffleCopy(gr.cards) : gr.cards;
     if(onlyUnsure) cards = cards.filter(c=>progress[cardKey(c)]==='unsure');
     if(onlyUnsure && !cards.length) return ''; // 헷갈린 카드가 없는 단원은 숨김
+    unitCards.set(gr.key, cards);
     const open = openUnits.has(gr.key);
     return `<div class="unit${open?' open':''}" data-uk="${esc(gr.key)}">
       <button class="unitHead" data-utoggle="${esc(gr.key)}">
         ${showAllGrades ? `<span class="ug">${esc(gr.g)}</span>` : ''}
         <span class="un">${esc(gr.u)}</span>
         <span class="uprog${total && known>=total ? ' full' : ''}">${total ? `<span class="uBar"><span style="width:${Math.round(known/total*100)}%"></span></span>${known}/${total}` : ''}${advN ? `<span class="uadv"> 심화 ${advN}</span>` : ''}</span>
+        <span class="uPlay" data-uplay="${esc(gr.key)}">▶</span>
         <span class="uchev">›</span>
       </button>
       <div class="unitBody">${open ? cards.map(cardHtml).join('') : ''}</div>
@@ -6073,6 +6106,8 @@ document.addEventListener('click', (e)=>{
     try{ localStorage.setItem('deolrim.links.adv', showAdv ? '1' : '0'); }catch(e){}
     renderCard(); return;
   }
+  const uplay = e.target.closest('[data-uplay]');
+  if(uplay){ openUnitTm(uplay.dataset.uplay, unitCards.get(uplay.dataset.uplay)); return; }
   const utoggle = e.target.closest('[data-utoggle]');
   if(utoggle){
     const key = utoggle.dataset.utoggle;
