@@ -161,15 +161,23 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 /* ── 만져보기 도구 (전체화면) ── */
 .toolBtn{width:100%;min-height:44px;margin-top:9px;border-radius:11px;background:var(--opBg);
   border:1px solid var(--opLine);color:var(--opInk);font-size:13px;font-weight:750}
-.seeSec{font-size:11px;font-weight:800;letter-spacing:.04em;margin:18px 2px 9px;display:flex;align-items:center;gap:9px}
-.seeSec::after{content:"";flex:1 1 auto;height:1px;background:var(--line)}
-.seeSec.es{color:var(--gEs)} .seeSec.ms{color:var(--gM2)} .seeSec.hs{color:var(--gHs)}
-.hint + .seeSec{margin-top:10px}
+.seeSec{width:100%;text-align:left;display:flex;align-items:center;gap:10px;margin:0 0 9px;min-height:56px;
+  padding:0 15px;border-radius:16px;border:1px solid var(--line);background:var(--surface);
+  font-size:15px;font-weight:800;letter-spacing:-.01em;color:var(--ink);position:relative;overflow:hidden}
+.seeSec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sGr,var(--grM2))}
+.seeSec.es{--sGr:var(--grEs)} .seeSec.ms{--sGr:var(--grM1)} .seeSec.hs{--sGr:var(--grHs)}
+.seeSec .ssNm{margin-left:4px}
+.seeSec .ssN{font-size:11px;font-weight:800;color:#fff;background:var(--sGr,var(--grM2));border-radius:999px;padding:2.5px 9px}
+.seeSec .ssChev{margin-left:auto;font-size:19px;color:var(--muted);transition:transform .2s}
+.seeSec.open .ssChev{transform:rotate(90deg)}
+.seeSec.open{border-color:transparent;box-shadow:var(--shadow-sm)}
+.seeBody{margin:0 0 14px;animation:opPop .22s cubic-bezier(.2,.8,.3,1)}
+.seeBody .seeCard{margin-left:9px}
 .seeCard{position:relative;overflow:hidden;width:100%;text-align:left;display:flex;align-items:center;gap:13px;margin-bottom:9px;
   background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px 13px 17px;min-height:64px}
 .seeCard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--sGr,var(--grM2))}
-.seeCard.es{--sGr:var(--grEs)} .seeCard.ms{--sGr:var(--grM2)} .seeCard.hs{--sGr:var(--grHs)}
-.seeCard.es .seeTag{color:var(--gEs)} .seeCard.ms .seeTag{color:var(--gM2)} .seeCard.hs .seeTag{color:var(--gHs)}
+.seeCard.es{--sGr:var(--grEs)} .seeCard.ms{--sGr:var(--grM1)} .seeCard.hs{--sGr:var(--grHs)}
+.seeCard.es .seeTag{color:var(--gEs)} .seeCard.ms .seeTag{color:var(--gM1)} .seeCard.hs .seeTag{color:var(--gHs)}
 .seeIco{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:var(--opBg);border:1px solid var(--opLine);
   display:flex;align-items:center;justify-content:center;font-size:22px}
 .seeTxt{flex:1 1 auto;min-width:0}
@@ -220,6 +228,18 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .tsNote b{color:var(--ink)}
 /* 공식 색 구조 — 함수 그리기 도구와 같은 색: 《a》·〈p,b〉·【q,c】 */
 .hlA{color:var(--crit)}.hlB{color:var(--opInk)}.hlC{color:var(--pairInk)}
+/* ── 수학 영역 칩 · 이름 푸터 ── */
+.chipsDom{margin-top:-2px}
+.chipD i{opacity:.75}
+.chipD[disabled]{opacity:.34}
+.chipD.d0[aria-pressed="true"]{background:var(--grEs);border-color:transparent;color:#fff}
+.chipD.d1[aria-pressed="true"]{background:var(--grM1);border-color:transparent;color:#fff}
+.chipD.d2[aria-pressed="true"]{background:var(--grM3);border-color:transparent;color:#fff}
+.chipD.d3[aria-pressed="true"]{background:var(--grHs);border-color:transparent;color:#fff}
+.whoFoot{margin:18px 2px 6px;font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.whoFoot b{color:var(--ink2);font-weight:750}
+.whoFoot button{margin-left:auto;font-size:11.5px;color:var(--muted);text-decoration:underline;
+  background:none;border:none;padding:4px 6px}
 /* ── 함수 그리기 ── */
 .fgExpr{margin:11px 4px 0;font-size:19px;font-weight:800;letter-spacing:.01em;text-align:center;line-height:1.5;word-break:keep-all}
 .fgExpr sup{font-size:11.5px;line-height:0}
@@ -754,6 +774,7 @@ main{max-width:760px;margin:0 auto;padding:24px 16px 8px}
 .unitBody{gap:13px;padding:0 13px 15px}
 .fcIn,.fcFace{min-height:212px}
 .fcFace{border-radius:19px;padding:25px 18px 16px}
+@media (max-width:390px){ .fcFace{padding-left:13px;padding-right:13px} }  /* 좁은 폰: 공식 폭 확보 (넘침 0줄 유지) */
 .fcFront{background:linear-gradient(160deg,var(--sunk),var(--surface));font-size:18px}
 .fcBack{box-shadow:var(--shadow-sm)}
 .gradeTag,.advTag,.pairTag{box-shadow:none}
@@ -3907,7 +3928,107 @@ const SHAPES = (()=>{
 let TAB = 'link';
 let LINKS = null;         // /api/links 결과
 let linkGrade = null;     // '초등' | '중등' | '고등' | null(고르는 중)
+
+/* ═══ 수학 영역 — 2022 개정 교육과정 4영역 ═══
+   학년을 고른 뒤 한 번 더 나눠 본다. 단원마다 영역을 정해 두고,
+   여러 영역이 섞인 단원(활용 문제·심화)만 카드별로 따로 정한다. */
+const DOMS = ['수와 연산', '변화와 관계', '도형과 측정', '자료와 가능성'];
+const DOM_ICON = { '수와 연산':'123', '변화와 관계':'f(x)', '도형과 측정':'△', '자료와 가능성':'%' };
+const DOM_U = {
+  /* 초등 */
+  '초등|수와 연산 기초':'수와 연산', '초등|분수와 비례':'수와 연산',
+  '초등|도형의 둘레와 넓이':'도형과 측정', '초등|원':'도형과 측정',
+  '초등|입체도형의 부피':'도형과 측정', '초등|각도와 비율':'도형과 측정',
+  '초등|사각형의 성질':'도형과 측정',
+  '초등|초2-1 세 자리 수':'수와 연산', '초등|초2-1 여러 가지 도형':'도형과 측정',
+  '초등|초2-1 덧셈과 뺄셈':'수와 연산', '초등|초2-1 길이 재기':'도형과 측정',
+  '초등|초2-1 분류하기':'자료와 가능성', '초등|초2-1 곱셈':'수와 연산',
+  '초등|초2-2 네 자리 수':'수와 연산', '초등|초2-2 곱셈구구':'수와 연산',
+  '초등|초2-2 길이 재기':'도형과 측정', '초등|초2-2 시각과 시간':'도형과 측정',
+  '초등|초2-2 표와 그래프':'자료와 가능성', '초등|초2-2 규칙 찾기':'변화와 관계',
+  '초등|초3-1 덧셈과 뺄셈':'수와 연산', '초등|초3-1 평면도형':'도형과 측정',
+  '초등|초3-1 나눗셈':'수와 연산', '초등|초3-1 곱셈':'수와 연산',
+  '초등|초3-1 길이와 시간':'도형과 측정', '초등|초3-1 분수와 소수':'수와 연산',
+  '초등|초3-2 곱셈':'수와 연산', '초등|초3-2 나눗셈':'수와 연산',
+  '초등|초3-2 원':'도형과 측정', '초등|초3-2 분수':'수와 연산',
+  '초등|초3-2 들이와 무게':'도형과 측정', '초등|초3-2 그림그래프':'자료와 가능성',
+  /* 중1 */
+  '중1|소인수분해와 약수·배수':'수와 연산', '중1|정수와 유리수':'수와 연산',
+  '중1|문자와 식':'변화와 관계', '중1|일차방정식':'변화와 관계',
+  '중1|좌표평면과 그래프':'변화와 관계', '중1|기본도형과 작도':'도형과 측정',
+  '중1|다각형의 성질':'도형과 측정', '중1|원과 부채꼴':'도형과 측정',
+  '중1|입체도형의 부피와 겉넓이':'도형과 측정', '중1|자료의 정리와 해석':'자료와 가능성',
+  '중1|활용 문제':'변화와 관계', '중1|더올림 심화':'수와 연산',
+  /* 중2 */
+  '중2|유리수와 순환소수':'수와 연산', '중2|지수법칙과 다항식의 계산':'변화와 관계',
+  '중2|연립방정식과 부등식':'변화와 관계', '중2|일차함수':'변화와 관계',
+  '중2|삼각형의 성질':'도형과 측정', '중2|사각형의 성질':'도형과 측정',
+  '중2|도형의 닮음':'도형과 측정', '중2|평행선 사이의 선분의 길이의 비':'도형과 측정',
+  '중2|피타고라스 정리':'도형과 측정', '중2|경우의 수와 확률':'자료와 가능성',
+  '중2|활용 문제':'변화와 관계', '중2|더올림 심화':'도형과 측정',
+  /* 중3 */
+  '중3|제곱근과 실수':'수와 연산', '중3|곱셈공식과 인수분해':'변화와 관계',
+  '중3|이차방정식':'변화와 관계', '중3|이차함수':'변화와 관계',
+  '중3|삼각비':'도형과 측정', '중3|원의 성질':'도형과 측정',
+  '중3|통계':'자료와 가능성', '중3|활용 문제':'변화와 관계', '중3|더올림 심화':'변화와 관계',
+  /* 고등 */
+  '공통수학1|다항식':'변화와 관계', '공통수학1|복소수와 이차방정식':'수와 연산',
+  '공통수학1|이차함수와 이차방정식의 관계':'변화와 관계',
+  '공통수학1|여러 가지 방정식과 부등식':'변화와 관계',
+  '공통수학1|경우의 수':'자료와 가능성', '공통수학1|행렬':'변화와 관계',
+  '공통수학1|더올림 심화':'변화와 관계',
+  '공통수학2|평면좌표와 직선의 방정식':'도형과 측정',
+  '공통수학2|원의 방정식과 도형의 이동':'도형과 측정',
+  '공통수학2|집합과 명제':'변화와 관계', '공통수학2|함수와 그래프':'변화와 관계',
+  '대수|지수와 로그':'변화와 관계', '대수|삼각함수':'변화와 관계',
+  '대수|수열':'변화와 관계', '대수|더올림 심화':'변화와 관계',
+  '미적분Ⅰ|함수의 극한과 연속':'변화와 관계', '미적분Ⅰ|미분':'변화와 관계',
+  '미적분Ⅰ|적분':'변화와 관계',
+  '확률과 통계|경우의 수':'자료와 가능성', '확률과 통계|확률':'자료와 가능성',
+  '확률과 통계|통계':'자료와 가능성',
+  '미적분Ⅱ|수열의 극한과 급수':'변화와 관계', '미적분Ⅱ|여러 함수의 미분':'변화와 관계',
+  '미적분Ⅱ|적분법':'변화와 관계', '미적분Ⅱ|더올림 심화':'변화와 관계',
+  '기하|이차곡선':'도형과 측정', '기하|평면벡터':'도형과 측정',
+  '기하|공간도형과 공간좌표':'도형과 측정', '기하|더올림 심화':'도형과 측정',
+};
+/* 단원 안에서 영역이 다른 카드만 따로 */
+const DOM_F = {
+  '초등::비례식의 성질':'변화와 관계', '초등::비례배분':'변화와 관계', '초등::평균':'자료와 가능성',
+  '초등::비율(백분율)':'변화와 관계',
+  '중1::톱니바퀴':'수와 연산', '중1::색칠한 부분의 넓이':'도형과 측정',
+  '중1::넓이가 같아지는 조건':'도형과 측정', '중1::그릇에 물 채우기':'도형과 측정',
+  '중1::오일러의 다면체 정리':'도형과 측정',
+  '중2::닮음 — 그림자와 축도':'도형과 측정', '중2::평행선 비 — 사다리꼴':'도형과 측정',
+  '중2::무게중심 — 넓이 구하기':'도형과 측정',
+  '중2::피타고라스 — 직육면체의 대각선':'도형과 측정',
+  '중2::피타고라스 — 겉면의 최단 거리':'도형과 측정',
+  '중2::피타고라스 — 접은 도형':'도형과 측정', '중2::확률 — 적어도':'자료와 가능성',
+  '중2::피타고라스 수 만들기':'수와 연산',
+  '중3::제곱근 — 정사각형의 한 변':'수와 연산',
+  '중3::삼각비 — 건물의 높이':'도형과 측정', '중3::삼각비 — 경사면':'도형과 측정',
+  '중3::삼각비 — 넓이 구하기':'도형과 측정',
+  '중3::원 — 접선의 길이':'도형과 측정', '중3::원 — 각의 크기 구하기':'도형과 측정',
+  '중3::통계 — 평균으로 미지수 구하기':'자료와 가능성',
+  '중3::통계 — 표준편차 비교':'자료와 가능성',
+  '중3::곱셈 공식·인수분해 — 수의 계산':'수와 연산',
+  '중3::헤론의 공식':'도형과 측정', '중3::정삼각형의 높이와 넓이':'도형과 측정',
+  '중3::방멱정리 — 두 현':'도형과 측정', '중3::방멱정리 — 접선과 할선':'도형과 측정',
+  '중3::방멱정리 — 두 할선':'도형과 측정', '중3::톨레미 정리':'도형과 측정',
+  '중3::세 변과 넓이로 내접원의 반지름':'도형과 측정',
+  '중3::세 변과 넓이로 외접원의 반지름':'도형과 측정',
+  '중3::이중근호':'수와 연산',
+  '공통수학1::이차방정식 — 근과 계수의 관계':'변화와 관계',
+  '공통수학1::이차방정식의 판별식':'변화와 관계',
+  '공통수학1::두 수를 근으로 하는 이차방정식':'변화와 관계',
+  '공통수학1::켤레근의 성질':'변화와 관계',
+  '공통수학1::근과 계수의 관계 + 도형':'변화와 관계',
+};
+function domOf(c){
+  return DOM_F[c.g + '::' + c.f] || DOM_U[c.g + '|' + c.u] || '수와 연산';
+}
+
 let cardGrade = '전체';
+let cardDom = '전체';    // 수학 영역 칩
 let hsSubject = '전체';   // 「고등」을 골랐을 때의 과목 칩
 let cardTerm = '전체';    // 「중1·중2·중3」을 골랐을 때의 학기 칩 ('전체' | 1 | 2)
 let cardType = '전체';      // '전체' | '정의' | '공식'
@@ -4690,6 +4811,8 @@ TOOLS.treeGap = (()=>{
   let mode='both';                  /* both | one | circle */
   let by='tree';                    /* tree: 나무 수로 | len: 길이·간격으로 */
   let hintOn=false, ansOn=false;    /* 답은 마지막에 — 접어 두고 열어 본다 */
+  let gMark={}, gN=0, tMark={}, tN=0, oMark={}, oN=0;   /* 눌러서 센 자국 (탭 순서 번호) */
+  let posG=[], posT=[], posO=[];                        /* 탭 판정용 화면 좌표 */
   let tn=7;                         /* 고른 나무 수 (2~12) */
   let len=100, gap=10;              /* 나무: m */
   let cnt=27;                       /* 테이프 장수 (길이 318cm · 겹침 22cm 고정) */
@@ -4725,21 +4848,25 @@ TOOLS.treeGap = (()=>{
       ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
       const step=(x1-x0)/k;
       const fs=Math.max(15, Math.min(30, step*0.72));
-      /* 간격 번호(빨강) — 아래쪽 */
+      /* 간격 괄호 — 번호는 눌러서 셀 때만 찍힌다 */
+      posG=[]; posT=[];
       ctx.strokeStyle=RED; ctx.lineWidth=2;
       for(let i=0;i<k;i++){
         const a=x0+i*step, b=x0+(i+1)*step, ym=y+22;
         ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(b-4,ym); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(a+4,ym); ctx.lineTo(a+4,ym-6); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(b-4,ym); ctx.lineTo(b-4,ym-6); ctx.stroke();
-        if(k<=12){ ctx.fillStyle=RED; font(11.5,800); ctx.fillText(String(i+1), (a+b)/2, ym+13); }
+        posG[i]={x:(a+b)/2, y:ym};
+        if(gMark[i]){ ctx.fillStyle=RED; font(12.5,800); ctx.fillText(String(gMark[i]), (a+b)/2, ym+14); }
       }
-      /* 나무 — 하나씩 자라난다 */
+      /* 나무 — 하나씩 자라난다. 번호: 나무 수 고르기 모드만 자동, 길이 모드는 눌러서 */
       for(let i=0;i<n;i++){
-        const x = x0 + (mode==='one' ? i : i) * step;
+        const x = x0 + i * step;
+        posT[i]={x, y:y-fs*0.62};
         if(i>=show) continue;
         font(fs); ctx.fillText('🌳', x, y-fs*0.62);
-        if(n<=13){ ctx.fillStyle=GRN; font(11,800); ctx.fillText(String(i+1), x, y-fs*1.28); }
+        if(by==='tree' && n<=13){ ctx.fillStyle=GRN; font(11,800); ctx.fillText(String(i+1), x, y-fs*1.28); }
+        else if(tMark[i]!==undefined && tMark[i]){ ctx.fillStyle=GRN; font(12,800); ctx.fillText(String(tMark[i]), x, y-fs*1.30); }
       }
       /* 한쪽 끝만: 안 심은 끝을 점선 동그라미로 */
       if(mode==='one'){
@@ -4756,17 +4883,21 @@ TOOLS.treeGap = (()=>{
       ctx.fillStyle='#dbedf7'; ctx.beginPath(); ctx.arc(cx,cy,R*0.82,0,6.2832); ctx.fill();
       ctx.fillStyle=MUT; font(11,700); ctx.fillText(by==='len' ? '둘레 '+len+'m 연못' : '연못', cx, cy);
       const fs=Math.max(15, Math.min(26, (6.28*R)/k*0.6));
+      posG=[]; posT=[];
       ctx.strokeStyle=RED; ctx.lineWidth=2;
       for(let i=0;i<k;i++){
         const a0=-Math.PI/2 + (i+0.12)*2*Math.PI/k, a1=-Math.PI/2 + (i+0.88)*2*Math.PI/k;
         ctx.beginPath(); ctx.arc(cx,cy,R+16,a0,a1); ctx.stroke();
-        if(k<=12){ const am=(a0+a1)/2; ctx.fillStyle=RED; font(11.5,800);
-          ctx.fillText(String(i+1), cx+Math.cos(am)*(R+30), cy+Math.sin(am)*(R+30)); }
+        const am=(a0+a1)/2, gx=cx+Math.cos(am)*(R+30), gy=cy+Math.sin(am)*(R+30);
+        posG[i]={x:gx, y:gy};
+        if(gMark[i]){ ctx.fillStyle=RED; font(12.5,800); ctx.fillText(String(gMark[i]), gx, gy); }
       }
       for(let i=0;i<k;i++){
+        const a=-Math.PI/2 + i*2*Math.PI/k, tx=cx+Math.cos(a)*R, ty=cy+Math.sin(a)*R;
+        posT[i]={x:tx, y:ty};
         if(i>=show) continue;
-        const a=-Math.PI/2 + i*2*Math.PI/k;
-        font(fs); ctx.fillText('🌳', cx+Math.cos(a)*R, cy+Math.sin(a)*R);
+        font(fs); ctx.fillText('🌳', tx, ty);
+        if(by==='len' && tMark[i]){ ctx.fillStyle=GRN; font(12,800); ctx.fillText(String(tMark[i]), tx, ty-fs*0.95); }
       }
     }
   }
@@ -4783,21 +4914,20 @@ TOOLS.treeGap = (()=>{
       ctx.strokeStyle=TAPEL; ctx.lineWidth=1.2;
       ctx.beginPath(); ctx.roundRect(x, y-h/2, stepW, h, 4); ctx.fill(); ctx.stroke();
     }
-    /* 겹침 — 빨간 띠 */
+    /* 겹침 — 빨간 띠. 번호는 눌러서 셀 때만 */
+    posO=[];
     for(let i=0;i<ov;i++){
       if(i+1>=show) continue;
       const x=x0 + (i+1)*(stepW-ovW);
       ctx.fillStyle='rgba(212,60,60,.55)';
       ctx.fillRect(x, y-h/2, ovW, h);
+      posO[i]={x:x+ovW/2, y:y};
+      if(oMark[i]){ ctx.textAlign='center'; ctx.fillStyle=RED; font(12,800);
+        ctx.fillText(String(oMark[i]), x+ovW/2, y+h/2+15); }
     }
     ctx.textAlign='center';
     ctx.fillStyle=INK; font(11.5,800);
     ctx.fillText('한 장 '+TL+'cm', Math.max(x0+stepW/2, 58), y-h/2-10);
-    if(ov>0 && show>1){
-      const xo=x0+(stepW-ovW)+ovW/2;
-      ctx.fillStyle=RED; font(11,800);
-      ctx.fillText('겹침 '+TO+'cm', Math.max(xo, 60), y+h/2+15);
-    }
     ctx.fillStyle=MUT; font(11,700);
     ctx.fillText('전체 '+total+'cm', W/2, H-12);
   }
@@ -4815,9 +4945,12 @@ TOOLS.treeGap = (()=>{
       ex.innerHTML = by==='tree'
         ? '나무 수와 간격 수는 <b>어떤 관계</b>일까?'
         : len+'m 길에 '+gap+'m 간격 — 나무는 몇 그루일까?';
-      ms.textContent = by==='tree'
-        ? '나무 수를 밀어 바꿔 가며 간격 수를 세어 보세요 — 몇 그루로 바꿔도 통하는 규칙을 찾는 거예요.'
-        : '먼저 간격이 몇 개인지 구하고, 나무 수와 간격 수의 관계를 떠올려 보세요.';
+      const done = gN>=k && (by==='tree' || tN>=n);
+      ms.textContent = done
+        ? (by==='tree' ? '간격 '+k+'개 — 다 세었어요! 나무 '+n+'그루와 비교해 보고, 나무 수를 바꿔 또 세어 보세요.'
+                       : '나무 '+n+'그루 · 간격 '+k+'개 — 다 세었어요! 관계가 보이면 답을 확인하세요.')
+        : (by==='tree' ? '빨간 간격을 하나씩 눌러 세어 보세요 — 지금 '+gN+'개'
+                       : '나무와 간격을 눌러 세어 보세요 — 나무 '+tN+' · 간격 '+gN);
       hint.innerHTML = mode==='both' ? '맨 앞에 나무 한 그루가 먼저 서고, 그다음부터는 <b>간격마다 한 그루씩</b>이에요. 그럼 나무와 간격, 어느 쪽이 하나 많을까요?'
         : mode==='one' ? '비워 둔 끝을 보세요 — 마지막 간격에도 나무는 <b>앞쪽 한 그루뿐</b>이에요.'
         : '연못을 한 바퀴 돌면 <b>시작 나무를 다시 만나요</b>. 끝 나무가 따로 없죠.';
@@ -4833,7 +4966,9 @@ TOOLS.treeGap = (()=>{
     } else {
       const ov=cnt-1, total=TL*cnt-TO*ov;
       ex.innerHTML = '테이프 장수와 겹침 수는 <b>어떤 관계</b>일까?';
-      ms.textContent = '장수를 밀어 바꿔 가며 빨간 겹침을 세어 보세요 — 몇 장이든 통하는 규칙을 찾는 거예요.';
+      ms.textContent = oN>=ov
+        ? '겹침 '+ov+'곳 — 다 세었어요! 장수 '+cnt+'장과 비교해 보고, 장수를 바꿔 또 세어 보세요.'
+        : '빨간 겹침을 하나씩 눌러 세어 보세요 — 지금 '+oN+'곳';
       hint.innerHTML = '<b>첫 장은 겹칠 상대가 없어요.</b> 두 번째 장부터 한 장 붙을 때마다 겹침이 하나씩 생겨요.';
       ans.innerHTML = '<b>겹침 수 = 장수 − 1</b> — 지금은 '+cnt+'장 ↔ 겹침 '+ov+'곳.<br>' +
         '첫 장은 겹칠 상대가 없으니, 둘째 장부터 한 장마다 겹침이 하나씩.<br>' +
@@ -4858,7 +4993,7 @@ TOOLS.treeGap = (()=>{
     root.querySelector('#tgTapeCtl').style.display = scene==='tape' ? '' : 'none';
     const sl=root.querySelector('#tgCnt'); if(sl){ sl.value=cnt; root.querySelector('#tgCntV').textContent=cnt+'장'; }
   }
-  function replant(){ seen=0; tPrev=0; }
+  function replant(){ seen=0; tPrev=0; gMark={}; gN=0; tMark={}; tN=0; oMark={}; oN=0; }
 
   return {
     title:'나무 심기 · 테이프 잇기', sub:'왜 하나 차이가 날까',
@@ -4867,7 +5002,8 @@ TOOLS.treeGap = (()=>{
     preset(k){ if(k==='tape') scene='tape'; if(k==='len'){ scene='tree'; by='len'; } },
     html(){
       return `<div class="tsCard">
-        <div class="tsStage" id="tgStage" style="aspect-ratio:16/10;min-height:210px"><canvas id="tgCv"></canvas></div>
+        <div class="tsStage" id="tgStage" style="aspect-ratio:16/10;min-height:210px"><canvas id="tgCv"></canvas>
+          <div class="tsTip">눌러서 하나씩 세어 보세요</div></div>
         <div class="fgExpr" id="tgExpr" style="font-size:17px"></div>
         <div class="tsSub fgFacts" id="tgMsg"></div>
         <button class="tsFold" id="tgHintB"></button>
@@ -4918,7 +5054,28 @@ TOOLS.treeGap = (()=>{
         cnt=+e.target.value; replant(); paint();
       });
       root.querySelector('#tgTn').addEventListener('input', e=>{
-        tn=+e.target.value; paint();      /* 줄어들면 즉시, 늘면 한 그루씩 자란다 */
+        tn=+e.target.value;
+        gMark={}; gN=0; tMark={}; tN=0;   /* 새 판이니 처음부터 다시 센다 */
+        paint(); draw();
+      });
+      stage.addEventListener('pointerdown', ev=>{
+        const b=stage.getBoundingClientRect();
+        const x=ev.clientX-b.left, yy=ev.clientY-b.top;
+        const near=(arr, mark)=>{
+          let bi=-1, bd=30;
+          arr.forEach((p,i)=>{ if(!p || mark[i]) return;
+            const d=Math.hypot(x-p.x, yy-p.y); if(d<bd){ bd=d; bi=i; } });
+          return bi;
+        };
+        if(scene==='tree'){
+          let i=near(posG, gMark);
+          if(i>-1){ gMark[i]=++gN; draw(); paint(); return; }
+          if(by==='len'){ i=near(posT, tMark);
+            if(i>-1){ tMark[i]=++tN; draw(); paint(); return; } }
+        } else {
+          const i=near(posO, oMark);
+          if(i>-1){ oMark[i]=++oN; draw(); paint(); return; }
+        }
       });
       const onResize=()=> resize();
       window.addEventListener('resize', onResize);
@@ -6592,7 +6749,12 @@ const SEE_SECTIONS = [
     { k:'funcGraph', fn:'sin', tag:'대수 · 삼각함수와 지수·로그',
       blurb:'사인·코사인·탄젠트부터 지수·로그까지 — 계수를 밀면 주기와 점근선이 따라 움직입니다. 단위원이 파도를 그려 내는 것도 여기서.' } ] },
 ];
+let seeOpen = null;   /* 펼친 구획 — 처음엔 내 학년만 */
 function renderSee(){
+  if(seeOpen === null){
+    const my = WHO ? lvOfG(WHO.g) : null;
+    seeOpen = new Set([ my === '초등' ? 'es' : my === '고등' ? 'hs' : my === '중등' ? 'ms' : 'es' ]);
+  }
   const card = (s, t)=>{
     const T = TOOLS[t.k]; if(!T) return '';
     return `<button class="seeCard ${s.c}" data-tool="${esc(t.k)}"${t.fn ? ` data-toolfn="${esc(t.fn)}"` : ''}>
@@ -6605,7 +6767,11 @@ function renderSee(){
   };
   const list = SEE_SECTIONS.map(s=>{
     const cards = s.tools.map(t=> card(s, t)).join('');
-    return cards ? `<div class="seeSec ${s.c}">${esc(s.name)}</div>${cards}` : '';
+    if(!cards) return '';
+    const on = seeOpen.has(s.c);
+    return `<button class="seeSec ${s.c}${on?' open':''}" data-sec="${s.c}" aria-expanded="${on}">
+        <span class="ssNm">${esc(s.name)}</span><span class="ssN">${s.tools.length}</span><span class="ssChev">›</span>
+      </button>${on ? `<div class="seeBody">${cards}</div>` : ''}`;
   }).join('');
   $('#main').innerHTML = `<div class="hint">머릿속으로 안 그려지는 것은 <b>움직여 보면</b> 그려집니다.<br>손으로 끌어보고, 굴려보고, 잘라보세요.</div>${list}`;
 }
@@ -6926,6 +7092,7 @@ function paintStreak(){
 /* 이름은 학생이 직접 쓴다 — 원생 명단을 앱(공개 저장소)에 싣지 않는다 */
 let WHO = null;
 try{ WHO = JSON.parse(localStorage.getItem('deolrim.links.who') || 'null'); }catch(e){}
+if(!(WHO && WHO.g && WHO.name)) WHO = null;   /* 빈 값·깨진 저장도 이름 없음으로 — 새로고침 때 무조건 게이트 */
 const lvOfG = g => g === '초등' ? '초등' : g === '고등' ? '고등' : '중등';
 if(WHO) openLv = lvOfG(WHO.g);   // 이름을 정한 학생은 어디서부터가 자기 학년으로 열린다
 let DID = '';
@@ -6936,9 +7103,10 @@ try{
 const isoDay = ()=>{ const d = new Date(); const p = n=>String(n).padStart(2, '0');
   return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()); };
 
-let whoCb = null;
-function whoAsk(cb){
+let whoCb = null, whoMust = false;
+function whoAsk(cb, must){
   whoCb = cb || null;
+  whoMust = !!must;
   const el = document.getElementById('whoSheet');
   const GS = ['초등','중1','중2','중3','고등'];
   el.innerHTML = `<div class="whoCard">
@@ -6950,7 +7118,7 @@ function whoAsk(cb){
     <input class="whoInp" id="whoName" type="text" maxlength="10" placeholder="홍길동" autocomplete="off" value="${WHO ? esc(WHO.name) : ''}">
     <div class="whoW" id="whoWarn"></div>
     <button class="whoSave" id="whoSave">저장</button>
-    <button class="whoSkip" id="whoSkip">나중에 할게요</button>
+    ${whoMust ? '' : '<button class="whoSkip" id="whoSkip">닫기</button>'}
   </div>`;
   el.hidden = false;
   const inp = el.querySelector('#whoName');
@@ -6981,7 +7149,7 @@ document.getElementById('whoSheet').addEventListener('click', (e)=>{
     if(cb) cb(true);
     return;
   }
-  if(e.target.closest('#whoSkip') || e.target === el){
+  if(e.target.closest('#whoSkip') || (e.target === el && !whoMust)){
     el.hidden = true;
     const cb = whoCb; whoCb = null;
     if(cb) cb(false);
@@ -7166,7 +7334,7 @@ function paintTdFin(){
   const doSend = ()=> sendLog(tmCtx.streak ? 'today' : 'unit',
     tmCtx.streak ? '오늘 5장' : tmCtx.label, tdPicks);
   if(WHO) doSend();
-  else whoAsk((picked)=>{ if(picked) doSend(); });
+  else whoAsk((picked)=>{ if(picked) doSend(); }, true);
 }
 function tmConfetti(){
   const cvf = document.getElementById('tmConfetti');
@@ -7246,29 +7414,37 @@ function renderCard(){
   const byType = (c)=> matchType(c, cardType);
   const byAdv  = (c)=> showAdv || !c.adv;
   const inTerm = (c)=> cardTerm === '전체' || termOf(c) === cardTerm;
+  const byDom  = (c)=> cardDom === '전체' || domOf(c) === cardDom;
+  const inSub  = (c)=> cardGrade !== '고등' || hsSubject === '전체' || c.g === hsSubject;
   const chips = grades.map(g=>
     `<button class="chip chipG" data-cg="${esc(g)}" aria-pressed="${g===cardGrade}">${esc(g)}</button>`).join('');
   let subChips = '';
   if(cardGrade === '고등'){
     subChips = `<div class="chips chipsSub">` + ['전체'].concat(HS_SUBJECTS).map(k=>{
-        const n = CARDS.filter(c=>TIER[c.g]==='hs' && (k==='전체'||c.g===k) && byType(c) && byAdv(c)).length;
+        const n = CARDS.filter(c=>TIER[c.g]==='hs' && (k==='전체'||c.g===k) && byType(c) && byAdv(c) && byDom(c)).length;
         return `<button class="chip" data-hs="${esc(k)}" aria-pressed="${k===hsSubject}">${esc(k)}<i>${n}</i></button>`;
       }).join('') + `</div>`;
   } else if(isMid(cardGrade)){
     subChips = `<div class="chips chipsSub">` + [['전체','전체'],[1,'1학기'],[2,'2학기']].map(([v,lab])=>{
-        const n = CARDS.filter(c=>c.g===cardGrade && (v==='전체'||termOf(c)===v) && byType(c) && byAdv(c)).length;
+        const n = CARDS.filter(c=>c.g===cardGrade && (v==='전체'||termOf(c)===v) && byType(c) && byAdv(c) && byDom(c)).length;
         return `<button class="chip" data-tm="${esc(String(v))}" aria-pressed="${v===cardTerm}">${esc(lab)}<i>${n}</i></button>`;
       }).join('') + `</div>`;
   }
+  /* 수학 영역 칩 — 학년(과 학기·과목) 안에서 한 번 더 나눈다 */
+  const dCount = (d)=> CARDS.filter(c=>inGrade(c,cardGrade) && inTerm(c) && inSub(c)
+      && (d==='전체' || domOf(c)===d) && byType(c) && byAdv(c)).length;
+  const domChips = '<div class="chips chipsDom">' + ['전체'].concat(DOMS).map(d=>{
+      const n = dCount(d);
+      return `<button class="chip chipD${d==='전체'?'':' d'+DOMS.indexOf(d)}" data-cd="${esc(d)}"
+        aria-pressed="${d===cardDom}"${n?'':' disabled'}>${d==='전체'?'전체 영역':esc(d)}<i>${n}</i></button>`;
+    }).join('') + '</div>';
   const types = ['전체','정의','공식','엮기'];
-  const tCount = (t)=> CARDS.filter(c=>inGrade(c,cardGrade) && inTerm(c)
-      && (cardGrade!=='고등' || hsSubject==='전체' || c.g===hsSubject)
-      && matchType(c, t) && byAdv(c)).length;
+  const tCount = (t)=> CARDS.filter(c=>inGrade(c,cardGrade) && inTerm(c) && inSub(c)
+      && byDom(c) && matchType(c, t) && byAdv(c)).length;
   const typeChips = types.map(t=>
     `<button class="chip${t==='엮기'?' chipPair':''}" data-ct="${esc(t)}" aria-pressed="${t===cardType}">${esc(t)}<i>${tCount(t)}</i></button>`).join('');
-  const list = CARDS.filter((c)=> inGrade(c, cardGrade) && inTerm(c)
-    && (cardGrade!=='고등' || hsSubject==='전체' || c.g===hsSubject)
-    && byType(c) && byAdv(c));
+  const list = CARDS.filter((c)=> inGrade(c, cardGrade) && inTerm(c) && inSub(c)
+    && byDom(c) && byType(c) && byAdv(c));
 
   // 학년 → 단원 그룹 (CARDS 원본 순서를 그대로 따라가므로 같은 단원은 항상 붙어있다)
   const groups = [];
@@ -7308,6 +7484,7 @@ function renderCard(){
     ${todayHtml()}
     <div class="chips">${chips}</div>
     ${subChips}
+    ${domChips}
     <div class="chips chipsSub">${typeChips}</div>
     <div class="toolsBar">
       <button class="toolsBtn" id="toolsToggle" aria-expanded="${toolsOpen}">보기 설정 ${toolsOpen?'▴':'▾'}</button>
@@ -7319,9 +7496,9 @@ function renderCard(){
       <button id="cardOnlyUnsure" aria-pressed="${onlyUnsure}">헷갈린 것만</button>
       <button id="cardAdv" aria-pressed="${showAdv}">심화 ${showAdv?'켜짐':'꺼짐'}</button>
       <button id="cardPic" aria-pressed="${shapeFirst}">그림 먼저</button>
-      <button id="whoBtn">내 이름${WHO ? ' · ' + esc(WHO.name) : ' 정하기'}</button>
     </div>` : ''}
-    <div class="unitList">${unitsHtml || '<div class="hint">해당하는 카드가 없어요.</div>'}</div>`;
+    <div class="unitList">${unitsHtml || '<div class="hint">해당하는 카드가 없어요.</div>'}</div>
+    <div class="whoFoot">이 폰의 이름 · <b>${WHO ? esc(WHO.name) : '—'}</b> <button id="whoBtn">바꾸기</button></div>`;
   fitForms();
   paintHalos();
   scrollChips();
@@ -7449,6 +7626,7 @@ try{
   if(savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
   paintStreak();
   flushPending();
+  if(!WHO) whoAsk(null, true);   /* 이름은 필수 — 저장해야 앱을 쓸 수 있다 */
 }catch(e){}
 
 document.addEventListener('click', (e)=>{
@@ -7457,6 +7635,13 @@ document.addEventListener('click', (e)=>{
     TAB = 'link'; linkGrade = null; render();
     window.scrollTo({ top:0, behavior:'smooth' });
     return;
+  }
+  const secBtn = e.target.closest('[data-sec]');
+  if(secBtn){
+    const k = secBtn.dataset.sec;
+    const y = window.pageYOffset;
+    if(seeOpen.has(k)) seeOpen.delete(k); else seeOpen.add(k);
+    renderSee(); window.scrollTo(0, y); return;
   }
   const gradeCard = e.target.closest('[data-lg]');
   if(gradeCard){ linkGrade = gradeCard.dataset.lg; renderLink(); return; }
@@ -7467,6 +7652,7 @@ document.addEventListener('click', (e)=>{
     cardGrade = chip.dataset.cg;
     if(cardGrade!=='고등') hsSubject = '전체';
     if(!isMid(cardGrade)) cardTerm = '전체';
+    cardDom = '전체';            /* 새 학년에서는 영역도 처음부터 */
     renderCard(); return;
   }
   const tmChip = e.target.closest('[data-tm]');
@@ -7477,6 +7663,8 @@ document.addEventListener('click', (e)=>{
   }
   const hsChip = e.target.closest('[data-hs]');
   if(hsChip){ hsSubject = hsChip.dataset.hs; renderCard(); return; }
+  const domChip = e.target.closest('[data-cd]');
+  if(domChip){ cardDom = domChip.dataset.cd; renderCard(); window.scrollTo(0,0); return; }
   const typeChip = e.target.closest('[data-ct]');
   if(typeChip){ cardType = typeChip.dataset.ct; renderCard(); return; }
   const todayBtn = e.target.closest('#todayToggle');
