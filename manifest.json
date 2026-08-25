@@ -1,0 +1,16 @@
+{
+  "name": "더올림수학 루틴",
+  "short_name": "더올림",
+  "description": "체크인·등원·하원 · 공지 · 공식 암기 · 눈으로 보기",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#17324d",
+  "icons": [
+    { "src": "app-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "app-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
