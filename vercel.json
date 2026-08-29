@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/links.js": {
+      "maxDuration": 10
+    }
+  }
+}
