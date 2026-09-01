@@ -2,6 +2,9 @@
   "functions": {
     "api/links.js": {
       "maxDuration": 10
+    },
+    "api/checkin-status.js": {
+      "maxDuration": 15
     }
   }
 }

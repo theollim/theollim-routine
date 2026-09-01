@@ -376,54 +376,74 @@ nav button{flex:1;min-width:0;padding:9px 2px 8px;display:flex;flex-direction:co
 nav button.on{color:var(--accent);font-weight:650}
 nav button .ic{font-size:19px}
 
-
-/* ── 재원생 로그인 · 상태 확인 ── */
-.hdrActions{display:flex;align-items:center;gap:7px}
-#routineUserBtn{max-width:92px;height:32px;padding:0 10px;border-radius:999px;background:var(--sunk);font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#routineAuthGate{position:fixed;inset:0;z-index:1000;background:var(--plane);display:flex;align-items:flex-start;justify-content:center;padding:calc(72px + env(safe-area-inset-top)) 16px 28px;overflow:auto}
-#routineAuthGate[hidden]{display:none}
-.authBox{width:min(100%,430px);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px 18px;box-shadow:0 12px 34px rgba(0,0,0,.10)}
-.authBrand{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}
-.authTitle{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
-.authDesc{font-size:13px;color:var(--ink2);margin-bottom:16px}
-.authField{width:100%;height:48px;border:1px solid var(--line);background:var(--plane);color:var(--ink);border-radius:12px;padding:0 13px;font:inherit;outline:none;margin-top:8px}
-.authField:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentBg)}
-.authBtn{width:100%;height:48px;border-radius:12px;background:var(--accent);color:#fff;font-weight:800;margin-top:12px}
-.authBtn:disabled{opacity:.55;cursor:default}
-.authMsg{min-height:22px;margin-top:8px;font-size:12.5px;color:var(--crit)}
-.authState{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;background:var(--sunk);font-size:13px;color:var(--ink2);margin-top:12px}
-.authDot{width:9px;height:9px;border-radius:50%;background:var(--warn);flex:0 0 auto}
-.authDot.ok{background:var(--good)}
-.authDot.bad{background:var(--crit)}
-.authSubBtn{width:100%;height:44px;border-radius:12px;background:var(--sunk);font-weight:700;margin-top:8px}
-.authFoot{font-size:11.5px;color:var(--muted);margin-top:13px;line-height:1.5}
-body.authLocked{overflow:hidden}
-
+/* ── 등원 전 체크인 확인 · 모바일 하단 시트 ── */
+#arrivalGate{position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(15,14,12,.46);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+#arrivalGate[hidden]{display:none}
+.agSheet{--state:var(--accent);--stateBg:var(--accentBg);position:relative;width:100%;max-width:480px;
+  overflow:hidden;background:var(--surface);border-radius:26px 26px 0 0;
+  box-shadow:0 -12px 44px rgba(0,0,0,.18);animation:agUp .22s cubic-bezier(.22,.8,.28,1)}
+.agSheet::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:transparent}
+.agSheet.good{--state:#2f7d4f;--stateBg:rgba(47,125,79,.10)}
+.agSheet.warn{--state:#c66b12;--stateBg:rgba(198,107,18,.11)}
+.agSheet.bad{--state:#c7473d;--stateBg:rgba(199,71,61,.10)}
+.agSheet.good::before,.agSheet.warn::before,.agSheet.bad::before{background:var(--state)}
+.agHandle{width:38px;height:4px;margin:10px auto 2px;border-radius:99px;background:var(--line)}
+.agInner{padding:17px 22px calc(20px + env(safe-area-inset-bottom))}
+.agKicker{display:flex;align-items:center;gap:7px;margin-bottom:10px;color:var(--muted);
+  font-size:11px;font-weight:800;letter-spacing:.06em}
+.agKickerDot{width:6px;height:6px;border-radius:50%;background:var(--state)}
+.agTitle{margin:0;font-size:22px;line-height:1.32;font-weight:820;letter-spacing:-.025em;word-break:keep-all}
+.agDesc{margin:8px 0 0;color:var(--ink2);font-size:13.5px;line-height:1.65;word-break:keep-all}
+.agField{margin-top:20px}
+.agLabel{display:block;margin-bottom:7px;color:var(--ink2);font-size:12px;font-weight:750}
+.agInput{width:100%;height:52px;padding:0 14px;border:1px solid var(--line);border-radius:13px;
+  outline:none;background:var(--plane);color:var(--ink);font:inherit;font-size:16px;transition:border-color .15s,box-shadow .15s}
+.agInput:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentBg)}
+.agError{min-height:19px;margin-top:6px;color:var(--crit);font-size:11.5px}
+.agStatusRow{display:flex;align-items:flex-start;gap:14px}
+.agStatusIcon{flex:0 0 auto;width:43px;height:43px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;background:var(--stateBg);color:var(--state)}
+.agStatusIcon svg{width:21px;height:21px;stroke:currentColor;stroke-width:2;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.agStatusCopy{min-width:0;flex:1}
+.agCallout{margin-top:17px;padding:12px 14px;border-radius:12px;background:var(--stateBg);
+  color:var(--ink2);font-size:12.5px;line-height:1.62;word-break:keep-all}
+.agCallout b{color:var(--state);font-weight:800}
+.agActions{display:grid;gap:7px;margin-top:18px}
+.agPrimary{width:100%;min-height:52px;padding:0 16px;border-radius:13px;background:var(--ink);
+  color:var(--surface);font-size:14px;font-weight:800;letter-spacing:-.01em}
+.agPrimary:disabled{opacity:.58;cursor:default}
+.agSecondary{width:100%;min-height:40px;color:var(--muted);font-size:12.5px;font-weight:650}
+.agPrivacy{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:10px;
+  color:var(--muted);font-size:10.5px}
+.agPrivacy svg{width:12px;height:12px;stroke:currentColor;stroke-width:1.7;fill:none}
+.agMiniSpin{display:inline-block;width:15px;height:15px;margin-right:7px;vertical-align:-3px;
+  border:2px solid rgba(255,255,255,.35);border-top-color:currentColor;border-radius:50%;animation:agSpin .7s linear infinite}
+.agMoving{display:flex;align-items:center;gap:7px;margin-top:16px;color:var(--muted);font-size:11.5px}
+.agMovingDot{width:6px;height:6px;border-radius:50%;background:var(--state);animation:agPulse .8s ease-in-out infinite alternate}
+body.agLocked{overflow:hidden}
+@keyframes agUp{from{transform:translateY(28px);opacity:.2}to{transform:none;opacity:1}}
+@keyframes agSpin{to{transform:rotate(360deg)}}
+@keyframes agPulse{to{opacity:.25}}
+@media(min-width:600px){
+  #arrivalGate{align-items:center;padding:24px}
+  .agSheet{max-width:420px;border-radius:24px;box-shadow:0 20px 70px rgba(0,0,0,.24)}
+  .agInner{padding-bottom:22px}
+}
+@media(prefers-reduced-motion:reduce){.agSheet,.agMiniSpin,.agMovingDot{animation:none}}
 </style>
-<script src="./config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="authLocked">
-
-<div id="routineAuthGate" aria-live="polite">
-  <div class="authBox">
-    <div class="authBrand">더올림수학 루틴</div>
-    <h2 class="authTitle" id="authGateTitle">재원 상태 확인 중</h2>
-    <div class="authDesc" id="authGateDesc">학생 계정과 재원 상태를 확인하고 있습니다.</div>
-    <div id="authGateBody">
-      <div class="authState"><span class="authDot"></span><span>잠시만 기다려 주세요.</span></div>
-    </div>
-  </div>
-</div>
-
+<body>
 <header>
   <div class="in">
     <div id="hdrHome" role="button" tabindex="0" aria-label="처음 화면으로"><h1>더올림수학 루틴</h1><div class="sub" id="hdrSub">체크인 · 공지 · 공식 암기</div></div>
-    <div class="hdrActions"><button id="routineUserBtn" type="button" hidden aria-label="학생 계정">학생</button><button id="themeBtn">🌓</button></div>
+    <button id="themeBtn">🌓</button>
   </div>
 </header>
 <main id="main"></main>
 <div id="toolSheet" class="toolSheet" hidden></div>
+<div id="arrivalGate" hidden aria-live="polite"></div>
 <button id="toTop" aria-label="맨 위로">↑</button>
 <nav>
   <div class="in">
@@ -5413,7 +5433,7 @@ function renderLink(){
       const cls = url ? '' : ' off';
       const goTxt = url ? '열기 ›' : '준비중';
       const tag = url ? 'a' : 'div';
-      const hrefAttr = url ? `href="${esc(url)}" target="_blank" rel="noopener"` : '';
+      const hrefAttr = url ? `href="${esc(url)}" target="_blank" rel="noopener" data-link-key="${esc(key)}"` : '';
       return `<${tag} class="linkCard${cls}" ${hrefAttr}>
         <div class="emo">${meta.emoji}</div>
         <div class="lab">${esc(meta.label)}</div>
@@ -5439,6 +5459,155 @@ function renderLink(){
     <div class="hint">눌러서 바로 열립니다. 매일 아침 자동으로 최신 주소를 확인해요.</div>${h}${appsHtml}${kakaoHtml}
     <div class="hint kakaoNote">모르는 문제가 있으면 사진을 찍어 보내세요.</div>
     ${askHtml()}`;
+}
+
+/* ═══════════ 등원 전 체크인 제출일 확인 ═══════════ */
+let arrivalContinueTimer = null;
+function arrivalGateEl(){ return document.getElementById('arrivalGate'); }
+function arrivalIcon(kind){
+  if(kind==='check') return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>';
+  if(kind==='alert') return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5"/><path d="M12 17h.01"/><path d="M10.3 3.7 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z"/></svg>';
+  return '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.4 2.4 0 1 1 3.6 2.1c-.8.5-1.3 1-1.3 2"/><path d="M12 17h.01"/></svg>';
+}
+function arrivalLockIcon(){
+  return '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
+}
+function arrivalCheckinUrl(grade){
+  const group = LINK_GROUPS[grade];
+  const key = group && group.keys[0];
+  const link = LINKS && LINKS.find(item=>item.key===key);
+  return link && link.url ? link.url : '';
+}
+function closeArrivalGate(){
+  if(arrivalContinueTimer){ clearTimeout(arrivalContinueTimer); arrivalContinueTimer = null; }
+  const gate = arrivalGateEl();
+  if(gate){ gate.hidden = true; gate.innerHTML = ''; }
+  document.body.classList.remove('agLocked');
+}
+function openArrivalGate(arrivalUrl){
+  const gate = arrivalGateEl();
+  if(!gate) return;
+  if(arrivalContinueTimer){ clearTimeout(arrivalContinueTimer); arrivalContinueTimer = null; }
+  let savedName = '';
+  try{ savedName = localStorage.getItem('deolrim.links.studentName') || ''; }catch(e){}
+  gate.dataset.arrivalUrl = arrivalUrl;
+  gate.dataset.grade = linkGrade || '';
+  gate.innerHTML = `<section class="agSheet" role="dialog" aria-modal="true" aria-labelledby="agTitle">
+    <div class="agHandle"></div>
+    <div class="agInner">
+      <div class="agKicker"><span class="agKickerDot"></span>등원 전 확인</div>
+      <h2 class="agTitle" id="agTitle">학생 이름을 확인할게요</h2>
+      <p class="agDesc">수업 전 체크인 제출일을 확인한 뒤 등원 화면으로 이동합니다.</p>
+      <div class="agField">
+        <label class="agLabel" for="agStudentName">학생 이름</label>
+        <input class="agInput" id="agStudentName" maxlength="20" autocomplete="name"
+          value="${esc(savedName)}" placeholder="이름을 정확히 입력하세요">
+        <div class="agError" id="agMsg"></div>
+      </div>
+      <div class="agActions">
+        <button class="agPrimary" id="agCheck" type="button">확인하고 등원하기</button>
+        <button class="agSecondary" type="button" data-ag-close>닫기</button>
+      </div>
+      <div class="agPrivacy">${arrivalLockIcon()}<span>이름은 이 기기에만 저장됩니다.</span></div>
+    </div>
+  </section>`;
+  gate.hidden = false;
+  document.body.classList.add('agLocked');
+  setTimeout(()=>{
+    const input = document.getElementById('agStudentName');
+    if(input){ input.focus(); input.select(); }
+  },40);
+}
+function showArrivalStatus(status){
+  const gate = arrivalGateEl();
+  if(!gate) return;
+  if(arrivalContinueTimer){ clearTimeout(arrivalContinueTimer); arrivalContinueTimer = null; }
+  const arrivalUrl = gate.dataset.arrivalUrl || '';
+  const checkinUrl = arrivalCheckinUrl(gate.dataset.grade || '');
+  if(status==='missing' && !checkinUrl) status = 'unavailable';
+  const states = {
+    previous_day:{tone:'good',icon:'check',kicker:'체크인 확인',title:'체크인 확인 완료',
+      text:'전날까지 제출한 수업 전 체크인이 확인됐어요.',auto:true,url:arrivalUrl},
+    same_day:{tone:'warn',icon:'alert',kicker:'제출일 안내',title:'오늘 제출한 체크인입니다',
+      text:'이번 등원은 계속할 수 있습니다.',
+      callout:'수업 준비를 위해 <b>다음 수업부터는 수업 전날까지</b> 제출해 주세요.',
+      action:'확인하고 등원하기',url:arrivalUrl},
+    missing:{tone:'bad',icon:'alert',kicker:'체크인 필요',title:'수업 전 체크인이 확인되지 않았어요',
+      text:'체크인을 먼저 제출해야 등원할 수 있습니다.',
+      callout:'체크인 제출을 마친 뒤 이 앱으로 돌아와 다시 등원해 주세요.',
+      action:'체크인 제출하기',url:checkinUrl},
+    already_arrived:{tone:'good',icon:'check',kicker:'등원 확인',title:'오늘 등원 기록이 이미 있어요',
+      text:'같은 이름으로 오늘 제출한 등원 기록을 확인했습니다.',action:'닫기',url:''},
+    unavailable:{tone:'',icon:'help',kicker:'확인 지연',title:'체크인 확인이 잠시 지연되고 있어요',
+      text:'잠시 후 다시 시도하거나, 필요한 경우 등원을 계속할 수 있습니다.',
+      action:'등원 계속하기',url:arrivalUrl},
+  };
+  const state = states[status] || states.unavailable;
+  const callout = state.callout ? `<div class="agCallout">${state.callout}</div>` : '';
+  let actions = '';
+  if(state.auto){
+    actions = '<div class="agMoving"><span class="agMovingDot"></span>등원 화면으로 이동하고 있습니다.</div>';
+  }else{
+    const primary = state.url
+      ? `<button class="agPrimary" type="button" data-ag-go="${esc(state.url)}">${esc(state.action)}</button>`
+      : `<button class="agPrimary" type="button" data-ag-close>${esc(state.action)}</button>`;
+    const secondary = state.url ? '<button class="agSecondary" type="button" data-ag-close>닫기</button>' : '';
+    actions = `<div class="agActions">${primary}${secondary}</div>`;
+  }
+  gate.innerHTML = `<section class="agSheet ${state.tone}" role="dialog" aria-modal="true" aria-labelledby="agTitle">
+    <div class="agHandle"></div>
+    <div class="agInner">
+      <div class="agStatusRow">
+        <div class="agStatusIcon">${arrivalIcon(state.icon)}</div>
+        <div class="agStatusCopy">
+          <div class="agKicker"><span class="agKickerDot"></span>${esc(state.kicker)}</div>
+          <h2 class="agTitle" id="agTitle">${esc(state.title)}</h2>
+          <p class="agDesc">${esc(state.text)}</p>
+        </div>
+      </div>
+      ${callout}${actions}
+    </div>
+  </section>`;
+  if(state.auto && state.url){
+    arrivalContinueTimer = setTimeout(()=>{
+      arrivalContinueTimer = null;
+      window.location.assign(state.url);
+    },850);
+  }
+}
+async function checkArrivalStatus(){
+  const gate = arrivalGateEl();
+  const input = document.getElementById('agStudentName');
+  const button = document.getElementById('agCheck');
+  const msg = document.getElementById('agMsg');
+  const name = input ? input.value.trim() : '';
+  if(!name){
+    if(msg) msg.textContent = '이름을 입력해 주세요.';
+    if(input) input.focus();
+    return;
+  }
+  try{ localStorage.setItem('deolrim.links.studentName', name); }catch(e){}
+  if(button){ button.disabled = true; button.innerHTML = '<span class="agMiniSpin"></span>체크인 확인 중'; }
+  if(msg) msg.textContent = '';
+  let timer = null;
+  try{
+    const controller = new AbortController();
+    timer = setTimeout(()=>controller.abort(), 10000);
+    const response = await fetch('/api/checkin-status', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,grade:(gate && gate.dataset.grade) || ''}),
+      cache:'no-store',
+      signal:controller.signal,
+    });
+    clearTimeout(timer); timer = null;
+    const result = await response.json();
+    if(!response.ok) throw new Error('request_failed');
+    showArrivalStatus(result && result.status);
+  }catch(e){
+    if(timer) clearTimeout(timer);
+    showArrivalStatus('unavailable');
+  }
 }
 
 /* ═══════════ 질문 약속 — 읽기 → 쓰기 → 막힌 부분 말하기 ═══════════ */
@@ -5796,6 +5965,23 @@ try{
 }catch(e){}
 
 document.addEventListener('click', (e)=>{
+  const agGo = e.target.closest('[data-ag-go]');
+  if(agGo){
+    const url = agGo.dataset.agGo;
+    closeArrivalGate();
+    if(url) window.location.assign(url);
+    return;
+  }
+  if(e.target.closest('[data-ag-close]') || e.target.id==='arrivalGate'){
+    closeArrivalGate(); return;
+  }
+  if(e.target.closest('#agCheck')){ checkArrivalStatus(); return; }
+  const arrivalLink = e.target.closest('a[data-link-key="arrival"]');
+  if(arrivalLink){
+    e.preventDefault();
+    openArrivalGate(arrivalLink.href);
+    return;
+  }
   const hdrHome = e.target.closest('#hdrHome');
   if(hdrHome){
     TAB = 'link'; linkGrade = null; render();
@@ -5908,167 +6094,22 @@ document.addEventListener('click', (e)=>{
   }
 });
 
+document.addEventListener('keydown', (e)=>{
+  const gate = arrivalGateEl();
+  if(!gate || gate.hidden) return;
+  if(e.key==='Escape'){
+    e.preventDefault(); closeArrivalGate(); return;
+  }
+  if(e.key==='Enter' && e.target && e.target.id==='agStudentName'){
+    e.preventDefault(); checkArrivalStatus();
+  }
+});
+
 /* ═══════════════════════ 시작 ═══════════════════════ */
 render();
 fetch('/api/links', {cache:'no-store'})
   .then(r=>r.json()).then(j=>{ LINKS = (j && j.links) || []; if(TAB==='link') renderLink(); })
   .catch(()=>{ LINKS = []; if(TAB==='link') renderLink(); });
-
-
-/* ═══════════════════════ 재원생 로그인 · 상태 통제 ═══════════════════════ */
-const ROUTINE_AUTH_CHECK_MS = 3 * 60 * 1000;
-let routineSb = null;
-let routineStudent = null;
-let routineLastCheck = 0;
-let routineChecking = false;
-
-function authEsc(s){ return String(s??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c)); }
-function authGateEl(){ return document.getElementById('routineAuthGate'); }
-function setRoutineLocked(locked){
-  document.body.classList.toggle('authLocked', !!locked);
-  ['header','main','nav','#toTop','#toolSheet'].forEach(sel=>{
-    const el=document.querySelector(sel); if(el) el.inert=!!locked;
-  });
-  const gate=authGateEl(); if(gate) gate.hidden=!locked;
-}
-function routineConfig(){
-  const c=window.DEOOLLIM_CONFIG||{};
-  const url=String(c.supabaseUrl||'').trim();
-  const key=String(c.supabasePublishableKey||'').trim();
-  return url&&key?{url,key}:null;
-}
-async function initRoutineSb(){
-  if(routineSb) return routineSb;
-  const c=routineConfig();
-  if(!c) throw new Error('학생 확인 설정이 없습니다.');
-  if(!window.supabase||!window.supabase.createClient) throw new Error('학생 확인 모듈을 불러오지 못했습니다.');
-  routineSb=window.supabase.createClient(c.url,c.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
-  return routineSb;
-}
-async function ensureRoutineAnonymous(){
-  const sb=await initRoutineSb();
-  let s=await sb.auth.getSession();
-  let u=s.data&&s.data.session&&s.data.session.user;
-  if(u && !u.is_anonymous){ await sb.auth.signOut(); s={data:{session:null}}; u=null; }
-  if(!u){ const r=await sb.auth.signInAnonymously(); if(r.error) throw r.error; }
-  return sb;
-}
-function routineStatusLabel(status){ return status==='paused'?'휴원':status==='withdrawn'?'퇴원':status==='active'?'재원':'사용 중지'; }
-function showRoutineLogin(message=''){
-  routineStudent=null; setRoutineLocked(true);
-  const t=document.getElementById('authGateTitle'), d=document.getElementById('authGateDesc'), b=document.getElementById('authGateBody');
-  if(t) t.textContent='학생 로그인';
-  if(d) d.textContent='연산앱과 같은 이름과 6자리 PIN을 사용합니다.';
-  if(!b) return;
-  b.innerHTML='<input id="routineName" class="authField" maxlength="20" autocomplete="username" placeholder="이름">'+
-    '<input id="routinePin" class="authField" maxlength="6" inputmode="numeric" type="password" autocomplete="current-password" placeholder="6자리 PIN">'+
-    '<div id="routineLoginMsg" class="authMsg">'+authEsc(message)+'</div>'+
-    '<button id="routineLoginBtn" class="authBtn" type="button">더올림수학 루틴 시작</button>'+
-    '<div class="authFoot">재원생만 사용할 수 있습니다. 휴원·퇴원 처리는 원장 관리에서 변경하면 이 앱에도 자동 반영됩니다.</div>';
-  const n=document.getElementById('routineName'), p=document.getElementById('routinePin'), btn=document.getElementById('routineLoginBtn'), msg=document.getElementById('routineLoginMsg');
-  if(p) p.addEventListener('input',()=>{ p.value=p.value.replace(/\D/g,'').slice(0,6); });
-  async function go(){
-    const name=(n&&n.value||'').trim(), pin=(p&&p.value||'').trim();
-    if(!name){ msg.textContent='이름을 입력해 주세요.'; n&&n.focus(); return; }
-    if(!/^\d{6}$/.test(pin)){ msg.textContent='PIN은 숫자 6자리입니다.'; p&&p.focus(); return; }
-    btn.disabled=true; msg.style.color='var(--muted)'; msg.textContent='재원 상태를 확인하고 있습니다…';
-    try{
-      const sb=await ensureRoutineAnonymous();
-      const r=await sb.rpc('student_login',{p_code:name,p_pin:pin});
-      if(r.error) throw r.error;
-      const info=Array.isArray(r.data)?r.data[0]:r.data;
-      if(!info||info.status!=='active') throw new Error('현재 사용할 수 없는 학생 계정입니다.');
-      unlockRoutine(info);
-    }catch(e){
-      msg.style.color='var(--crit)';
-      let text=(e&&e.message)||'로그인에 실패했습니다.';
-      text=text.replace(/^.*?:\s*/,'');
-      msg.textContent=text; btn.disabled=false;
-    }
-  }
-  btn.onclick=go;
-  n&&n.addEventListener('keydown',e=>{ if(e.key==='Enter') p&&p.focus(); });
-  p&&p.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
-  setTimeout(()=>n&&n.focus(),50);
-}
-function showRoutineBlocked(status){
-  routineStudent=null; setRoutineLocked(true);
-  const t=document.getElementById('authGateTitle'), d=document.getElementById('authGateDesc'), b=document.getElementById('authGateBody');
-  const label=routineStatusLabel(status);
-  if(t) t.textContent=label==='휴원'?'현재 휴원 중입니다':label==='퇴원'?'현재 이용이 종료되었습니다':'현재 사용할 수 없습니다';
-  if(d) d.textContent='학생 상태가 '+label+'으로 변경되어 루틴앱 이용이 중지되었습니다.';
-  if(b) b.innerHTML='<div class="authState"><span class="authDot bad"></span><span>재원 상태로 변경되면 기존 계정으로 다시 사용할 수 있습니다.</span></div><button id="routineBlockedLogout" class="authSubBtn" type="button">다른 계정으로 로그인</button>';
-  const x=document.getElementById('routineBlockedLogout'); if(x) x.onclick=routineLogout;
-  const ub=document.getElementById('routineUserBtn'); if(ub) ub.hidden=true;
-}
-function showRoutineOffline(){
-  setRoutineLocked(true);
-  const t=document.getElementById('authGateTitle'), d=document.getElementById('authGateDesc'), b=document.getElementById('authGateBody');
-  if(t) t.textContent='인터넷 연결이 필요합니다';
-  if(d) d.textContent='재원 상태를 확인한 뒤 루틴앱을 사용할 수 있습니다.';
-  if(b) b.innerHTML='<div class="authState"><span class="authDot"></span><span>인터넷 연결을 확인한 뒤 다시 시도해 주세요.</span></div><button id="routineRetryAuth" class="authSubBtn" type="button">다시 확인</button>';
-  const x=document.getElementById('routineRetryAuth'); if(x) x.onclick=bootRoutineAuth;
-}
-function unlockRoutine(info){
-  routineStudent=info; routineLastCheck=Date.now(); setRoutineLocked(false);
-  const ub=document.getElementById('routineUserBtn');
-  if(ub){ ub.hidden=false; ub.textContent=(info.name||'학생')+' · 재원'; ub.title='눌러서 로그아웃'; }
-}
-async function routineLogout(){
-  setRoutineLocked(true);
-  try{
-    const sb=await initRoutineSb();
-    try{ await sb.rpc('student_logout'); }catch(e){}
-    try{ await sb.auth.signOut(); }catch(e){}
-  }catch(e){}
-  routineSb=null; routineStudent=null; routineLastCheck=0;
-  showRoutineLogin();
-}
-async function currentRoutineStudent(){
-  const sb=await initRoutineSb();
-  const s=await sb.auth.getSession();
-  const u=s.data&&s.data.session&&s.data.session.user;
-  if(!u||!u.is_anonymous) return null;
-  const r=await sb.rpc('current_student');
-  if(r.error) throw r.error;
-  return Array.isArray(r.data)?(r.data[0]||null):r.data;
-}
-async function validateRoutineStatus(force=false){
-  if(routineChecking) return;
-  if(!force && Date.now()-routineLastCheck<ROUTINE_AUTH_CHECK_MS) return;
-  routineChecking=true;
-  try{
-    const info=await currentRoutineStudent();
-    if(!info){ showRoutineLogin(); return; }
-    if(info.status!=='active'){ showRoutineBlocked(info.status); return; }
-    unlockRoutine(info);
-  }catch(e){
-    // 앱을 새로 열었는데 검증 자체가 안 되면 사용을 열지 않습니다.
-    if(!routineStudent) showRoutineOffline();
-  }finally{ routineChecking=false; }
-}
-async function bootRoutineAuth(){
-  setRoutineLocked(true);
-  const t=document.getElementById('authGateTitle'), d=document.getElementById('authGateDesc'), b=document.getElementById('authGateBody');
-  if(t) t.textContent='재원 상태 확인 중';
-  if(d) d.textContent='학생 계정과 재원 상태를 확인하고 있습니다.';
-  if(b) b.innerHTML='<div class="authState"><span class="authDot"></span><span>잠시만 기다려 주세요.</span></div>';
-  try{
-    const sb=await initRoutineSb();
-    const s=await sb.auth.getSession();
-    const u=s.data&&s.data.session&&s.data.session.user;
-    if(!u){ showRoutineLogin(); return; }
-    if(!u.is_anonymous){ await sb.auth.signOut(); showRoutineLogin(); return; }
-    await validateRoutineStatus(true);
-  }catch(e){ showRoutineOffline(); }
-}
-const routineUserBtn=document.getElementById('routineUserBtn');
-if(routineUserBtn) routineUserBtn.onclick=()=>{ if(confirm((routineStudent&&routineStudent.name?routineStudent.name+' 학생':'현재 학생')+' 계정에서 로그아웃할까요?')) routineLogout(); };
-window.addEventListener('focus',()=>validateRoutineStatus(true));
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') validateRoutineStatus(true); });
-window.addEventListener('online',()=>validateRoutineStatus(true));
-setInterval(()=>{ if(document.visibilityState==='visible') validateRoutineStatus(false); },ROUTINE_AUTH_CHECK_MS);
-bootRoutineAuth();
 
 /* 홈 화면 추가 시 이름이 "더올림수학 루틴" 으로 뜨도록 매니페스트를 붙인다 */
 try{
