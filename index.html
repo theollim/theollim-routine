@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="더올림수학 루틴 — 체크인·등원·하원 · 공지사항 · 공식 암기">
+<meta name="description" content="더올림수학 루틴 — 등원·하원 · 공지사항 · 공식 암기">
 <title>더올림수학 루틴</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="더올림 루틴">
@@ -892,7 +892,7 @@ nav button.on .ic{transform:none}
   <div class="in">
     <div id="hdrHome" role="button" tabindex="0" aria-label="처음 화면으로">
       <span class="brandMark" aria-hidden="true">올</span>
-      <div class="brandCopy"><h1>더올림수학</h1><div class="sub" id="hdrSub">체크인 · 공지 · 공식 암기</div></div>
+      <div class="brandCopy"><h1>더올림수학</h1><div class="sub" id="hdrSub">등원 · 공지 · 공식 암기</div></div>
     </div>
     <div class="headerActions">
       <span id="hdrStreak" class="hdrStreak" hidden></span>
@@ -925,7 +925,7 @@ const NOTICES = [
   {k:'crit', e:'🔁', t:'보강도 한 번뿐', b:'보강에 못 오면 재보강은 어려워요.'},
   {k:'warn', e:'📅', t:'결석은 미리 알려주세요', b:'2주 전 신고하면 보강 자리를 잡아드려요.'},
   {k:'warn', e:'📞', t:'숙제 3회째도 안 되면 연락', b:'2번은 챙겨보고, 3번째부터 연락드려요.'},
-  {k:'warn', e:'🔒', t:'이 앱은 더올림 재원생용', b:'체크인·하원 기록이 남는 앱이라 재원생만 씁니다. 링크 공유는 하지 말아주세요.'},
+  {k:'warn', e:'🔒', t:'이 앱은 더올림 재원생용', b:'등원·하원 기록이 남는 앱이라 재원생만 씁니다. 링크 공유는 하지 말아주세요.'},
   {k:'good', e:'✏️', t:'필기도구는 개인 지참', b:'여분 비치는 안 합니다. 교재도 챙겨주세요.'},
 ];
 
@@ -2526,10 +2526,14 @@ const LINK_FALLBACK = {
   checkin_hs:{label:'체크인', emoji:'✓'}, arrival:{label:'등원 — 출석체크', emoji:'→'},
   dismissal:{label:'하원 — 수업정리', emoji:'↗'},
 };
+/* 체크인은 뺐습니다 (2026-09-02) — 체크인에서 묻던 것(숙제 문항수·걸린 시간·못 한 이유·
+   막힌 곳·질문)이 등원 폼 안으로 들어갔습니다. 링크가 남아 있으면 두 번 내게 됩니다.
+   온라인 학생처럼 문으로 들어오지 않는 경우에는 원장님이 체크인 링크를 따로 보내십니다.
+   되살리시려면 아래 keys 에 'checkin_es' / 'checkin_ms' / 'checkin_hs' 를 다시 넣으면 됩니다. */
 const LINK_GROUPS = {
-  '초등':{emoji:'초', keys:['checkin_es','arrival','dismissal']},
-  '중등':{emoji:'중', keys:['checkin_ms','arrival','dismissal']},
-  '고등':{emoji:'고', keys:['checkin_hs','arrival','dismissal']},
+  '초등':{emoji:'초', keys:['arrival','dismissal']},
+  '중등':{emoji:'중', keys:['arrival','dismissal']},
+  '고등':{emoji:'고', keys:['arrival','dismissal']},
 };
 
 /* 학습 도구 — 탈리 폼이 아니라 고정 주소(앱·사이트)로 바로 보내는 버튼 */
@@ -6937,9 +6941,9 @@ function renderLink(){
       `<button class="gradeCard" data-lg="${esc(g)}">
         <div class="emo">${meta.emoji}</div>
         <div class="lab">${esc(g)}</div>
-        <div class="go">체크인 · 등원 · 하원 ›</div>
+        <div class="go">등원 · 하원 ›</div>
       </button>`).join('');
-    $('#main').innerHTML = `${hwHtml()}<section class="pageIntro"><span class="eyebrow">STUDENT ROUTINE</span><h2>오늘의 학습을<br>차분히 시작해요.</h2><p>학년을 선택하면 체크인부터 수업정리까지 바로 이어집니다.</p></section>
+    $('#main').innerHTML = `${hwHtml()}<section class="pageIntro"><span class="eyebrow">STUDENT ROUTINE</span><h2>오늘의 학습을<br>차분히 시작해요.</h2><p>학년을 선택하면 등원부터 수업정리까지 바로 이어집니다.</p></section>
       <div class="sectionLabel">학년 선택</div><div class="gradeGrid">${h}</div>
       <a class="linkCard kakao" href="${esc(KAKAO.url)}" target="_blank" rel="noopener">
         <div class="emo">${KAKAO.emoji}</div>
@@ -7797,7 +7801,7 @@ function renderOpen(){
 
 function render(){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===TAB));
-  $('#hdrSub').textContent = TAB==='link' ? '체크인 · 등원 · 하원' : TAB==='notice' ? '공지사항'
+  $('#hdrSub').textContent = TAB==='link' ? '등원 · 하원' : TAB==='notice' ? '공지사항'
     : TAB==='open' ? '답이 아니라 첫 걸음'
     : TAB==='see' ? '움직이는 것을 보고 만지기' : '초·중·고 공식 암기';
   if(TAB==='link') renderLink();
