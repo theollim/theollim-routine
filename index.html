@@ -235,12 +235,17 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .hwCard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4.5px;background:var(--grBrand)}
 .hwT{font-size:17px;font-weight:800;letter-spacing:-.01em;margin-bottom:3px}
 .hwS{font-size:12px;color:var(--muted);line-height:1.55;word-break:keep-all}
-.hwRow{display:flex;gap:7px;margin-top:12px}
-.hwB{flex:1 1 0;min-height:52px;border-radius:13px;border:1.5px solid var(--line);background:var(--plane);
+.hwRow{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+/* 다섯 개라 한 줄에 둘씩 놓고, 마지막 「숙제 없었어요」가 한 줄을 차지합니다 */
+.hwB{flex:1 1 calc(50% - 4px);min-height:50px;border-radius:13px;border:1.5px solid var(--line);background:var(--plane);
   font-size:13px;font-weight:750;color:var(--ink);padding:0 6px;word-break:keep-all;line-height:1.3}
 .hwB.done{border-color:var(--accent);color:var(--accent)}
+.hwB.ok2{border-color:var(--accent);color:var(--accent);opacity:.72}
+/* 「했는데 안 가져왔어요」 — 했다는 말은 믿되, 확인은 못 한 상태라 노란 쪽입니다 */
+.hwB.nobr{border-color:var(--warn);color:var(--ink2)}
 .hwB.stuck{border-color:var(--warn);color:var(--warn)}
 .hwB.none{border-color:var(--line);color:var(--muted)}
+.hwB.nohw{border-color:var(--line);color:var(--muted);opacity:.8;font-weight:650}
 .hwCard.sent::before{background:var(--accent)}
 .hwDone{font-size:13.5px;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .hwDone b{color:var(--ink);font-weight:800}
@@ -253,6 +258,7 @@ header .in{max-width:480px;margin:0 auto;width:100%;display:flex;align-items:cen
 .hwSend{flex:1 1 0;min-height:46px;border-radius:12px;border:none;background:var(--grBrand);color:#fff;font-size:14px;font-weight:800}
 .hwKakao{flex:0 0 auto;min-height:46px;display:flex;align-items:center;padding:0 15px;border-radius:12px;
   border:1.5px solid var(--kkLine);background:var(--kkBg);color:var(--kkInk);font-size:13px;font-weight:750;text-decoration:none}
+.hwNote{margin-top:9px;font-size:12.5px;color:var(--muted);line-height:1.5;word-break:keep-all}
 .hwMemoOn{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink2);
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;word-break:keep-all}
 
@@ -6889,7 +6895,21 @@ function shuffleCopy(arr){
 
 /* ═══ 오늘 숙제 — 등원해서 앱 열면 맨 위. 버튼 한 번이면 원장님께 전달 ═══
    답을 미루지 않게 상태부터 바로 보내고, 막힌 곳은 뒤이어 덧붙인다. */
-const HW_LABEL = { done:'다 했어요', stuck:'하다 막혔어요', none:'못 했어요' };
+/* 등원 폼의 숙제 완료도와 같은 눈금 다섯 단계입니다.
+   'done' 은 예전에 3단계로 저장해 둔 폰을 위해 남겨 둡니다 — 지우면 그 화면이 빈칸이 됩니다. */
+const HW_LABEL = {
+  alldone: '오답까지 다 함',
+  hwonly:  '숙제만 다 함',
+  notbring:'했는데 안 가져왔어요',
+  stuck:   '하다 막혔어요',
+  none:    '못 했어요',
+  nohw:    '숙제 없었어요',
+  done:    '다 했어요',            // 예전 저장값
+};
+/* 어디서 막혔는지 물어볼 상태 — 다 한 학생·숙제 없던 학생에겐 안 묻습니다 */
+const HW_ASK = { stuck: 1, none: 1 };
+/* 보낸 뒤 한 줄 — 혼날까 봐 「못 했어요」를 누르지 않도록 */
+const HW_NOTE = { notbring: '괜찮아요. 다음에 가져오면 그때 같이 확인할게요.' };
 let HW = null;
 try{ HW = JSON.parse(localStorage.getItem('deolrim.links.hw') || 'null'); }catch(e){}
 function hwToday(){ return (HW && HW.d === isoDay()) ? HW : null; }
@@ -6911,17 +6931,21 @@ function hwHtml(){
       <div class="hwT">오늘 숙제 어땠어?</div>
       <div class="hwS">한 번만 누르면 원장님께 바로 전해져요.</div>
       <div class="hwRow">
-        <button class="hwB done" data-hw="done">다 했어요</button>
+        <button class="hwB done"  data-hw="alldone">오답까지 다 함</button>
+        <button class="hwB ok2"   data-hw="hwonly">숙제만 다 함</button>
+        <button class="hwB nobr"  data-hw="notbring">했는데 안 가져왔어요</button>
         <button class="hwB stuck" data-hw="stuck">하다 막혔어요</button>
-        <button class="hwB none" data-hw="none">못 했어요</button>
+        <button class="hwB none"  data-hw="none">못 했어요</button>
+        <button class="hwB nohw"  data-hw="nohw">숙제 없었어요</button>
       </div>
     </section>`;
   }
-  const ask = t.s !== 'done';
+  const ask = !!HW_ASK[t.s];
   const memoDone = !!t.memo;
   return `<section class="hwCard sent" id="hwCard">
     <div class="hwDone"><b>오늘 숙제 · ${esc(HW_LABEL[t.s] || '')}</b> 보냈어요 ✓
       <button class="hwRe" data-hwre="1">바꾸기</button></div>
+    ${HW_NOTE[t.s] ? `<div class="hwNote">${esc(HW_NOTE[t.s])}</div>` : ''}
     ${ask ? (memoDone
       ? `<div class="hwMemoOn">막힌 곳: ${esc(t.memo)} <button class="hwRe" data-hwmemo="1">고치기</button></div>`
       : `<div class="hwAsk">
