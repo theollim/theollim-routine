@@ -6898,9 +6898,7 @@ function hwSend(state, memo){
   const ev = { name: WHO.name, g: WHO.g, kind: 'hw', label: HW_LABEL[state] || state,
     know: 0, unsure: 0, streak: 0, cards: (memo || '').slice(0, 300),
     date: isoDay(), did: DID };
-  fetch('/api/study-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(ev) })
-    .then(r=>r.json()).then(j=>{ if(!(j && j.ok)) pushPending(ev); })
-    .catch(()=>{ pushPending(ev); });
+  sendStudy(ev).then(ok=>{ if(!ok) pushPending(ev); });
 }
 function hwHtml(){
   const t = hwToday();
@@ -7347,6 +7345,17 @@ document.getElementById('whoSheet').addEventListener('click', (e)=>{
 
 try{ enrollCheckOnBoot(); }catch(e){}
 
+/* 기록 보내기 — 우리 서버가 안 되면 원장님 운영앱으로 한 번 더 보냅니다.
+   둘 중 하나만 살아 있어도 공부한 게 원장님께 닿게 하려는 것입니다.
+   그래도 안 되면 폰에 쌓아 뒀다가 다음에 다시 보냅니다. */
+const STUDY_API2 = 'https://deolrim-app.vercel.app/api/study-log';
+function sendStudy(ev){
+  const post = url => fetch(url, {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(ev)})
+    .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
+  return post('/api/study-log').then(ok => ok ? true : post(STUDY_API2));
+}
+
 function pushPending(ev){
   try{
     const q = JSON.parse(localStorage.getItem('deolrim.links.logq') || '[]');
@@ -7358,14 +7367,12 @@ function flushPending(){
   let q = [];
   try{ q = JSON.parse(localStorage.getItem('deolrim.links.logq') || '[]'); }catch(e){}
   if(!q.length) return;
-  fetch('/api/study-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(q[0]) })
-    .then(r=>r.json()).then(j=>{
-      if(j && j.ok){
-        q.shift();
-        try{ localStorage.setItem('deolrim.links.logq', JSON.stringify(q)); }catch(e){}
-        if(q.length) flushPending();
-      }
-    }).catch(()=>{});
+  sendStudy(q[0]).then(ok=>{
+    if(!ok) return;
+    q.shift();
+    try{ localStorage.setItem('deolrim.links.logq', JSON.stringify(q)); }catch(e){}
+    if(q.length) flushPending();
+  });
 }
 function markSent(ok){
   const el = document.getElementById('tmSent');
@@ -7381,12 +7388,10 @@ function sendLog(kind, label, picks){
   }).join(', ').slice(0, 1900);
   const ev = { name: WHO.name, g: WHO.g, kind, label, know, unsure,
     streak: streakNow(getStreak()), cards, date: isoDay(), did: DID };
-  fetch('/api/study-log', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(ev) })
-    .then(r=>r.json()).then(j=>{
-      if(j && j.ok) markSent(true);
-      else { pushPending(ev); markSent(false); }
-    })
-    .catch(()=>{ pushPending(ev); markSent(false); });
+  sendStudy(ev).then(ok=>{
+    if(ok) markSent(true);
+    else { pushPending(ev); markSent(false); }
+  });
 }
 
 /* ═══ 몰입 모드 — 오늘 5장을 한 장씩, 전체 화면으로 ═══ */

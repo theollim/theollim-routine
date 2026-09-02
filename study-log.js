@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
   const props = {
     '이름': { title: [{ text: { content: S(b.name, 20) } }] },
     '학년': { select: { name: GRADES.includes(b.g) ? b.g : '초등' } },
-    '종류': { select: { name: b.kind === 'unit' ? '단원 몰아보기' : '오늘 5장' } },
+    '종류': { select: { name: b.kind === 'hw' ? '숙제 확인' : b.kind === 'unit' ? '단원 몰아보기' : '오늘 5장' } },
     '단원': { rich_text: [{ text: { content: S(b.label, 100) } }] },
     '알아요': { number: N(b.know) },
     '헷갈려요': { number: N(b.unsure) },
