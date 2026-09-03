@@ -2561,9 +2561,10 @@ const MATHFLAT = {
   store_ios:'https://apps.apple.com/kr/app/id1342984730',
   store_and:'https://play.google.com/store/apps/details?id=iclass.mathflat.parent.student',
 };
-/* 학년마다 <실제로 쓰는 것>을 위에 둡니다. 아이가 두 번 보지 않게 하려고요. */
+/* 학년마다 <실제로 쓰는 것만> 둡니다 — 안 쓰는 것을 보여 주면 아이가 헷갈립니다.
+   초등은 매쓰플랫만 씁니다 (원장님 확인, 2026-09-03). */
 const APP_LINKS = {
-  '초등':[MATHFLAT, MATHOLIC],
+  '초등':[MATHFLAT],
   '중등':[MATHOLIC, MATHFLAT],
   '고등':[MATHOLIC, MATHFLAT],
 };
