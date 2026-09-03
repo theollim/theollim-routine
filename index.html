@@ -2548,13 +2548,25 @@ const KAKAO = { label:'더올림에 질문하기', emoji:'···', note:'카톡 
   url:'https://pf.kakao.com/_PwxoGX/chat' };
 
 const MATHOLIC = {
-  label:'매쓰홀릭', emoji:'M', note:'앱 열기',
+  label:'매쓰홀릭', emoji:'홀', note:'앱 열기',
   web:'https://www.matholic.com/',
   pkg:'com.matholic.mathapp',
   store_ios:'https://apps.apple.com/kr/app/id1441272210',
   store_and:'https://play.google.com/store/apps/details?id=com.matholic.mathapp',
 };
-const APP_LINKS = { '초등':[MATHOLIC], '중등':[MATHOLIC], '고등':[MATHOLIC] };
+const MATHFLAT = {
+  label:'매쓰플랫', emoji:'플', note:'앱 열기',
+  web:'https://student.mathflat.com/login',
+  pkg:'iclass.mathflat.parent.student',
+  store_ios:'https://apps.apple.com/kr/app/id1342984730',
+  store_and:'https://play.google.com/store/apps/details?id=iclass.mathflat.parent.student',
+};
+/* 학년마다 <실제로 쓰는 것>을 위에 둡니다. 아이가 두 번 보지 않게 하려고요. */
+const APP_LINKS = {
+  '초등':[MATHFLAT, MATHOLIC],
+  '중등':[MATHOLIC, MATHFLAT],
+  '고등':[MATHOLIC, MATHFLAT],
+};
 
 /* 안드로이드는 설치된 앱을 바로 띄우고(없으면 스토어), 그 외에는 웹으로 보낸다.
    iOS는 유니버설 링크가 잡혀 있으면 https 주소로도 앱이 열린다. */
