@@ -580,6 +580,86 @@ nav button.on{color:var(--accent);font-weight:650}
 nav button .ic{font-size:19px}
 
 /* ═══════════════════════════════════════════════════════════════════
+   홈 — 휴대폰 우선 (2026-09-04)
+   핵심 다섯 개가 첫 화면에서 스크롤 없이 보여야 합니다.
+   ═══════════════════════════════════════════════════════════════════ */
+.secT{display:flex;align-items:baseline;gap:8px;font-size:15px;font-weight:800;
+  color:var(--ink);letter-spacing:-.02em;margin:2px 2px 9px}
+.secS{font-size:11.5px;font-weight:500;color:var(--muted)}
+.quickWrap{margin-bottom:16px}
+.qGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.qk{display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto;
+  column-gap:10px;align-items:center;min-height:74px;padding:13px 14px;border-radius:16px;
+  border:1px solid var(--line);background:var(--surface);text-decoration:none;color:inherit;
+  box-shadow:var(--shadow-sm);word-break:keep-all}
+.qk .qIc{grid-row:1 / span 2;display:grid;place-items:center;width:38px;height:38px;
+  border-radius:12px;font-size:17px;font-weight:850;background:var(--sunk);color:var(--ink2)}
+.qk .qT{font-size:14.5px;font-weight:780;letter-spacing:-.02em;align-self:end}
+.qk .qS{font-size:11.5px;color:var(--muted);align-self:start;margin-top:1px}
+.qk.off{opacity:.5}
+/* 등원 — 진한 청록. 하루에 꼭 한 번 누르는 것이라 가장 진합니다 */
+.qk.qArrive{min-height:88px;border-color:var(--accent);background:rgba(15,118,110,.075)}
+.qk.qArrive .qIc{background:var(--accent);color:#fff}
+.qk.qArrive .qT{color:var(--accent);font-size:15.5px}
+/* 하원 — 연한 청록 */
+.qk.qLeave{min-height:88px;border-color:rgba(15,118,110,.34);background:rgba(15,118,110,.03)}
+.qk.qLeave .qIc{background:rgba(15,118,110,.13);color:var(--accent)}
+/* 매쓰플랫·매쓰홀릭 — 연한 파랑 */
+.qk.qApp{border-color:rgba(47,119,185,.24);background:rgba(47,119,185,.05)}
+.qk.qApp .qIc{background:rgba(47,119,185,.12);color:#2f77b9}
+/* 질문하기 — 연한 노랑, 한 줄 전체 */
+.qk.qAsk{grid-column:1 / -1;margin-top:9px;min-height:70px;
+  border-color:var(--kkLine);background:var(--kkBg)}
+.qk.qAsk .qIc{background:rgba(240,180,0,.18);color:#8a6a00}
+.qk.qAsk .qT{color:var(--kkInk)}
+
+/* 더올림 학습실 — 아주 연한 민트 */
+.roomWrap{margin-top:4px}
+.roomGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.roomCard{display:grid;justify-items:center;gap:4px;padding:15px 8px 13px;border-radius:16px;
+  border:1px solid var(--line);background:rgba(15,118,110,.028);min-height:96px;
+  align-content:center;text-align:center;word-break:keep-all}
+.roomCard .rIc{font-size:20px;color:var(--accent);line-height:1}
+.roomCard .rT{font-size:13.5px;font-weight:750;letter-spacing:-.02em;color:var(--ink)}
+.roomCard .rS{font-size:11px;color:var(--muted)}
+.roomCard.soon{opacity:.55}
+.roomCard.soon .rIc{color:var(--muted)}
+
+/* 내 기록 */
+.mTiles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mTile{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:14px 10px;text-align:center;display:grid;gap:2px;box-shadow:var(--shadow-sm)}
+.mTile b{font-size:22px;font-weight:850;color:var(--accent);letter-spacing:-.03em}
+.mTile .mU{font-size:11px;color:var(--muted)}
+.mTile .mT{font-size:11.5px;color:var(--ink2);font-weight:600;margin-top:3px}
+.mLine{font-size:13.5px;line-height:1.6;color:var(--ink2)}
+.mMuted{color:var(--muted)}
+
+/* ── 아이패드 미니 세로부터 — 2열은 그대로, 숨 쉴 자리만 ── */
+@media (min-width:600px){
+  .qGrid{gap:12px}
+  .roomGrid{grid-template-columns:repeat(3,1fr);gap:12px}
+  .qk{min-height:84px;padding:15px 16px}
+  .qk.qArrive,.qk.qLeave{min-height:100px}
+  .secT{font-size:17px}
+}
+/* ── 태블릿 가로 — 핵심 다섯 개를 한 줄에 ── */
+@media (min-width:900px){
+  .qGrid{display:flex;flex-wrap:nowrap}
+  .qGrid > .qk{flex:1 1 0;min-width:0}
+  .qk{grid-template-columns:1fr;grid-template-rows:auto auto auto;justify-items:center;
+    text-align:center;row-gap:5px;min-height:118px;padding:16px 10px}
+  .qk .qIc{grid-row:auto;width:44px;height:44px}
+  .qk .qT,.qk .qS{align-self:auto}
+  .qk.qArrive,.qk.qLeave{min-height:118px}
+  .qk.qAsk{grid-column:auto;margin-top:0}
+  .roomGrid{grid-template-columns:repeat(6,1fr)}
+}
+@media (min-width:1300px){
+  .roomGrid{grid-template-columns:repeat(6,1fr);gap:14px}
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    2026 MODERN UI REFRESH
    더올림의 네이비·청록을 중심으로 색과 밀도, 카드 체계를 정돈한다.
    기존 기능과 데이터 구조는 그대로 두고 표현 계층만 다시 설계했다.
@@ -915,11 +995,11 @@ nav button.on .ic{transform:none}
 <button id="toTop" aria-label="맨 위로">↑</button>
 <nav>
   <div class="in">
-    <button data-tab="link" class="on"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1"/><path d="M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/></svg></span>링크</button>
+    <button data-tab="home" class="on"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5 12 4l8.5 6.5V20a1 1 0 0 1-1 1h-5"/><path d="M3.5 10.5V20a1 1 0 0 0 1 1H9v-6h6v6"/></svg></span>홈</button>
     <button data-tab="notice"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span>공지</button>
-    <button data-tab="card"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v18a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 1 2.5 2.5Z"/></svg></span>공식암기</button>
-    <button data-tab="open"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h3a3 3 0 0 0 3-3v-6a3 3 0 0 1 3-3"/><path d="m14 18 2 2 4-4"/></svg></span>어디서부터</button>
-    <button data-tab="see"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></span>눈으로 보기</button>
+    <button data-tab="room"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11a3 3 0 0 1 3 3v15a3 3 0 0 0-3-3H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H14v18a3 3 0 0 1 3-3h.5a2.5 2.5 0 0 1 2.5 2.5Z"/></svg></span>학습실</button>
+    <button data-tab="mine"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 19.5V6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v13.5"/><path d="M8 8.5h8M8 12h8M8 15.5h5"/></svg></span>내 기록</button>
+    <button data-tab="more"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>더보기</button>
   </div>
 </nav>
 
@@ -3976,7 +4056,7 @@ const SHAPES = (()=>{
 })();
 
 /* ═══════════════════════ 상태 ═══════════════════════ */
-let TAB = 'link';
+let TAB = 'home';
 let LINKS = null;         // /api/links 결과
 let linkGrade = null;     // '초등' | '중등' | '고등' | null(고르는 중)
 
@@ -6972,6 +7052,116 @@ function hwHtml(){
   </section>`;
 }
 
+/* ═══════════════ 홈 — 휴대폰 첫 화면에서 스크롤 없이 ═══════════════
+   차례가 곧 중요도입니다. 매일 쓰는 다섯 개가 맨 위,
+   그 아래 오늘 숙제, 그 아래 재원생 전용 학습자료.            */
+
+/* 이름을 쓸 때 받은 학년 → 등원/하원·학습 도구를 고르는 데 씁니다.
+   학년을 한 번 더 고르게 하지 않습니다. */
+function myGroup(){
+  const g = (WHO && WHO.g) || '';
+  if(g === '초등' || /^초/.test(g)) return '초등';
+  if(/^중/.test(g)) return '중등';
+  return '고등';
+}
+/* 재원생 전용 학습자료 — 없는 것은 「준비 중」으로 정직하게 둡니다 */
+const ROOM_ITEMS = [
+  {k:'log',   t:'수학체력 로그', s:'첫 시도 정확도·속도',   ic:'▥', ready:false},
+  {k:'card',  t:'공식암기',      s:'초·중·고 692장',        ic:'π',  ready:true},
+  {k:'open',  t:'어디서부터',    s:'답이 아니라 첫 걸음',   ic:'⌖',  ready:true},
+  {k:'see',   t:'눈으로 보기',   s:'움직이는 것을 만지기',  ic:'◎',  ready:true},
+  {k:'stick', t:'개념정착 자료', s:'배운 것을 굳히는 자료', ic:'✿', ready:false},
+  {k:'exam',  t:'내신 때 꼭 풀어보기', s:'시험 전 필수 문항', ic:'★', ready:false},
+];
+function roomGridHtml(){
+  return `<div class="roomGrid">${ROOM_ITEMS.map(x=>
+    `<button class="roomCard${x.ready?'':' soon'}" data-room="${x.k}">
+      <span class="rIc">${x.ic}</span>
+      <span class="rT">${esc(x.t)}</span>
+      <span class="rS">${x.ready ? esc(x.s) : '준비 중'}</span>
+    </button>`).join('')}</div>`;
+}
+/* 오늘 바로가기 — 등원·하원이 가장 큽니다. 질문하기는 한 줄 전체. */
+function quickHtml(){
+  const url = k => { const l = (LINKS || []).find(x=>x.key===k); return l && l.url; };
+  const go  = (k, cls, t, s2) => {
+    const u = url(k);
+    return u ? `<a class="qk ${cls}" href="${esc(u)}" target="_blank" rel="noopener">
+        <span class="qIc">${cls==='qArrive'?'⇥':'⇤'}</span>
+        <span class="qT">${t}</span><span class="qS">${s2}</span></a>`
+      : `<div class="qk ${cls} off"><span class="qIc">${cls==='qArrive'?'⇥':'⇤'}</span>
+        <span class="qT">${t}</span><span class="qS">준비중</span></div>`;
+  };
+  const apps = (APP_LINKS[myGroup()] || []).map(a=>
+    `<a class="qk qApp" href="${esc(appHref(a))}">
+      <span class="qIc">${a.emoji}</span>
+      <span class="qT">${esc(a.label)}</span><span class="qS">${esc(a.note)}</span></a>`).join('');
+  return `<section class="quickWrap">
+    <div class="secT">오늘 바로가기 <span class="secS">오늘 꼭 쓰는 것</span></div>
+    <div class="qGrid">
+      ${go('arrival','qArrive','등원 · 출석체크','들어오면 눌러요')}
+      ${go('dismissal','qLeave','하원 · 수업정리','나가기 전에 눌러요')}
+      ${apps}
+      <a class="qk qAsk" href="${esc(KAKAO.url)}" target="_blank" rel="noopener">
+        <span class="qIc">?</span>
+        <span class="qT">더올림에 질문하기</span>
+        <span class="qS">모르는 문제는 사진 찍어 보내요</span></a>
+    </div>
+  </section>`;
+}
+function renderHome(){
+  $('#main').innerHTML = quickHtml() + hwHtml() + `
+    <section class="roomWrap">
+      <div class="secT">더올림 학습실 <span class="secS">재원생에게 드리는 학습자료</span></div>
+      ${roomGridHtml()}
+    </section>`;
+}
+/* ═══════════════ 학습실 ═══════════════ */
+let ROOMSUB = null;
+function renderRoom(){
+  if(ROOMSUB === 'card') return renderCard();
+  if(ROOMSUB === 'open') return renderOpen();
+  if(ROOMSUB === 'see')  return renderSee();
+  $('#main').innerHTML = `<section class="pageIntro"><span class="eyebrow">DEOLRIM STUDY ROOM</span>
+    <h2>더올림 학습실</h2><p>재원생에게 드리는 학습자료예요. 필요할 때 열어 쓰면 됩니다.</p></section>
+    ${roomGridHtml()}`;
+}
+/* ═══════════════ 내 기록 ═══════════════ */
+function renderMine(){
+  const st = (function(){ try{ return JSON.parse(localStorage.getItem('deolrim.links.streak')||'null')||{n:0}; }catch(e){ return {n:0}; } })();
+  const pr = (function(){ try{ return JSON.parse(localStorage.getItem('deolrim.links.progress')||'{}')||{}; }catch(e){ return {}; } })();
+  const hw = hwToday();
+  const q  = (function(){ try{ return JSON.parse(localStorage.getItem('deolrim.links.logq')||'[]')||[]; }catch(e){ return []; } })();
+  const 외운장수 = Object.keys(pr).length;
+  const tile = (n, u, t) => `<div class="mTile"><b>${n}</b><span class="mU">${u}</span><span class="mT">${t}</span></div>`;
+  $('#main').innerHTML = `<section class="pageIntro"><span class="eyebrow">MY RECORD</span>
+    <h2>${esc((WHO&&WHO.name)||'내')} 기록</h2><p>내가 한 것만 보여요. 다른 친구 기록은 보이지 않아요.</p></section>
+    <div class="mTiles">
+      ${tile(st.n||0,'일','연속 기록')}
+      ${tile(외운장수,'장','열어 본 공식 카드')}
+      ${tile(hw?1:0,'개','오늘 숙제 답')}
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="secT" style="margin:0 0 8px">오늘 숙제</div>
+      ${hw ? `<div class="mLine"><b>${esc(HW_LABEL[hw.s]||hw.s)}</b>${hw.memo?` · ${esc(hw.memo)}`:''}</div>`
+           : `<div class="mLine mMuted">아직 안 눌렀어요 — 홈에서 한 번만 누르면 됩니다.</div>`}
+    </div>
+    ${q.length ? `<div class="card" style="margin-top:10px"><div class="mLine mMuted">
+      아직 못 보낸 기록 ${q.length}건이 폰에 담겨 있어요. 인터넷이 되면 저절로 보내집니다.</div></div>` : ''}`;
+}
+/* ═══════════════ 더보기 ═══════════════ */
+function renderMore(){
+  const who = WHO ? `${esc(WHO.name)} · ${esc(WHO.g)}` : '아직 안 썼어요';
+  $('#main').innerHTML = `<section class="pageIntro"><span class="eyebrow">MORE</span>
+    <h2>더보기</h2><p>이름·학년과 화면 설정, 문의하는 곳이에요.</p></section>
+    <button class="linkCard" data-more="who">
+      <div class="emo">이름</div><div class="lab">${who}</div><div class="go">고치기 ›</div></button>
+    <button class="linkCard" data-more="theme">
+      <div class="emo">◐</div><div class="lab">화면 밝기 바꾸기</div><div class="go">밝게 · 어둡게 ›</div></button>
+    <a class="linkCard kakao" href="${esc(KAKAO.url)}" target="_blank" rel="noopener">
+      <div class="emo">${KAKAO.emoji}</div><div class="lab">더올림에 문의하기</div><div class="go">카톡 채널 ›</div></a>`;
+}
+
 function renderLink(){
   if(!linkGrade){
     const h = Object.entries(LINK_GROUPS).map(([g,meta])=>
@@ -7235,6 +7425,17 @@ const ENROLL_TTL = 12 * 3600 * 1000;                 // '다님' 판정은 반�
    그래서 '다님'을 마지막으로 확인한 지 이만큼 지나도록 서버를 못 물으면 잠급니다.
    재원생이 일주일 넘게 한 번도 인터넷에 안 닿는 일은 거의 없습니다. */
 const ENROLL_GRACE = 7 * 24 * 3600 * 1000;
+/* 한 번도 <다님>을 확인하지 못한 폰 — 앱 데이터를 지운 뒤일 수도 있습니다.
+   진짜 신입생이 집에서 인터넷 없이 열어 보는 일은 막지 않되(하루는 봐 줍니다),
+   지우고 비행기모드로 계속 쓰는 길은 닫습니다. */
+const ENROLL_FIRST_GRACE = 24 * 3600 * 1000;
+function enrollFirstAt(){
+  try{
+    let v = Number(localStorage.getItem('deolrim.links.first') || 0);
+    if(!v){ v = Date.now(); localStorage.setItem('deolrim.links.first', String(v)); }
+    return v;
+  }catch(e){ return Date.now(); }
+}
 function enrollCacheGet(name){
   try{
     const c = JSON.parse(localStorage.getItem('deolrim.links.enroll') || 'null');
@@ -7308,8 +7509,10 @@ function enrollCheckOnBoot(){
       if(j.status === 'paused' || j.status === 'left') enrollBlock(j.status, j.until);
       return;
     }
-    /* 서버를 못 물었다 — 잠깐이면 그냥 쓰게 두고, 일주일이 넘으면 확인을 요청합니다 */
-    if(okAt && Date.now() - okAt > ENROLL_GRACE) enrollBlock('offline', '');
+    /* 서버를 못 물었다 — 잠깐이면 그냥 쓰게 두고, 오래되면 확인을 요청합니다.
+       한 번도 확인한 적이 없으면(데이터를 지웠거나 새 폰) 하루까지만 봐 줍니다. */
+    if(okAt){ if(Date.now() - okAt > ENROLL_GRACE) enrollBlock('offline', ''); }
+    else if(Date.now() - enrollFirstAt() > ENROLL_FIRST_GRACE) enrollBlock('offline', '');
   });
 }
 
@@ -7838,18 +8041,46 @@ function renderOpen(){
 
 function render(){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.tab===TAB));
-  $('#hdrSub').textContent = TAB==='link' ? '등원 · 하원' : TAB==='notice' ? '공지사항'
-    : TAB==='open' ? '답이 아니라 첫 걸음'
-    : TAB==='see' ? '움직이는 것을 보고 만지기' : '초·중·고 공식 암기';
-  if(TAB==='link') renderLink();
+  $('#hdrSub').textContent =
+      TAB==='home'   ? '등원 · 하원 · 질문'
+    : TAB==='notice' ? '공지사항'
+    : TAB==='mine'   ? '내 기록'
+    : TAB==='more'   ? '설정 · 문의'
+    : ROOMSUB==='open' ? '답이 아니라 첫 걸음'
+    : ROOMSUB==='see'  ? '움직이는 것을 보고 만지기'
+    : ROOMSUB==='card' ? '초·중·고 공식 암기'
+    : '더올림 학습실';
+  if(TAB==='home') renderHome();
   else if(TAB==='notice') renderNotice();
-  else if(TAB==='open') renderOpen();
-  else if(TAB==='see') renderSee();
-  else renderCard();
+  else if(TAB==='mine') renderMine();
+  else if(TAB==='more') renderMore();
+  else renderRoom();
+}
+
+/* 짧은 알림 한 줄 — 화면 아래에 잠깐 떴다 사라집니다 */
+function toast(msg){
+  let el = document.getElementById('tstBar');
+  if(!el){
+    el = document.createElement('div'); el.id = 'tstBar';
+    el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);'
+      + 'bottom:calc(84px + env(safe-area-inset-bottom));z-index:60;max-width:88vw;'
+      + 'padding:11px 16px;border-radius:999px;background:rgba(16,42,67,.94);color:#fff;'
+      + 'font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.22);'
+      + 'opacity:0;transition:opacity .18s ease;pointer-events:none;word-break:keep-all';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  requestAnimationFrame(()=>{ el.style.opacity = '1'; });
+  clearTimeout(window.__tstT);
+  window.__tstT = setTimeout(()=>{ el.style.opacity = '0'; }, 2200);
 }
 
 /* ═══════════════════════ 이벤트 ═══════════════════════ */
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', ()=>{ TAB=b.dataset.tab; render(); }));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click', ()=>{
+  TAB = b.dataset.tab;
+  if(TAB !== 'room') ROOMSUB = null;      // 학습실을 떠나면 하위 화면도 닫습니다
+  render();
+}));
 
 $('#themeBtn').addEventListener('click', ()=>{
   const cur = document.documentElement.getAttribute('data-theme');
@@ -7867,9 +8098,24 @@ try{
 }catch(e){}
 
 document.addEventListener('click', (e)=>{
+  /* 학습실 카드 — 준비된 것만 열립니다 */
+  const rm = e.target.closest('[data-room]');
+  if(rm){
+    const k = rm.dataset.room;
+    const it = ROOM_ITEMS.find(x=>x.k===k);
+    if(!it || !it.ready) return toast('아직 준비 중이에요. 곧 열어 드릴게요.');
+    TAB = 'room'; ROOMSUB = k; render();
+    window.scrollTo({top:0, behavior:'auto'});
+    return;
+  }
+  const mo = e.target.closest('[data-more]');
+  if(mo){
+    if(mo.dataset.more === 'who') return whoAsk(()=>render(), false);
+    if(mo.dataset.more === 'theme') return document.getElementById('themeBtn').click();
+  }
   const hdrHome = e.target.closest('#hdrHome');
   if(hdrHome){
-    TAB = 'link'; linkGrade = null; render();
+    TAB = 'home'; ROOMSUB = null; linkGrade = null; render();
     window.scrollTo({ top:0, behavior:'smooth' });
     return;
   }
