@@ -597,6 +597,21 @@ nav button .ic{font-size:19px}
 .qk .qT{font-size:14.5px;font-weight:780;letter-spacing:-.02em;align-self:end}
 .qk .qS{font-size:11.5px;color:var(--muted);align-self:start;margin-top:1px}
 .qk.off{opacity:.5}
+/* 숙제를 아직 안 낸 아이에게 보이는 등원 — 잠겨 있지만 죽어 보이지는 않게.
+   「누를 수 있는데 아직 때가 아니다」로 읽혀야 합니다. */
+.qk.need{border-style:dashed;background:var(--surface);cursor:pointer;
+  font:inherit;text-align:left;-webkit-tap-highlight-color:transparent}
+.qk.qArrive.need{border-color:rgba(15,118,110,.45)}
+.qk.qArrive.need .qIc{background:var(--sunk);color:var(--muted)}
+.qk.qArrive.need .qT{color:var(--ink2)}
+.qk.need .qS{color:var(--accent);font-weight:700}
+.hwCard.ping{animation:hwPing 1.3s ease-out 1}
+@keyframes hwPing{
+  0%,100%{box-shadow:0 0 0 0 rgba(15,118,110,0)}
+  18%{box-shadow:0 0 0 5px rgba(15,118,110,.22)}
+  55%{box-shadow:0 0 0 3px rgba(15,118,110,.12)}
+}
+@media (prefers-reduced-motion: reduce){ .hwCard.ping{animation:none;border-color:var(--accent)} }
 /* 등원 — 진한 청록. 하루에 꼭 한 번 누르는 것이라 가장 진합니다 */
 .qk.qArrive{min-height:88px;border-color:var(--accent);background:rgba(15,118,110,.075)}
 .qk.qArrive .qIc{background:var(--accent);color:#fff}
@@ -7022,7 +7037,8 @@ function hwHtml(){
   if(!t){
     return `<section class="hwCard" id="hwCard">
       <div class="hwT">오늘 숙제 어땠어?</div>
-      <div class="hwS">한 번만 누르면 원장님께 바로 전해져요.</div>
+      <div class="hwS">한 번만 누르면 원장님께 바로 전해져요.
+        <b>이걸 눌러야 위의 등원이 열려요.</b></div>
       <div class="hwRow">
         <button class="hwB done"  data-hw="alldone">오답까지 다 함</button>
         <button class="hwB ok2"   data-hw="hwonly">숙제만 다 함</button>
@@ -7081,11 +7097,20 @@ function roomGridHtml(){
       <span class="rS">${x.ready ? esc(x.s) : '준비 중'}</span>
     </button>`).join('')}</div>`;
 }
-/* 오늘 바로가기 — 등원·하원이 가장 큽니다. 질문하기는 한 줄 전체. */
+/* 오늘 바로가기 — 등원·하원이 가장 큽니다. 질문하기는 한 줄 전체.
+   등원은 오늘 숙제를 알려 준 뒤에 열립니다 (원장님 결정 2026-09-08).
+   하원은 잠그지 않습니다 — 집에 갈 아이를 문 앞에 세워 둘 수 없습니다. */
 function quickHtml(){
   const url = k => { const l = (LINKS || []).find(x=>x.key===k); return l && l.url; };
   const go  = (k, cls, t, s2) => {
     const u = url(k);
+    /* 등원만 — 숙제를 안 냈으면 잠급니다. 눌리기는 하되 숙제 카드로 데려갑니다. */
+    if(k === 'arrival' && !hwToday()){
+      return `<button class="qk ${cls} need" data-needhw="1">
+        <span class="qIc">⇥</span>
+        <span class="qT">${t}</span>
+        <span class="qS">숙제부터 알려주세요 ↓</span></button>`;
+    }
     return u ? `<a class="qk ${cls}" href="${esc(u)}" target="_blank" rel="noopener">
         <span class="qIc">${cls==='qArrive'?'⇥':'⇤'}</span>
         <span class="qT">${t}</span><span class="qS">${s2}</span></a>`
@@ -8118,6 +8143,20 @@ document.addEventListener('click', (e)=>{
   if(hdrHome){
     TAB = 'home'; ROOMSUB = null; linkGrade = null; render();
     window.scrollTo({ top:0, behavior:'smooth' });
+    return;
+  }
+  /* 잠긴 등원 — 숙제 카드로 데려가고 한 번 반짝입니다 */
+  if(e.target.closest('[data-needhw]')){
+    const card = document.getElementById('hwCard');
+    if(card){
+      card.scrollIntoView({ block: 'center',
+        behavior: (!window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches)
+          ? 'smooth' : 'auto' });
+      card.classList.remove('ping');
+      void card.offsetWidth;                 /* 다시 틀기 */
+      card.classList.add('ping');
+      setTimeout(()=>card.classList.remove('ping'), 1400);
+    }
     return;
   }
   const hwBtn = e.target.closest('[data-hw]');
