@@ -7090,7 +7090,8 @@ function quickHtml(){
         <span class="qIc">${cls==='qArrive'?'⇥':'⇤'}</span>
         <span class="qT">${t}</span><span class="qS">${s2}</span></a>`
       : `<div class="qk ${cls} off"><span class="qIc">${cls==='qArrive'?'⇥':'⇤'}</span>
-        <span class="qT">${t}</span><span class="qS">준비중</span></div>`;
+        <span class="qT">${t}</span>
+        <span class="qS">${LINKS === null ? '불러오는 중' : '준비중'}</span></div>`;
   };
   const apps = (APP_LINKS[myGroup()] || []).map(a=>
     `<a class="qk qApp" href="${esc(appHref(a))}">
@@ -8124,13 +8125,13 @@ document.addEventListener('click', (e)=>{
     const s = hwBtn.dataset.hw;
     hwSave({ d: isoDay(), s: s, memo: '' });
     hwSend(s, '');                      /* 상태는 바로 보낸다 — 메모를 안 써도 기록은 남게 */
-    renderLink(); window.scrollTo(0, 0); return;
+    render(); window.scrollTo(0, 0); return;
   }
   if(e.target.closest('[data-hwre]') || e.target.closest('[data-hwmemo]')){
     const t = hwToday();
     if(e.target.closest('[data-hwre]')) hwSave({ d: '', s: '', memo: '' });
     else hwSave({ d: t.d, s: t.s, memo: '' });
-    renderLink(); return;
+    render(); return;
   }
   if(e.target.closest('#hwMemoSend')){
     const t = hwToday(); if(!t) return;
@@ -8138,7 +8139,7 @@ document.addEventListener('click', (e)=>{
     if(!v){ document.getElementById('hwMemo').focus(); return; }
     hwSave({ d: t.d, s: t.s, memo: v.slice(0, 60) });
     hwSend(t.s, v);
-    renderLink(); return;
+    render(); return;
   }
   const secBtn = e.target.closest('[data-sec]');
   if(secBtn){
@@ -8188,7 +8189,7 @@ document.addEventListener('click', (e)=>{
   const opLv = e.target.closest('[data-ol]');
   if(opLv){ openLv = opLv.dataset.ol; opStage.clear(); renderOpen(); window.scrollTo(0,0); return; }
   const askBtn = e.target.closest('#askToggle');
-  if(askBtn){ askOpen = !askOpen; renderLink(); return; }
+  if(askBtn){ askOpen = !askOpen; render(); return; }
   const toolBtn = e.target.closest('[data-tool]');
   if(toolBtn){ openTool(toolBtn.dataset.tool, toolBtn.dataset.toolfn || undefined); return; }
   if(e.target.closest('#tsClose')){ closeTool(); return; }
@@ -8275,9 +8276,12 @@ document.addEventListener('click', (e)=>{
 
 /* ═══════════════════════ 시작 ═══════════════════════ */
 render();
+/* 링크가 도착하면 <어느 탭이든> 다시 그립니다.
+   예전에는 link 탭일 때만 다시 그려서, 홈의 등원·하원이 「준비중」인 채로
+   멈춰 있었습니다. 아이가 숙제 단추를 눌러 화면이 새로 그려져야 나타났습니다. */
 fetch('/api/links', {cache:'no-store'})
-  .then(r=>r.json()).then(j=>{ LINKS = (j && j.links) || []; if(TAB==='link') renderLink(); })
-  .catch(()=>{ LINKS = []; if(TAB==='link') renderLink(); });
+  .then(r=>r.json()).then(j=>{ LINKS = (j && j.links) || []; render(); })
+  .catch(()=>{ LINKS = []; render(); });
 
 /* 홈 화면 추가 시 이름이 "더올림수학 루틴" 으로 뜨도록 매니페스트를 붙인다 */
 try{
